@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import UserList from './UserList';
+import StateList from './StateList';
 
 class App extends Component {
   render() {
@@ -12,6 +13,7 @@ class App extends Component {
         </header>
         
         <UserList />
+        <StateList />
       </div>
     );
   }

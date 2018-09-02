@@ -33,12 +33,23 @@ type Category {
   businesses(first: Int = 10, offset: Int = 0): [Business] @relation(name: "IN_CATEGORY", direction: "IN")
 }
 
+type State {
+  id: ID!
+  name: String
+
+  numCounties: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(c:County) RETURN count(DISTINCT c)")
+  numPlaces: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(p:Place) RETURN count(DISTINCT p)")
+  numBridges: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(b:Bridge) RETURN count(DISTINCT b)")
+}
+
 type Query {
     users(id: ID, name: String, first: Int = 10, offset: Int = 0): [User]
     businesses(id: ID, name: String, first: Int = 10, offset: Int = 0): [Business]
     reviews(id: ID, stars: Int, first: Int = 10, offset: Int = 0): [Review]
     category(name: ID!): Category
     usersBySubstring(substring: String, first: Int = 10, offset: Int = 0): [User] @cypher(statement: "MATCH (u:User) WHERE u.name CONTAINS $substring RETURN u")
+
+    states(id: ID, name: String): [State]
 }
 `;
 
@@ -48,6 +59,8 @@ export const resolvers = {
     businesses: neo4jgraphql,
     reviews: neo4jgraphql,
     category: neo4jgraphql,
-    usersBySubstring: neo4jgraphql
+    usersBySubstring: neo4jgraphql,
+
+    states: neo4jgraphql
   }
 };
