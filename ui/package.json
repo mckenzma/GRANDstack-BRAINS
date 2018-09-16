@@ -8,10 +8,12 @@
     "apollo-boost": "^0.1.7",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
+    "mapbox-gl": "^0.48.0",
     "react": "^16.4.0",
     "react-apollo": "^2.1.4",
     "react-dom": "^16.4.0",
-    "react-scripts": "1.1.4",
+    "react-mapbox-gl": "^3.9.2",
+    "react-scripts": "^1.1.5",
     "serve": "^7.2.0"
   },
   "scripts": {

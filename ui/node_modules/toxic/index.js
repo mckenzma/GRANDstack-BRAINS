@@ -14,7 +14,6 @@ module.exports = function (data, options) {
   
   return _(data)
     .map(function (value, key) {
-      
       // Which mutator to use
       var keyMutator = options.keyMutator || options.mutator;
       var valueMutator = options.valueMutator || options.mutator;
@@ -25,6 +24,6 @@ module.exports = function (data, options) {
       ];
     })
     .filter(_.identity)
-    .zipObject()
+    .fromPairs()
     .value();
 };

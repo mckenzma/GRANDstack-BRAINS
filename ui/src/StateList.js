@@ -77,8 +77,8 @@ class StateList extends React.Component {
                 <TableHead>
                   <TableRow>
                     <TableCell
-                      key="name"
-                      sortDirection={orderBy === "name" ? order : false}
+                      key="id"
+                      sortDirection={orderBy === "id" ? order : false}
                     >
                       <Tooltip
                         title="Sort"
@@ -86,17 +86,17 @@ class StateList extends React.Component {
                         enterDelay={300}
                       >
                         <TableSortLabel
-                          active={orderBy === "name"}
+                          active={orderBy === "id"}
                           direction={order}
-                          onClick={() => this.handleSortRequest("name")}
+                          onClick={() => this.handleSortRequest("id")}
                         >
                           Id
                         </TableSortLabel>
                       </Tooltip>
                     </TableCell>
                     <TableCell
-                      key="avgStars"
-                      sortDirection={orderBy === "avgStars" ? order : false}
+                      key="name"
+                      sortDirection={orderBy === "name" ? order : false}
                       numeric
                     >
                       <Tooltip
@@ -105,9 +105,9 @@ class StateList extends React.Component {
                         enterDelay={300}
                       >
                         <TableSortLabel
-                          active={orderBy === "avgStars"}
+                          active={orderBy === "name"}
                           direction={order}
-                          onClick={() => this.handleSortRequest("avgStars")}
+                          onClick={() => this.handleSortRequest("name")}
                         >
                           Name
                         </TableSortLabel>
