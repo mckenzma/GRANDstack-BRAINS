@@ -1,5 +1,7 @@
-USING PERIODIC COMMIT 500
-LOAD CSV WITH HEADERS FROM "file:///MN14.csv" AS row
+CALL apoc.periodic.iterate("
+UNWIND ['file:///MN14.csv', 'file:///AK14.csv'] AS file
+LOAD CSV WITH HEADERS FROM file AS row RETURN row",
+"
 MERGE (bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
 MERGE (place:Place {id: row.PLACE_CODE_004})
 MERGE (county:County {id: row.COUNTY_CODE_003})
@@ -38,6 +40,39 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  state.name = row.STATE_CODE_001,
 			  owner.name = row.OWNER_022,
 			  maintResp.name = row.MAINTENANCE_021
+",
+{batchSize:1000,iterateList:true});
+
+// build timeline tree
+MATCH (inspDate:InspectionDate)
+MERGE (year:Year {id: inspDate.year})
+MERGE (year)-[:MONTH]->(month:Month {id: inspDate.month})
+
+// set Inspection Date month and year properties
+MATCH (inspDate:InspectionDate)
+SET inspDate.year = right(inspDate.id, 2)
+WITH inspDate.year AS inspDateYear
+MATCH (inspDate:InspectionDate)
+WHERE size(inspDate.id) = 3
+SET inspDate.month = left(inspDate.id, 1)
+WITH inspDateYear, inspDate.month AS inspDateMonth
+MATCH (inspDate:InspectionDate)
+WHERE size(inspDate.id) = 4
+SET inspDate.month = left(inspDate.id, 2)
+
+// connect (:InspectionDate) to (:Month) in timeline tree
+MATCH (bridge:Bridge)-[:INSPECTED_ON]->(inspDate:InspectionDate)
+MATCH (year:Year {id: inspDate.year})-[:MONTH]->(month:Month {id: inspDate.month})
+MERGE (inspDate)-[:DATE_OF_INSPECTION]->(month)
+
+// Create Condition Rating Nodes
+UNWIND ['N', '9', '8', '7', '6', '5', '4', '3', '2', '1', '0'] AS code
+CREATE (:ConditionRating {id: code})
+
+
+
+
+
 
 //STATE_CODE_001
 HIGHWAY_DISTRICT_002

@@ -1,11 +1,13 @@
 import React from "react";
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
+// import { Query } from "react-apollo";
+// import gql from "graphql-tag";
+import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
 import Paper from "@material-ui/core/Paper";
 
 import mapboxgl from "mapbox-gl";
+// import 'mapbox-gl/dist/mapbox-gl.css';
 // import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
 // import ReactMapboxGl from "react-mapbox-gl";
 
@@ -15,36 +17,39 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmb
 
 const styles = theme => ({
   root: {
-    maxWidth: 700,
-    marginTop: theme.spacing.unit * 3,
+    width: 700,
+    height: 400,
+    // maxWidth: 700,
+    // marginTop: theme.spacing.unit * 3,
     overflowX: "auto",
-    margin: "auto"
+    // margin: "auto"
   },
   
 });
 
 
-// const Map = ReactMapboxGl({
-//   accessToken: "pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTV1ZzUwMDJwdzJrb2w0dXRmc2d0In0.p6GGlfyV-WksaDV_KdN27A"
-// });
 
 class Map extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      // lng: 5,
+      lng: -93.2650,
+      // lat: 34,
+      lat: 44.9778,
+      // zoom: 1.5
+      zoom: 13
       // order: "asc",
       // orderBy: "avgStars"
-      viewport: {
-	  	width: 400,
-	  	height: 400,
-	  	latitude: 37.7577,
-	  	longitude: -122.4376,
-	  	zoom: 8
-	  },
-	  lng: 5,
-      lat: 34,
-      zoom: 1.5
+    //   viewport: {
+	  	// width: 400,
+	  	// height: 400,
+	  	// latitude: 37.7577,
+	  	// longitude: -122.4376,
+	  	// zoom: 8
+	  // },
+	  
     };
   }
 
@@ -64,7 +69,8 @@ class Map extends React.Component {
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v9',
       center: [lng, lat],
-      zoom
+      zoom,
+      width: 300
     });
 		
      map.on('move', () => {
@@ -97,20 +103,17 @@ class Map extends React.Component {
 
   	const { lng, lat, zoom } = this.state;
 
-    return (
-      <div>
-        <div className="inline-block absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
-          <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
-        </div>
-        <div ref={el => this.mapContainer = el} className="absolute top right left bottom" />
-      </div>
-    );
-
-    // return <div style={this.state.viewport} ref={el => this.mapContainer = el} />;
-    // return <div style={this.props.classes.viewport} ref={el => this.mapContainer = el} />;
+    // return (
+    //   <div>
+    //     {<div className="inline-block absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
+    //       <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
+    //     </div>}
+    //     <div ref={el => this.mapContainer = el} className="absolute top right left bottom" />
+    //   </div>
+    // );
 
     // const { order, orderBy } = this.state;
-    //return (
+    // return (
     //   <Query
     //     query={gql`
     //       {
@@ -128,32 +131,37 @@ class Map extends React.Component {
     //       if (loading) return <p>Loading...</p>;
     //       if (error) return <p>Error</p>;
 
-   //        return (
-   //          // <Paper className={this.props.classes.root}>
-   //          //<Paper className={this.props.classes.root}>
-   //          //{/*}  // Map goes here*/}
+          return (
+// <div>
+        // {<div className="inline-block absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
+        //   <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
+        // </div>}
+        <Paper className={this.props.classes.root}>
+        {/*<div ref={el => this.mapContainer = el} className="absolute top right left bottom"/>*/}
+        <div ref={el => this.mapContainer = el} className={this.props.classes.root}/>
+        </Paper>
+        // {<div ref={el => this.mapContainer = el} />}
+      // </div>
 
-			// <ReactMapboxGl
-			//   style="mapbox://styles/mapbox/streets-v9"
-			//   containerStyle={{
-			//     height: 300,
-			//     width: 300
-			//   }}
-			//   className={this.props.classes.viewport}
-			//   />
-			// //{/*//     {<Layer
-			// //       type="symbol"
-			// //       id="marker"
-			// //       layout={{ "icon-image": "marker-15" }}>
-			// //       <Feature coordinates={[-0.481747846041145, 51.3233379650232]}/>
-			// //     </Layer>}
-			// // {/*</ReactMapboxGl>*/}
-   //          //</Paper>
-   //        );
-        // }}
-      // </Query>
-    //);
+
+
+
+   //          // <Paper className={this.props.classes.root}>
+             // <Paper className={this.props.classes.root}>
+   // <div>
+        // {<div ref={el => this.mapContainer = el} className="absolute top right left bottom" />}
+        // <div ref={el => this.mapContainer = el} className={this.props.classes.root} />
+  //      <Paper>
+    //    <div ref={el => this.mapContainer = el} className={this.state.viewport} />
+      //  </Paper>
+   // </div>
+              // </Paper>
+          );
+    //     }}
+    //   </Query>
+    // );
   }
 }
 
 export default withStyles(styles)(Map);
+// export default Map;
