@@ -43,6 +43,27 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 ",
 {batchSize:1000,iterateList:true});
 
+
+// build state, county, place like a timeline tree
+CALL apoc.periodic.iterate("
+UNWIND ['file:///MN14.csv', 'file:///AK14.csv'] AS file
+LOAD CSV WITH HEADERS FROM file AS row RETURN row",
+"
+MERGE (state:State {id: row.STATE_CODE_001})
+MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
+MERGE (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
+MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
+ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
+			  bridge.latitude = row.LAT_016,
+			  bridge.longitude = row.LONG_017,
+			  bridge.yearbuilt = row.YEAR_BUILT_027,
+			  place.name = row.PLACE_CODE_004,
+			  county.name = row.COUNTY_CODE_003,
+			  state.name = row.STATE_CODE_001
+",
+{batchSize:1000,iterateList:true});
+
+
 // build timeline tree
 MATCH (inspDate:InspectionDate)
 MERGE (year:Year {id: inspDate.year})
