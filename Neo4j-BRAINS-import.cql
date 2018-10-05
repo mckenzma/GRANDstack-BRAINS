@@ -57,6 +57,20 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  bridge.latitude = row.LAT_016,
 			  bridge.longitude = row.LONG_017,
 			  bridge.yearbuilt = row.YEAR_BUILT_027,
+			  
+			  bridge.deck_cond = row.DECK_COND_058,
+			  bridge.superstructure_cond = row.SUPERSTRUCTURE_COND_059,
+			  bridge.substructure_cond = row.SUBSTRUCTURE_COND_060,
+			  bridge.channel_cond = row.CHANNEL_COND_061,
+			  bridge.culvert_cond = row.CULVERT_COND_062,
+
+			  bridge.structural_eval = row.STRUCTURAL_EVAL_067,
+			  bridge.deck_geometry_eval = row.DECK_GEOMETRY_EVAL_068,
+			  bridge.undclrence_eval = row.UNDCLRENCE_EVAL_069,
+			  bridge.posting_eval = row.POSTING_EVAL_070,
+			  bridge.waterway_eval = row.WATERWAY_EVAL_071,
+			  bridge.appr_road_eval = row.APPR_ROAD_EVAL_072,
+			  
 			  place.name = row.PLACE_CODE_004,
 			  county.name = row.COUNTY_CODE_003,
 			  state.name = row.STATE_CODE_001
