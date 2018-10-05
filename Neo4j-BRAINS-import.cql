@@ -83,10 +83,17 @@ RETURN bridge.yearbuilt, count(bridge.yearbuilt)
 ORDER BY bridge.yearbuilt
 
 
-// build timeline tree
-MATCH (inspDate:InspectionDate)
-MERGE (year:Year {id: inspDate.year})
-MERGE (year)-[:MONTH]->(month:Month {id: inspDate.month})
+
+
+
+// create (inspDate) nodes
+CALL apoc.periodic.iterate("
+UNWIND ['file:///MN14.csv', 'file:///AK14.csv'] AS file
+LOAD CSV WITH HEADERS FROM file AS row RETURN row",
+"
+MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+",
+{batchSize:1000,iterateList:true});
 
 // set Inspection Date month and year properties
 MATCH (inspDate:InspectionDate)
@@ -99,6 +106,19 @@ WITH inspDateYear, inspDate.month AS inspDateMonth
 MATCH (inspDate:InspectionDate)
 WHERE size(inspDate.id) = 4
 SET inspDate.month = left(inspDate.id, 2)
+
+// build timeline tree
+MATCH (inspDate:InspectionDate)
+MERGE (year:Year {id: inspDate.year})
+MERGE (year)-[:MONTH]->(month:Month {id: inspDate.month})
+
+
+
+
+
+
+
+
 
 // connect (:InspectionDate) to (:Month) in timeline tree
 MATCH (bridge:Bridge)-[:INSPECTED_ON]->(inspDate:InspectionDate)
