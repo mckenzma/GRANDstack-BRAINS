@@ -111,6 +111,7 @@ SET inspDate.month = left(inspDate.id, 2)
 MATCH (inspDate:InspectionDate)
 MERGE (year:Year {id: inspDate.year})
 MERGE (year)-[:MONTH]->(month:Month {id: inspDate.month})
+MERGE (month)-[:INSPECTED_ON]->(inspDate)
 
 
 
