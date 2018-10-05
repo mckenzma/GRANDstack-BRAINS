@@ -77,6 +77,11 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 ",
 {batchSize:1000,iterateList:true});
 
+// count number of bridges built each year
+MATCH (bridge:Bridge)
+RETURN bridge.yearbuilt, count(bridge.yearbuilt)
+ORDER BY bridge.yearbuilt
+
 
 // build timeline tree
 MATCH (inspDate:InspectionDate)
