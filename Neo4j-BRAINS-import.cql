@@ -114,7 +114,10 @@ MERGE (year)-[:MONTH]->(month:Month {id: inspDate.month})
 MERGE (month)-[:INSPECTED_ON]->(inspDate)
 
 
-
+// connect bridge to year
+MATCH (bridge:Bridge)
+MERGE (year:Year {id: right(bridge.yearbuilt, 2)})
+MERGE (bridge)-[:BUILT_ON]->(year)
 
 
 
