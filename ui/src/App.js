@@ -202,7 +202,8 @@ class App extends Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <Typography>{'You think water moves fast? You should see ice.'}</Typography>
+            {/*<Typography>{'You think water moves fast? You should see ice.'}</Typography>*/}
+            <StateList />
           </main>
           {after}
         </div>
