@@ -190,7 +190,7 @@ class App extends Component {
                 <MenuIcon />
               </IconButton>
               <Typography variant="title" color="inherit" noWrap>
-                Persistent drawer
+                B.R.A.I.N.S.
               </Typography>
             </Toolbar>
           </AppBar>
@@ -203,7 +203,9 @@ class App extends Component {
           >
             <div className={classes.drawerHeader} />
             {/*<Typography>{'You think water moves fast? You should see ice.'}</Typography>*/}
+            {/*<UserList />*/}
             <StateList />
+            {/*<Map />*/}
           </main>
           {after}
         </div>
