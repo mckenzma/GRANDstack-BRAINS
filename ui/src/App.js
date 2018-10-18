@@ -13,9 +13,9 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import MenuItem from '@material-ui/core/MenuItem';
+// import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -32,16 +32,16 @@ import { Fragment } from 'react';
 // import Typography from '@material-ui/core/Typography';
 // import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 // import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Avatar from '@material-ui/core/Avatar';
 // import MenuIcon from '@material-ui/icons/Menu';
-import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
-import MoreIcon from '@material-ui/icons/MoreVert';
+// import AddIcon from '@material-ui/icons/Add';
+// import SearchIcon from '@material-ui/icons/Search';
+// import MoreIcon from '@material-ui/icons/MoreVert';
 
 const drawerWidth = 240;
 
@@ -136,6 +136,7 @@ const styles = theme => ({
   main: {
     height: 400,
     overflowY: 'auto',
+    // position: 'relative',
     position: 'relative',
   },
   list: {
@@ -332,7 +333,7 @@ class App extends Component {
       </Paper>
       <AppBar position="sticky" color="primary">
         <Toolbar className={classes.toolbar}>
-          <IconButton color="inherit" aria-label="Open drawer">
+          {/*<IconButton color="inherit" aria-label="Open drawer">
             <MenuIcon />
           </IconButton>
           <Button variant="fab" color="secondary" aria-label="Add" className={classes.fabButton}>
@@ -345,7 +346,7 @@ class App extends Component {
             <IconButton color="inherit">
               <MoreIcon />
             </IconButton>
-          </div>
+          </div>*/}
         </Toolbar>
       </AppBar>
     </div>
