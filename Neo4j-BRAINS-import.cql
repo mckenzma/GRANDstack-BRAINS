@@ -165,6 +165,43 @@ ON CREATE SET evaluation.id = bridge.id + inspDate.id,
 {batchSize:1000,iterateList:true});
 
 
+// converting latitude to decimal
+MATCH (bridge:Bridge)
+WHERE size(bridge.latitude) = 8
+SET bridge.latitude_decimal = toFloat(left(bridge.latitude, 2)) + toFloat(substring(bridge.latitude,2,2))/60 + toFloat(right(bridge.latitude,4))/100/3600
+//RETURN bridge.latitude AS Lat, 
+//	   toFloat(left(bridge.latitude, 2)) AS Degrees, 
+//	   toFloat(substring(bridge.latitude,2,2))/60 AS Minutes,
+//       toFloat(right(bridge.latitude,4))/100/3600 AS Seconds,
+//       toFloat(left(bridge.latitude, 2)) + toFloat(substring(bridge.latitude,2,2))/60 + toFloat(right(bridge.latitude,4))/100/3600 AS Lat_Decimal
+//ORDER BY Lat
+
+// converting longitude to decimal
+MATCH (bridge:Bridge)
+WITH bridge, size(bridge.longitude) AS long_size
+//WHERE size(bridge.longitude) >= 8
+WHERE long_size >= 8
+SET bridge.longitude_decimal = 
+CASE long_size
+	WHEN 8 THEN -1 * ( toFloat(left(bridge.longitude, 2)) + toFloat(substring(bridge.longitude,2,2))/60 + toFloat(right(bridge.longitude,4))/100/3600 )
+    WHEN 9 THEN -1 * ( toFloat(left(bridge.longitude, 3)) + toFloat(substring(bridge.longitude,3,2))/60 + toFloat(right(bridge.longitude,4))/100/3600 )
+END
+//RETURN size(bridge.longitude),
+//	   bridge.longitude AS Long, 
+//	CASE size(bridge.longitude)
+//		WHEN 8 THEN left(bridge.longitude, 2)
+//		WHEN 9 THEN left(bridge.longitude, 3)
+//	END AS Degrees,
+//    CASE size(bridge.longitude)
+//    	WHEN 8 THEN substring(bridge.longitude,2,2)
+//        WHEN 9 THEN substring(bridge.longitude,3,2)
+//	END AS Minutes,
+//	   right(bridge.longitude,4) AS Seconds
+//ORDER BY Long
+
+
+
+
 
 //STATE_CODE_001
 HIGHWAY_DISTRICT_002
