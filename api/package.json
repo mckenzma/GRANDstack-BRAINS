@@ -1,5 +1,5 @@
 {
-  "name": "grand-stack-starter-api",
+  "name": "GRANDstack-BRAINS-api",
   "version": "0.0.1",
   "description": "API app for GRANDstack",
   "main": "src/index.js",
@@ -8,24 +8,24 @@
     "start": "./node_modules/.bin/nodemon --exec babel-node src/index.js",
     "seedDb": "./node_modules/.bin/babel-node src/seed/seed-db.js"
   },
-  "author": "William Lyon",
+  "author": "Michael McKenzie",
   "license": "MIT",
   "dependencies": {
-    "apollo-boost": "^0.1.10",
-    "apollo-cache-inmemory": "^1.2.5",
-    "apollo-client": "^2.3.2",
-    "apollo-link-http": "^1.5.4",
-    "apollo-server": "^2.0.0-rc.5",
+    "apollo-boost": "^0.1.19",
+    "apollo-cache-inmemory": "^1.3.8",
+    "apollo-client": "^2.4.5",
+    "apollo-link-http": "^1.5.5",
+    "apollo-server": "^2.1.0",
     "dotenv": "^5.0.1",
-    "graphql-tag": "^2.9.2",
+    "graphql-tag": "^2.10.0",
     "mapbox-gl": "^0.48.0",
-    "neo4j-driver": "^1.6.1",
-    "neo4j-graphql-js": "^0.1.26",
+    "neo4j-driver": "^1.7.1",
+    "neo4j-graphql-js": "^1.0.5",
     "node-fetch": "^2.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.18.5"
   }
 }
