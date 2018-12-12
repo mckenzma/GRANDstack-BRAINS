@@ -39,7 +39,7 @@ class Map extends React.Component {
       // lat: 34,
       lat: 44.9778,
       // zoom: 1.5
-      zoom: 13
+      zoom: 13,
       // order: "asc",
       // orderBy: "avgStars"
     //   viewport: {
@@ -51,6 +51,53 @@ class Map extends React.Component {
 	  // },
 	  
     };
+
+    this.businessMarkers = [];
+  }
+
+  businessPopupHTML = business => {
+    return `<ul>
+    <li>
+      <strong>Id: </strong> ${business.id}
+    </li>
+    <li>
+      <strong>Longitude: </strong> ${business.longitude_decimal}
+    </li>
+    <li>
+      <strong>Latitude: </strong> ${business.latitude_decimal}
+    </li>
+  </ul>`;
+  };
+
+  setBusinessMarkers() {
+    const { businesses } = this.props;
+    this.businessMarkers.map(m => {
+      m.remove();
+      return true;
+    });
+
+    this.businessMarkers = businesses.map(b => {
+      return new mapboxgl.Marker()
+        .setLngLat([b.location.x, b.location.y])
+        .setPopup(
+          new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
+        )
+        .addTo(this.map);
+    });
+  }
+
+  componentDidUpdate() {
+    this.setBusinessMarkers();
+    if (this.mapLoaded) {
+      this.map
+        // .getSource("polygon")
+        // .setData(
+          // this.createGeoJSONCircle(
+          //   [this.props.mapCenter.longitude, this.props.mapCenter.latitude],
+          //   this.props.mapCenter.radius
+          // ).data
+        // );
+    }
   }
 
   // componentDidMount() {
@@ -66,12 +113,31 @@ class Map extends React.Component {
     const { lng, lat, zoom } = this.state;
 
     const map = new mapboxgl.Map({
+    //this.map = new mapboxgl.Map({ // this line is giving me an error: 'map' is not defined no-undefined
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v9',
       center: [lng, lat],
-      zoom,
-      width: 300
+      // width: 300,
+      zoom
     });
+
+    // this.map.on('load', () => {
+    //   this.mapLoaded = true;
+    //   // this.map.addSource(
+    //   //   "polygon",
+    //   //   this.createGeoJSONCircle([lng, lat], this.props.mapCenter.radius)
+    //   // );
+    //   // this.map.addLayer({
+    //   //   id: "polygon",
+    //   //   type: "fill",
+    //   //   source: "polygon",
+    //   //   layout: {},
+    //   //   paint: {
+    //   //     "fill-color": "blue",
+    //   //     "fill-opacity": 0.6
+    //   //   }
+    //   // });
+    // });
 		
      map.on('move', () => {
       const { lng, lat } = map.getCenter();
@@ -82,6 +148,8 @@ class Map extends React.Component {
         zoom: map.getZoom().toFixed(2)
       });
     });
+
+     // this.setBusinessMarkers();
   }
 
   // componentWillUnmount() {
@@ -136,10 +204,14 @@ class Map extends React.Component {
         // {<div className="inline-block absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
         //   <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
         // </div>}
-        <Paper className={this.props.classes.root}>
-        {/*<div ref={el => this.mapContainer = el} className="absolute top right left bottom"/>*/}
-        <div ref={el => this.mapContainer = el} className={this.props.classes.root}/>
-        </Paper>
+        //{/*<Paper className={this.props.classes.root}>*/}
+        //{/*<div ref={el => this.mapContainer = el} className="absolute top right left bottom"/>*/}
+        <div>
+        <div 
+          ref={el => this.mapContainer = el} 
+          className={this.props.classes.root}/>
+        </div>
+        //{/*</Paper>*/}
         // {<div ref={el => this.mapContainer = el} />}
       // </div>
 

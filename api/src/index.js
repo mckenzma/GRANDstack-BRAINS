@@ -27,7 +27,7 @@ const server = new ApolloServer({
   //resolvers,
   context: { driver },
   // remove schema and uncomment typeDefs and resolvers above to use original (unaugmented) schema
-  schema: augmentedSchema
+  schema: schema
 });
 
 server.listen(process.env.GRAPHQL_LISTEN_PORT, '0.0.0.0').then(({ url }) => {

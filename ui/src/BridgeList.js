@@ -1,7 +1,7 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-import "./StateList.css";
+import "./BridgeList.css";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,6 +11,9 @@ import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
 import { TableSortLabel } from "@material-ui/core";
+
+import Map from './Map';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const styles = theme => ({
   root: {
@@ -30,13 +33,20 @@ function getSorting(order, orderBy) {
     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
 }
 
-class StateList extends React.Component {
+class BridgeList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       order: "asc",
-      orderBy: "avgStars"
+      orderBy: "avgStars",
+      
+      businesses: [],
+      mapCenter: {
+        longitude: -93.2650,
+        latitude: 44.9778,
+        zoom: 13,
+      }
     };
   }
 
@@ -57,12 +67,10 @@ class StateList extends React.Component {
       <Query
         query={gql`
           {
-            State {
+            Bridge {
               id
-              name
-              numCounties
-              numPlaces
-              numBridges
+              latitude_decimal
+              longitude_decimal
             }
           }
         `}
@@ -73,7 +81,11 @@ class StateList extends React.Component {
 
           return (
             <Paper className={this.props.classes.root}>
-              <Table className={this.props.classes.table}>
+              <Map
+                // businesses={data.Bridge}
+              />
+              
+              {/*<Table className={this.props.classes.table}>
                 <TableHead>
                   <TableRow>
                     <TableCell
@@ -95,8 +107,8 @@ class StateList extends React.Component {
                       </Tooltip>
                     </TableCell>
                     <TableCell
-                      key="name"
-                      sortDirection={orderBy === "name" ? order : false}
+                      key="latitude_decimal"
+                      sortDirection={orderBy === "latitude_decimal" ? order : false}
                       numeric
                     >
                       <Tooltip
@@ -105,17 +117,17 @@ class StateList extends React.Component {
                         enterDelay={300}
                       >
                         <TableSortLabel
-                          active={orderBy === "name"}
+                          active={orderBy === "latitude_decimal"}
                           direction={order}
-                          onClick={() => this.handleSortRequest("name")}
+                          onClick={() => this.handleSortRequest("latitude_decimal")}
                         >
-                          Name
+                          Latitude
                         </TableSortLabel>
                       </Tooltip>
                     </TableCell>
                     <TableCell
-                      key="numCounties"
-                      sortDirection={orderBy === "numCounties" ? order : false}
+                      key="longitude_decimal"
+                      sortDirection={orderBy === "longitude_decimal" ? order : false}
                       numeric
                     >
                       <Tooltip
@@ -124,56 +136,18 @@ class StateList extends React.Component {
                         enterDelay={300}
                       >
                         <TableSortLabel
-                          active={orderBy === "numCounties"}
+                          active={orderBy === "longitude_decimal"}
                           direction={order}
-                          onClick={() => this.handleSortRequest("numCounties")}
+                          onClick={() => this.handleSortRequest("longitude_decimal")}
                         >
-                          # of Counties
-                        </TableSortLabel>
-                      </Tooltip>
-                    </TableCell>
-                    <TableCell
-                      key="numPlaces"
-                      sortDirection={orderBy === "numPlaces" ? order : false}
-                      numeric
-                    >
-                      <Tooltip
-                        title="Sort"
-                        placement="bottom-end"
-                        enterDelay={300}
-                      >
-                        <TableSortLabel
-                          active={orderBy === "numPlaces"}
-                          direction={order}
-                          onClick={() => this.handleSortRequest("numPlaces")}
-                        >
-                          # of Places
-                        </TableSortLabel>
-                      </Tooltip>
-                    </TableCell>
-                    <TableCell
-                      key="numBridges"
-                      sortDirection={orderBy === "numBridges" ? order : false}
-                      numeric
-                    >
-                      <Tooltip
-                        title="Sort"
-                        placement="bottom-end"
-                        enterDelay={300}
-                      >
-                        <TableSortLabel
-                          active={orderBy === "numBridges"}
-                          direction={order}
-                          onClick={() => this.handleSortRequest("numBridges")}
-                        >
-                          # of Bridges
+                          Longitude
                         </TableSortLabel>
                       </Tooltip>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.State
+                  {data.Bridge
                     .slice()
                     .sort(getSorting(order, orderBy))
                     .map(n => {
@@ -182,15 +156,13 @@ class StateList extends React.Component {
                           <TableCell component="th" scope="row">
                             {n.id}
                           </TableCell>
-                          <TableCell>{n.name}</TableCell>
-                          <TableCell numeric>{n.numCounties}</TableCell>
-                          <TableCell numeric>{n.numPlaces}</TableCell>
-                          <TableCell numeric>{n.numBridges}</TableCell>
+                          <TableCell numeric>{n.latitude_decimal}</TableCell>
+                          <TableCell numeric>{n.longitude_decimal}</TableCell>
                         </TableRow>
                       );
                     })}
                 </TableBody>
-              </Table>
+              </Table>*/}
             </Paper>
           );
         }}
@@ -199,4 +171,4 @@ class StateList extends React.Component {
   }
 }
 
-export default withStyles(styles)(StateList);
+export default withStyles(styles)(BridgeList);
