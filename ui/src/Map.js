@@ -4,7 +4,7 @@ import React from "react";
 import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
-import Paper from "@material-ui/core/Paper";
+// import Paper from "@material-ui/core/Paper";
 
 import mapboxgl from "mapbox-gl";
 // import 'mapbox-gl/dist/mapbox-gl.css';
@@ -39,7 +39,8 @@ class Map extends React.Component {
       // lat: 34,
       lat: 44.9778,
       // zoom: 1.5
-      zoom: 13,
+      // zoom: 13,
+      zoom: 6,
       // order: "asc",
       // orderBy: "avgStars"
     //   viewport: {
@@ -70,18 +71,22 @@ class Map extends React.Component {
   };
 
   setBusinessMarkers() {
+    console.log("setBusinessMarkers");
     const { businesses } = this.props;
     this.businessMarkers.map(m => {
       m.remove();
       return true;
     });
-
+    console.log(businesses);
+    // console.log(this.map);
     this.businessMarkers = businesses.map(b => {
+      // console.log(b);
       return new mapboxgl.Marker()
-        .setLngLat([b.location.x, b.location.y])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
-        )
+        //.setLngLat([b.location.x, b.location.y])
+        .setLngLat([b.longitude_decimal, b.latitude_decimal])
+        // .setPopup(
+        //   new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
+        // )
         .addTo(this.map);
     });
   }
@@ -110,10 +115,11 @@ class Map extends React.Component {
   
 
   componentDidMount() {
+    console.log("componentDidMount");
     const { lng, lat, zoom } = this.state;
 
-    const map = new mapboxgl.Map({
-    //this.map = new mapboxgl.Map({ // this line is giving me an error: 'map' is not defined no-undefined
+    // const map = new mapboxgl.Map({
+    this.map = new mapboxgl.Map({ // this line is giving me an error: 'map' is not defined no-undefined
       container: this.mapContainer,
       style: 'mapbox://styles/mapbox/streets-v9',
       center: [lng, lat],
@@ -121,35 +127,46 @@ class Map extends React.Component {
       zoom
     });
 
-    // this.map.on('load', () => {
-    //   this.mapLoaded = true;
-    //   // this.map.addSource(
-    //   //   "polygon",
-    //   //   this.createGeoJSONCircle([lng, lat], this.props.mapCenter.radius)
-    //   // );
-    //   // this.map.addLayer({
-    //   //   id: "polygon",
-    //   //   type: "fill",
-    //   //   source: "polygon",
-    //   //   layout: {},
-    //   //   paint: {
-    //   //     "fill-color": "blue",
-    //   //     "fill-opacity": 0.6
-    //   //   }
-    //   // });
-    // });
-		
-     map.on('move', () => {
-      const { lng, lat } = map.getCenter();
+    this.map.on('load', () => {
+      this.mapLoaded = true;
+      // this.map.addSource(
+      //   "polygon",
+      //   this.createGeoJSONCircle([lng, lat], this.props.mapCenter.radius)
+      // );
+      // this.map.addLayer({
+      //   id: "polygon",
+      //   type: "fill",
+      //   source: "polygon",
+      //   layout: {},
+      //   paint: {
+      //     "fill-color": "blue",
+      //     "fill-opacity": 0.6
+      //   }
+      // });
+    });
+
+    // const onDragEnd = e => {
+    //   var lngLat = e.target.getLngLat();
+
+    //   const viewport = {
+    //     latitude: lngLat.lat,
+    //     longitude: lngLat.lng,
+    //     zoom: this.map.getZoom()
+    //   }
+    //   this.props.mapSearchPointChange(viewport);
+    // }
+		console.log(this.map);
+     this.map.on('move', () => {
+      const { lng, lat } = this.map.getCenter();
 
       this.setState({
         lng: lng.toFixed(4),
         lat: lat.toFixed(4),
-        zoom: map.getZoom().toFixed(2)
+        zoom: this.map.getZoom().toFixed(2)
       });
     });
 
-     // this.setBusinessMarkers();
+     this.setBusinessMarkers();
   }
 
   // componentWillUnmount() {
@@ -209,7 +226,8 @@ class Map extends React.Component {
         <div>
         <div 
           ref={el => this.mapContainer = el} 
-          className={this.props.classes.root}/>
+          className={this.props.classes.root}
+        />
         </div>
         //{/*</Paper>*/}
         // {<div ref={el => this.mapContainer = el} />}

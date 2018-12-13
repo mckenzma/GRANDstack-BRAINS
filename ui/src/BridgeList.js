@@ -67,7 +67,7 @@ class BridgeList extends React.Component {
       <Query
         query={gql`
           {
-            Bridge {
+            Bridge(first: 10) {
               id
               latitude_decimal
               longitude_decimal
@@ -82,10 +82,10 @@ class BridgeList extends React.Component {
           return (
             <Paper className={this.props.classes.root}>
               <Map
-                // businesses={data.Bridge}
+                businesses={data.Bridge}
               />
               
-              {/*<Table className={this.props.classes.table}>
+              <Table className={this.props.classes.table}>
                 <TableHead>
                   <TableRow>
                     <TableCell
@@ -162,7 +162,7 @@ class BridgeList extends React.Component {
                       );
                     })}
                 </TableBody>
-              </Table>*/}
+              </Table>
             </Paper>
           );
         }}
