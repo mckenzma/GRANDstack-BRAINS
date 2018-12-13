@@ -67,7 +67,7 @@ class BridgeList extends React.Component {
       <Query
         query={gql`
           {
-            Bridge(first: 10) {
+            Bridge(first: 20) {
               id
               latitude_decimal
               longitude_decimal

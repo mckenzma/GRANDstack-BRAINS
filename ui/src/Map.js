@@ -71,22 +71,22 @@ class Map extends React.Component {
   };
 
   setBusinessMarkers() {
-    console.log("setBusinessMarkers");
+    // console.log("setBusinessMarkers");
     const { businesses } = this.props;
     this.businessMarkers.map(m => {
       m.remove();
       return true;
     });
-    console.log(businesses);
+    // console.log(businesses);
     // console.log(this.map);
     this.businessMarkers = businesses.map(b => {
       // console.log(b);
       return new mapboxgl.Marker()
         //.setLngLat([b.location.x, b.location.y])
         .setLngLat([b.longitude_decimal, b.latitude_decimal])
-        // .setPopup(
-        //   new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
-        // )
+        .setPopup(
+          new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
+        )
         .addTo(this.map);
     });
   }
@@ -94,7 +94,7 @@ class Map extends React.Component {
   componentDidUpdate() {
     this.setBusinessMarkers();
     if (this.mapLoaded) {
-      this.map
+      // this.map
         // .getSource("polygon")
         // .setData(
           // this.createGeoJSONCircle(
@@ -115,7 +115,7 @@ class Map extends React.Component {
   
 
   componentDidMount() {
-    console.log("componentDidMount");
+    // console.log("componentDidMount");
     const { lng, lat, zoom } = this.state;
 
     // const map = new mapboxgl.Map({
@@ -155,7 +155,7 @@ class Map extends React.Component {
     //   }
     //   this.props.mapSearchPointChange(viewport);
     // }
-		console.log(this.map);
+		// console.log(this.map);
      this.map.on('move', () => {
       const { lng, lat } = this.map.getCenter();
 
