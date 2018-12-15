@@ -25,6 +25,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 // import { mailFolderListItems, otherMailFolderListItems } from './tileData';
 import StateListMenu from './StateListMenu';
 
+import TemporaryDrawer from './BridgeDrawer';
+
 // import React, { Fragment } from 'react';
 // import { Fragment } from 'react';
 // import PropTypes from 'prop-types';
@@ -320,6 +322,7 @@ class App extends Component {
             {/*<UserList />*/}
             {/*<StateList />*/}
             <BridgeList />
+            <TemporaryDrawer />
             {/*<Map />*/}
           </main>
           {after}
