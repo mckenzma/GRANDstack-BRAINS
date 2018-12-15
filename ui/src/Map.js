@@ -166,7 +166,7 @@ class Map extends React.Component {
       });
     });
 
-     this.setBusinessMarkers();
+    this.setBusinessMarkers();
   }
 
   // componentWillUnmount() {

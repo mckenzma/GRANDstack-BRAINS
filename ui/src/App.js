@@ -22,7 +22,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { mailFolderListItems, otherMailFolderListItems } from './tileData';
+// import { mailFolderListItems, otherMailFolderListItems } from './tileData';
+import StateListMenu from './StateListMenu';
 
 // import React, { Fragment } from 'react';
 // import { Fragment } from 'react';
@@ -254,11 +255,13 @@ class App extends Component {
           </IconButton>
         </div>
         <Divider />
-        <List>{mailFolderListItems}</List>
+        {/*<List>{mailFolderListItems}</List>*/}
         {/*something*/}
-        <Divider />
-        <List>{otherMailFolderListItems}</List>
+        {/*<Divider />*/}
+        {/*<List>{otherMailFolderListItems}</List>*/}
         {/*something else*/}
+        {/*<Divider />*/}
+        <StateListMenu />
       </Drawer>
     );
 

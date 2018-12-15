@@ -3,14 +3,14 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import "./BridgeList.css";
 import { withStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Tooltip from "@material-ui/core/Tooltip";
+// import Table from "@material-ui/core/Table";
+// import TableBody from "@material-ui/core/TableBody";
+// import TableCell from "@material-ui/core/TableCell";
+// import TableHead from "@material-ui/core/TableHead";
+// import TableRow from "@material-ui/core/TableRow";
+// import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
-import { TableSortLabel } from "@material-ui/core";
+// import { TableSortLabel } from "@material-ui/core";
 
 import Map from './Map';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -27,19 +27,19 @@ const styles = theme => ({
   }
 });
 
-function getSorting(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
-    : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
-}
+// function getSorting(order, orderBy) {
+  // return order === "desc"
+    // ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
+    // : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
+// }
 
 class BridgeList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      order: "asc",
-      orderBy: "avgStars",
+      // order: "asc",
+      // orderBy: "avgStars",
       
       businesses: [],
       mapCenter: {
@@ -50,19 +50,19 @@ class BridgeList extends React.Component {
     };
   }
 
-  handleSortRequest = property => {
-    const orderBy = property;
-    let order = "desc";
+  // handleSortRequest = property => {
+  //   const orderBy = property;
+  //   let order = "desc";
 
-    if (this.state.orderBy === property && this.state.order === "desc") {
-      order = "asc";
-    }
+  //   if (this.state.orderBy === property && this.state.order === "desc") {
+  //     order = "asc";
+  //   }
 
-    this.setState({ order, orderBy });
-  };
+  //   this.setState({ order, orderBy });
+  // };
 
   render() {
-    const { order, orderBy } = this.state;
+    // const { order, orderBy } = this.state;
     return (
       <Query
         query={gql`
@@ -85,7 +85,7 @@ class BridgeList extends React.Component {
                 businesses={data.Bridge}
               />
               
-              <Table className={this.props.classes.table}>
+              {/*<Table className={this.props.classes.table}>
                 <TableHead>
                   <TableRow>
                     <TableCell
@@ -162,7 +162,7 @@ class BridgeList extends React.Component {
                       );
                     })}
                 </TableBody>
-              </Table>
+              </Table>*/}
             </Paper>
           );
         }}
