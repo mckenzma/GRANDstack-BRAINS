@@ -1,6 +1,6 @@
 import React from "react";
-// import { Query } from "react-apollo";
-// import gql from "graphql-tag";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -46,8 +46,8 @@ const styles = theme => ({
   
 });
 
-console.log(icon);
-console.log(iconShadow);
+// console.log(icon);
+// console.log(iconShadow);
 
 class MapLeaf extends React.Component {
   constructor(props) {
@@ -96,146 +96,146 @@ class MapLeaf extends React.Component {
   // </ul>`;
   // };
 
-  setBusinessMarkers() {
-    // console.log("setBusinessMarkers");
-    const { businesses } = this.props;
-    // this.businessMarkers.map(m => {
-    //   m.remove();
-    //   return true;
-    // });
-    // console.log(businesses);
-    // console.log(this.map);
-    // this.businessMarkers = businesses.map(b => {
-    //   // console.log(b);
-    //   return new mapboxgl.Marker()
-    //     //.setLngLat([b.location.x, b.location.y])
-    //     .setLngLat([b.longitude_decimal, b.latitude_decimal])
-    //     .setPopup(
-    //       new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
-    //     )
+  // setBusinessMarkers() {
+  //   // console.log("setBusinessMarkers");
+  //   const { businesses } = this.props;
+  //   // this.businessMarkers.map(m => {
+  //   //   m.remove();
+  //   //   return true;
+  //   // });
+  //   // console.log(businesses);
+  //   // console.log(this.map);
+  //   // this.businessMarkers = businesses.map(b => {
+  //   //   // console.log(b);
+  //   //   return new mapboxgl.Marker()
+  //   //     //.setLngLat([b.location.x, b.location.y])
+  //   //     .setLngLat([b.longitude_decimal, b.latitude_decimal])
+  //   //     .setPopup(
+  //   //       new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
+  //   //     )
 
-    //     // .onclick = function (e) {
-    //     //   this.toggleDrawer('right', true);
+  //   //     // .onclick = function (e) {
+  //   //     //   this.toggleDrawer('right', true);
 
-    //     //   // var clickedLayer = this.textContent;
-    //     //   // e.preventDefault();
-    //     //   // e.stopPropagation();
+  //   //     //   // var clickedLayer = this.textContent;
+  //   //     //   // e.preventDefault();
+  //   //     //   // e.stopPropagation();
 
-    //     //   // var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+  //   //     //   // var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
 
-    //     //   // if (visibility === 'visible') {
-    //     //   //     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-    //     //   //     this.className = '';
-    //     //   // } else {
-    //     //   //     this.className = 'active';
-    //     //   //     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-    //     //   // }
-    //     // };
-    //     .on('click', function(e) {
-    //       this.toggleDrawer('right', true);
-    //       console.log("clicked");
-    //     })
-    //     .addTo(this.map);
-    // });
-  }
-
-  componentDidUpdate() {
-    this.setBusinessMarkers();
-    if (this.mapLoaded) {
-      // this.map
-        // .getSource("polygon")
-        // .setData(
-          // this.createGeoJSONCircle(
-          //   [this.props.mapCenter.longitude, this.props.mapCenter.latitude],
-          //   this.props.mapCenter.radius
-          // ).data
-        // );
-    }
-  }
-
-  // componentDidMount() {
-  //   this.map = new mapboxgl.Map({
-  //     container: this.mapContainer,
-  //     style: 'mapbox://styles/mapbox/streets-v9'
-  //   });
+  //   //     //   // if (visibility === 'visible') {
+  //   //     //   //     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+  //   //     //   //     this.className = '';
+  //   //     //   // } else {
+  //   //     //   //     this.className = 'active';
+  //   //     //   //     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+  //   //     //   // }
+  //   //     // };
+  //   //     .on('click', function(e) {
+  //   //       this.toggleDrawer('right', true);
+  //   //       console.log("clicked");
+  //   //     })
+  //   //     .addTo(this.map);
+  //   // });
   // }
+
+  // componentDidUpdate() {
+  //   this.setBusinessMarkers();
+  //   if (this.mapLoaded) {
+  //     // this.map
+  //       // .getSource("polygon")
+  //       // .setData(
+  //         // this.createGeoJSONCircle(
+  //         //   [this.props.mapCenter.longitude, this.props.mapCenter.latitude],
+  //         //   this.props.mapCenter.radius
+  //         // ).data
+  //       // );
+  //   }
+  // }
+
+  // // componentDidMount() {
+  // //   this.map = new mapboxgl.Map({
+  // //     container: this.mapContainer,
+  // //     style: 'mapbox://styles/mapbox/streets-v9'
+  // //   });
+  // // }
 
   
 
-  componentDidMount() {
-    // console.log("componentDidMount");
-    const { lng, lat, zoom } = this.state;
+  // componentDidMount() {
+  //   // console.log("componentDidMount");
+  //   const { lng, lat, zoom } = this.state;
 
-    const { businesses } = this.props;
-    // console.log(businesses);
-    // console.log(JSON.stringify(businesses));
+  //   const { businesses } = this.props;
+  //   // console.log(businesses);
+  //   // console.log(JSON.stringify(businesses));
 
-    // const map = new mapboxgl.Map({
-    // this.map = new mapboxgl.Map({ // this line is giving me an error: 'map' is not defined no-undefined
-    //   container: this.mapContainer,
-    //   style: 'mapbox://styles/mapbox/streets-v9',
-    //   center: [lng, lat],
-    //   // width: 300,
-    //   zoom
-    // });
+  //   // const map = new mapboxgl.Map({
+  //   // this.map = new mapboxgl.Map({ // this line is giving me an error: 'map' is not defined no-undefined
+  //   //   container: this.mapContainer,
+  //   //   style: 'mapbox://styles/mapbox/streets-v9',
+  //   //   center: [lng, lat],
+  //   //   // width: 300,
+  //   //   zoom
+  //   // });
 
-    // this.map.on('load', () => {
-    //   this.mapLoaded = true;
-    //   // this.map.addSource('bridges', {
-    //   //   "type": "geojson",
-    //   //   "data": JSON.stringify(businesses)
-    //   // });
+  //   // this.map.on('load', () => {
+  //   //   this.mapLoaded = true;
+  //   //   // this.map.addSource('bridges', {
+  //   //   //   "type": "geojson",
+  //   //   //   "data": JSON.stringify(businesses)
+  //   //   // });
 
-    //   // this.map.addLayer({
-    //   //   "id": "bridges-heat",
-    //   //   "type": "heatmap",
-    //   //   "source": "bridges",
-    //   //   "maxzoom": 9,
-    //   //   "paint": {
-    //   //     // Increase the heatmap wieght vase
-    //   //   }
-    //   // })
+  //   //   // this.map.addLayer({
+  //   //   //   "id": "bridges-heat",
+  //   //   //   "type": "heatmap",
+  //   //   //   "source": "bridges",
+  //   //   //   "maxzoom": 9,
+  //   //   //   "paint": {
+  //   //   //     // Increase the heatmap wieght vase
+  //   //   //   }
+  //   //   // })
 
 
-    //   // this.map.addSource(
-    //   //   "polygon",
-    //   //   this.createGeoJSONCircle([lng, lat], this.props.mapCenter.radius)
-    //   // );
-    //   // this.map.addLayer({
-    //   //   id: "polygon",
-    //   //   type: "fill",
-    //   //   source: "polygon",
-    //   //   layout: {},
-    //   //   paint: {
-    //   //     "fill-color": "blue",
-    //   //     "fill-opacity": 0.6
-    //   //   }
-    //   // });
-    // });
+  //   //   // this.map.addSource(
+  //   //   //   "polygon",
+  //   //   //   this.createGeoJSONCircle([lng, lat], this.props.mapCenter.radius)
+  //   //   // );
+  //   //   // this.map.addLayer({
+  //   //   //   id: "polygon",
+  //   //   //   type: "fill",
+  //   //   //   source: "polygon",
+  //   //   //   layout: {},
+  //   //   //   paint: {
+  //   //   //     "fill-color": "blue",
+  //   //   //     "fill-opacity": 0.6
+  //   //   //   }
+  //   //   // });
+  //   // });
 
-    // const onDragEnd = e => {
-    //   var lngLat = e.target.getLngLat();
+  //   // const onDragEnd = e => {
+  //   //   var lngLat = e.target.getLngLat();
 
-    //   const viewport = {
-    //     latitude: lngLat.lat,
-    //     longitude: lngLat.lng,
-    //     zoom: this.map.getZoom()
-    //   }
-    //   this.props.mapSearchPointChange(viewport);
-    // }
-		// console.log(this.map);
-    //  this.map.on('move', () => {
-    //   const { lng, lat } = this.map.getCenter();
+  //   //   const viewport = {
+  //   //     latitude: lngLat.lat,
+  //   //     longitude: lngLat.lng,
+  //   //     zoom: this.map.getZoom()
+  //   //   }
+  //   //   this.props.mapSearchPointChange(viewport);
+  //   // }
+		// // console.log(this.map);
+  //   //  this.map.on('move', () => {
+  //   //   const { lng, lat } = this.map.getCenter();
 
-    //   this.setState({
-    //     lng: lng.toFixed(4),
-    //     lat: lat.toFixed(4),
-    //     zoom: this.map.getZoom().toFixed(2)
-    //   });
-    // });
+  //   //   this.setState({
+  //   //     lng: lng.toFixed(4),
+  //   //     lat: lat.toFixed(4),
+  //   //     zoom: this.map.getZoom().toFixed(2)
+  //   //   });
+  //   // });
 
-    // this.setBusinessMarkers();
-  }
+  //   // this.setBusinessMarkers();
+  // }
 
   // componentWillUnmount() {
   //   this.map.remove();
@@ -287,7 +287,7 @@ class MapLeaf extends React.Component {
   	const { lng, lat, zoom } = this.state;
 
     const position = [this.state.lat, this.state.lng];
-    console.log(position);
+    // console.log(position);
 
     // return (
     //   <div>
@@ -323,40 +323,55 @@ class MapLeaf extends React.Component {
 
 
           return (
-// <div>
-        // {<div className="inline-block absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
-        //   <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
-        // </div>}
-        //{/*<Paper className={this.props.classes.root}>*/}
-        //{/*<div ref={el => this.mapContainer = el} className="absolute top right left bottom"/>*/}
-        <div>
-        {/*<div 
-          ref={el => this.mapContainer = el} 
-          className={this.props.classes.root}
-        />*/}
-        <Map center={position} zoom={this.state.zoom} className={this.props.classes.root}>
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-          // url='http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
-        />
-        <Marker position={position} icon={myIcon}>
-          <Popup>
-            A pretty CSS3 popup. <br/> Easily customizable.
-          </Popup>
-        </Marker>
-      </Map>
-        <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={this.toggleDrawer('right', false)}
-            onKeyDown={this.toggleDrawer('right', false)}
-          >
-            {sideList}
-          </div>
-        </Drawer>
-        </div>
+            <Query
+              query={gql`
+                {
+                  Bridge(first: 20) {
+                    id
+                    latitude_decimal
+                    longitude_decimal
+                  }
+                }
+              `}
+            >
+              {({ loading, error, data }) => {
+                if (loading) return <p>Loading...</p>
+                if (error) return <p>Error</p>
+
+                return (
+                  <div>
+                    <Map center={position} zoom={this.state.zoom} className={this.props.classes.root}>
+                      <TileLayer
+                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                        // url='http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+                      />
+                      {data.Bridge
+                        .slice()
+                        .map(n => {
+                          return (
+                            <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true)}>
+                              <Popup>
+                                A pretty CSS3 popup. <br/> Easily customizable.
+                              </Popup>
+                            </Marker>
+                          );
+                      })}
+                    </Map>
+                    <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
+                      <div
+                        tabIndex={0}
+                        role="button"
+                        onClick={this.toggleDrawer('right', false)}
+                        onKeyDown={this.toggleDrawer('right', false)}
+                      >
+                        {sideList}
+                      </div>
+                    </Drawer>
+                  </div>
+                );
+              }}
+            </Query>
         //{/*</Paper>*/}
         // {<div ref={el => this.mapContainer = el} />}
       // </div>
