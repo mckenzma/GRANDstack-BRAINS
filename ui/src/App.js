@@ -25,7 +25,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 // import { mailFolderListItems, otherMailFolderListItems } from './tileData';
 import StateListMenu from './StateListMenu';
 
-import TemporaryDrawer from './BridgeDrawer';
+// import TemporaryDrawer from './BridgeDrawer';
 
 // import React, { Fragment } from 'react';
 // import { Fragment } from 'react';
@@ -138,7 +138,7 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit * 2,
   },
   main: {
-    height: 400,
+    // height: 400,
     overflowY: 'auto',
     // position: 'relative',
     position: 'relative',
@@ -322,7 +322,7 @@ class App extends Component {
             {/*<UserList />*/}
             {/*<StateList />*/}
             <BridgeList />
-            <TemporaryDrawer />
+            {/*<TemporaryDrawer />*/}
             {/*<Map />*/}
           </main>
           {after}

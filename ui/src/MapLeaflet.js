@@ -6,10 +6,17 @@ import { withStyles } from "@material-ui/core/styles";
 
 // import Paper from "@material-ui/core/Paper";
 
-import mapboxgl from "mapbox-gl";
+// import mapboxgl from "mapbox-gl";
 // import 'mapbox-gl/dist/mapbox-gl.css';
 // import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
 // import ReactMapboxGl from "react-mapbox-gl";
+
+import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import L from 'leaflet';
+
 
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
@@ -22,7 +29,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 // mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 // ReactMapboxGl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
-mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
+// mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
 
 const styles = theme => ({
   root: {
@@ -39,9 +46,10 @@ const styles = theme => ({
   
 });
 
+console.log(icon);
+console.log(iconShadow);
 
-
-class Map extends React.Component {
+class MapLeaf extends React.Component {
   constructor(props) {
     super(props);
 
@@ -65,7 +73,7 @@ class Map extends React.Component {
       right: false,
     };
 
-    this.businessMarkers = [];
+    // this.businessMarkers = [];
   }
 
   toggleDrawer = (side, open) => () => {
@@ -74,61 +82,61 @@ class Map extends React.Component {
     });
   };
 
-  businessPopupHTML = business => {
-    return `<ul>
-    <li>
-      <strong>Id: </strong> ${business.id}
-    </li>
-    <li>
-      <strong>Longitude: </strong> ${business.longitude_decimal}
-    </li>
-    <li>
-      <strong>Latitude: </strong> ${business.latitude_decimal}
-    </li>
-  </ul>`;
-  };
+  // businessPopupHTML = business => {
+  //   return `<ul>
+  //   <li>
+  //     <strong>Id: </strong> ${business.id}
+  //   </li>
+  //   <li>
+  //     <strong>Longitude: </strong> ${business.longitude_decimal}
+  //   </li>
+  //   <li>
+  //     <strong>Latitude: </strong> ${business.latitude_decimal}
+  //   </li>
+  // </ul>`;
+  // };
 
   setBusinessMarkers() {
     // console.log("setBusinessMarkers");
     const { businesses } = this.props;
-    this.businessMarkers.map(m => {
-      m.remove();
-      return true;
-    });
+    // this.businessMarkers.map(m => {
+    //   m.remove();
+    //   return true;
+    // });
     // console.log(businesses);
     // console.log(this.map);
-    this.businessMarkers = businesses.map(b => {
-      // console.log(b);
-      return new mapboxgl.Marker()
-        //.setLngLat([b.location.x, b.location.y])
-        .setLngLat([b.longitude_decimal, b.latitude_decimal])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
-        )
+    // this.businessMarkers = businesses.map(b => {
+    //   // console.log(b);
+    //   return new mapboxgl.Marker()
+    //     //.setLngLat([b.location.x, b.location.y])
+    //     .setLngLat([b.longitude_decimal, b.latitude_decimal])
+    //     .setPopup(
+    //       new mapboxgl.Popup({ offset: 25 }).setHTML(this.businessPopupHTML(b))
+    //     )
 
-        // .onclick = function (e) {
-        //   this.toggleDrawer('right', true);
+    //     // .onclick = function (e) {
+    //     //   this.toggleDrawer('right', true);
 
-        //   // var clickedLayer = this.textContent;
-        //   // e.preventDefault();
-        //   // e.stopPropagation();
+    //     //   // var clickedLayer = this.textContent;
+    //     //   // e.preventDefault();
+    //     //   // e.stopPropagation();
 
-        //   // var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+    //     //   // var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
 
-        //   // if (visibility === 'visible') {
-        //   //     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-        //   //     this.className = '';
-        //   // } else {
-        //   //     this.className = 'active';
-        //   //     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-        //   // }
-        // };
-        .on('click', function(e) {
-          this.toggleDrawer('right', true);
-          console.log("clicked");
-        })
-        .addTo(this.map);
-    });
+    //     //   // if (visibility === 'visible') {
+    //     //   //     map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+    //     //   //     this.className = '';
+    //     //   // } else {
+    //     //   //     this.className = 'active';
+    //     //   //     map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+    //     //   // }
+    //     // };
+    //     .on('click', function(e) {
+    //       this.toggleDrawer('right', true);
+    //       console.log("clicked");
+    //     })
+    //     .addTo(this.map);
+    // });
   }
 
   componentDidUpdate() {
@@ -159,51 +167,51 @@ class Map extends React.Component {
     const { lng, lat, zoom } = this.state;
 
     const { businesses } = this.props;
-    console.log(businesses);
-    console.log(JSON.stringify(businesses));
+    // console.log(businesses);
+    // console.log(JSON.stringify(businesses));
 
     // const map = new mapboxgl.Map({
-    this.map = new mapboxgl.Map({ // this line is giving me an error: 'map' is not defined no-undefined
-      container: this.mapContainer,
-      style: 'mapbox://styles/mapbox/streets-v9',
-      center: [lng, lat],
-      // width: 300,
-      zoom
-    });
+    // this.map = new mapboxgl.Map({ // this line is giving me an error: 'map' is not defined no-undefined
+    //   container: this.mapContainer,
+    //   style: 'mapbox://styles/mapbox/streets-v9',
+    //   center: [lng, lat],
+    //   // width: 300,
+    //   zoom
+    // });
 
-    this.map.on('load', () => {
-      this.mapLoaded = true;
-      // this.map.addSource('bridges', {
-      //   "type": "geojson",
-      //   "data": JSON.stringify(businesses)
-      // });
+    // this.map.on('load', () => {
+    //   this.mapLoaded = true;
+    //   // this.map.addSource('bridges', {
+    //   //   "type": "geojson",
+    //   //   "data": JSON.stringify(businesses)
+    //   // });
 
-      // this.map.addLayer({
-      //   "id": "bridges-heat",
-      //   "type": "heatmap",
-      //   "source": "bridges",
-      //   "maxzoom": 9,
-      //   "paint": {
-      //     // Increase the heatmap wieght vase
-      //   }
-      // })
+    //   // this.map.addLayer({
+    //   //   "id": "bridges-heat",
+    //   //   "type": "heatmap",
+    //   //   "source": "bridges",
+    //   //   "maxzoom": 9,
+    //   //   "paint": {
+    //   //     // Increase the heatmap wieght vase
+    //   //   }
+    //   // })
 
-      
-      // this.map.addSource(
-      //   "polygon",
-      //   this.createGeoJSONCircle([lng, lat], this.props.mapCenter.radius)
-      // );
-      // this.map.addLayer({
-      //   id: "polygon",
-      //   type: "fill",
-      //   source: "polygon",
-      //   layout: {},
-      //   paint: {
-      //     "fill-color": "blue",
-      //     "fill-opacity": 0.6
-      //   }
-      // });
-    });
+
+    //   // this.map.addSource(
+    //   //   "polygon",
+    //   //   this.createGeoJSONCircle([lng, lat], this.props.mapCenter.radius)
+    //   // );
+    //   // this.map.addLayer({
+    //   //   id: "polygon",
+    //   //   type: "fill",
+    //   //   source: "polygon",
+    //   //   layout: {},
+    //   //   paint: {
+    //   //     "fill-color": "blue",
+    //   //     "fill-opacity": 0.6
+    //   //   }
+    //   // });
+    // });
 
     // const onDragEnd = e => {
     //   var lngLat = e.target.getLngLat();
@@ -216,17 +224,17 @@ class Map extends React.Component {
     //   this.props.mapSearchPointChange(viewport);
     // }
 		// console.log(this.map);
-     this.map.on('move', () => {
-      const { lng, lat } = this.map.getCenter();
+    //  this.map.on('move', () => {
+    //   const { lng, lat } = this.map.getCenter();
 
-      this.setState({
-        lng: lng.toFixed(4),
-        lat: lat.toFixed(4),
-        zoom: this.map.getZoom().toFixed(2)
-      });
-    });
+    //   this.setState({
+    //     lng: lng.toFixed(4),
+    //     lat: lat.toFixed(4),
+    //     zoom: this.map.getZoom().toFixed(2)
+    //   });
+    // });
 
-    this.setBusinessMarkers();
+    // this.setBusinessMarkers();
   }
 
   // componentWillUnmount() {
@@ -278,6 +286,9 @@ class Map extends React.Component {
 
   	const { lng, lat, zoom } = this.state;
 
+    const position = [this.state.lat, this.state.lng];
+    console.log(position);
+
     // return (
     //   <div>
     //     {<div className="inline-block absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
@@ -305,6 +316,11 @@ class Map extends React.Component {
     //     {({ loading, error, data }) => {
     //       if (loading) return <p>Loading...</p>;
     //       if (error) return <p>Error</p>;
+          const myIcon = L.icon({
+            iconUrl: icon,
+            shadowUrl: iconShadow
+          });
+
 
           return (
 // <div>
@@ -314,10 +330,22 @@ class Map extends React.Component {
         //{/*<Paper className={this.props.classes.root}>*/}
         //{/*<div ref={el => this.mapContainer = el} className="absolute top right left bottom"/>*/}
         <div>
-        <div 
+        {/*<div 
           ref={el => this.mapContainer = el} 
           className={this.props.classes.root}
+        />*/}
+        <Map center={position} zoom={this.state.zoom} className={this.props.classes.root}>
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          // url='http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
         />
+        <Marker position={position} icon={myIcon}>
+          <Popup>
+            A pretty CSS3 popup. <br/> Easily customizable.
+          </Popup>
+        </Marker>
+      </Map>
         <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
           <div
             tabIndex={0}
@@ -353,9 +381,9 @@ class Map extends React.Component {
   }
 }
 
-Map.propTypes = {
+MapLeaf.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Map);
+export default withStyles(styles)(MapLeaf);
 // export default Map;

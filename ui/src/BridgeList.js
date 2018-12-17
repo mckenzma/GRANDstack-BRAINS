@@ -15,9 +15,13 @@ import Paper from "@material-ui/core/Paper";
 import Map from './Map';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+import MapLeaf from './MapLeaflet';
+
+import TemporaryDrawer from './BridgeDrawer';
+
 const styles = theme => ({
   root: {
-    maxWidth: 700,
+    // maxWidth: 700,
     marginTop: theme.spacing.unit * 3,
     overflowX: "auto",
     margin: "auto"
@@ -81,10 +85,16 @@ class BridgeList extends React.Component {
 
           return (
             <Paper className={this.props.classes.root}>
-              <Map
+              {/*<Map
+                businesses={data.Bridge}
+              />*/}
+
+              <MapLeaf
                 businesses={data.Bridge}
               />
               
+              {/*<TemporaryDrawer />*/}
+
               {/*<Table className={this.props.classes.table}>
                 <TableHead>
                   <TableRow>
