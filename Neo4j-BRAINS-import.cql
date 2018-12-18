@@ -216,6 +216,14 @@ RETURN size(bridge.longitude),
 ORDER BY Long
 
 
+//query to change state name from id to state letters
+MATCH (state:State)
+SET state.name = 
+CASE state.name
+	WHEN "2" THEN "AK"
+	WHEN "27" THEN "MN"
+END
+
 
 //STATE_CODE_001
 HIGHWAY_DISTRICT_002

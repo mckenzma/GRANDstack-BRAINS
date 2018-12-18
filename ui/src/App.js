@@ -47,6 +47,8 @@ import StateListMenu from './StateListMenu';
 // import SearchIcon from '@material-ui/icons/Search';
 // import MoreIcon from '@material-ui/icons/MoreVert';
 
+import CustomizedDialogDemo from './About';
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -264,6 +266,8 @@ class App extends Component {
         {/*something else*/}
         {/*<Divider />*/}
         <StateListMenu />
+        <Divider />
+        <CustomizedDialogDemo />
       </Drawer>
     );
 

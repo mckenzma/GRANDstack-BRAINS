@@ -18,14 +18,18 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from 'leaflet';
 
 
+
+
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 // import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+
+import TemporaryDrawer from './BridgeDrawer';
 
 // mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 // ReactMapboxGl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -255,15 +259,16 @@ class MapLeaf extends React.Component {
   render() {
 
     const { classes } = this.props;
+    // console.log(classes);
 
     const sideList = (
       <div className={classes.list}>
-        <List>
+        {/*<List>
           <ListItem>
             <ListItemText>Bridge Info</ListItemText>
           </ListItem>
         </List>
-        <Divider />
+        <Divider />*/}
         <List>
           {['Test 1', 'Test 2', 'Test 3', 'Test 4'].map((text, index) => (
             <ListItem button key={text}>
@@ -322,6 +327,8 @@ class MapLeaf extends React.Component {
           });
 
 
+
+
           return (
             <Query
               query={gql`
@@ -350,24 +357,65 @@ class MapLeaf extends React.Component {
                         .slice()
                         .map(n => {
                           return (
+                            
                             <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true)}>
                               <Popup>
-                                A pretty CSS3 popup. <br/> Easily customizable.
+                                {n.id} <br/> Latitude: {n.latitude_decimal} <br/> Longitude: {n.longitude_decimal}
+                                {/*A pretty CSS3 popup. <br/> Easily customizable.*/}
                               </Popup>
                             </Marker>
-                          );
-                      })}
+                            
+                            // <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
+                            //   <div
+                            //     tabIndex={0}
+                            //     role="button"
+                            //     onClick={this.toggleDrawer('right', false)}
+                            //     onKeyDown={this.toggleDrawer('right', false)}
+                            //   >
+                            //     <div className={classes.list}>
+                            //       <List>
+                            //         <ListItem>
+                            //           <ListItemText>Bridge Info</ListItemText>
+                            //         </ListItem>
+                            //       </List>
+                            //       <Divider />
+                            //       <List key={n.id}>
+                            //           <ListItem >
+                            //             <ListItemText >ID: {n.id}</ListItemText>
+                            //           </ListItem>
+                            //           <ListItem >
+                            //             <ListItemText >LAT: {n.latitude_decimal}</ListItemText>
+                            //           </ListItem>
+                            //           <ListItem >
+                            //             <ListItemText >LONG: {n.longitude_decimal}</ListItemText>
+                            //           </ListItem>
+                            //       </List>
+                            //     </div>
+                            //   </div>
+                            // </Drawer>
+                            
+                                );
+                                })}
+                              <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
+                                <div
+                                  tabIndex={0}
+                                  role="button"
+                                  onClick={this.toggleDrawer('right', false)}
+                                  onKeyDown={this.toggleDrawer('right', false)}
+                                >
+                                  <div className={classes.list}>
+                                  <List>
+                                    <ListItem>
+                                      <ListItemText>Bridge Info</ListItemText>
+                                    </ListItem>
+                                  </List>
+                                  <Divider />
+                                  {sideList}
+                                  </div>
+                                </div>
+                              </Drawer>
+                              
                     </Map>
-                    <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
-                      <div
-                        tabIndex={0}
-                        role="button"
-                        onClick={this.toggleDrawer('right', false)}
-                        onKeyDown={this.toggleDrawer('right', false)}
-                      >
-                        {sideList}
-                      </div>
-                    </Drawer>
                   </div>
                 );
               }}

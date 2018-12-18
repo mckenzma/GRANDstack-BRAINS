@@ -36,12 +36,14 @@ class TemporaryDrawer extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const { bridge } = this.props;
+    console.log(bridge);
 
     const sideList = (
       <div className={classes.list}>
         <List>
           <ListItem>
-            <ListItemText>Bridge Info</ListItemText>
+            <ListItemText>Bridge Info ${bridge.id}</ListItemText>
           </ListItem>
         </List>
         <Divider />

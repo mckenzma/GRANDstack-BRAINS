@@ -12,12 +12,12 @@ import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 // import { TableSortLabel } from "@material-ui/core";
 
-import Map from './Map';
+// import Map from './Map';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import MapLeaf from './MapLeaflet';
 
-import TemporaryDrawer from './BridgeDrawer';
+// import TemporaryDrawer from './BridgeDrawer';
 
 const styles = theme => ({
   root: {
@@ -90,7 +90,7 @@ class BridgeList extends React.Component {
               />*/}
 
               <MapLeaf
-                businesses={data.Bridge}
+                // businesses={data.Bridge}
               />
               
               {/*<TemporaryDrawer />*/}
