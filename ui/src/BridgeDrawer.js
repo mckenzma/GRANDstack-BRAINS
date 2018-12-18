@@ -43,7 +43,7 @@ class TemporaryDrawer extends React.Component {
       <div className={classes.list}>
         <List>
           <ListItem>
-            <ListItemText>Bridge Info ${bridge.id}</ListItemText>
+            <ListItemText>Bridge Info</ListItemText>
           </ListItem>
         </List>
         <Divider />

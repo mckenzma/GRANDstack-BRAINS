@@ -75,6 +75,9 @@ class MapLeaf extends React.Component {
 	  	// zoom: 8
 	  // },
       right: false,
+      bridge_id: null,
+      bridge_lat: null,
+      bridge_lng: null
     };
 
     // this.businessMarkers = [];
@@ -84,6 +87,7 @@ class MapLeaf extends React.Component {
     this.setState({
       [side]: open,
     });
+    console.log(this.state.bridge_id);
   };
 
   // businessPopupHTML = business => {
@@ -260,6 +264,7 @@ class MapLeaf extends React.Component {
 
     const { classes } = this.props;
     // console.log(classes);
+    console.log(this.state.bridge_id);
 
     const sideList = (
       <div className={classes.list}>
@@ -289,7 +294,7 @@ class MapLeaf extends React.Component {
       </div>
     );
 
-  	const { lng, lat, zoom } = this.state;
+  	// const { lng, lat, zoom } = this.state;
 
     const position = [this.state.lat, this.state.lng];
     // console.log(position);
@@ -396,7 +401,8 @@ class MapLeaf extends React.Component {
                             
                                 );
                                 })}
-                              <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
+                              {/*<TemporaryDrawer />*/}
+                              {/*<Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
                                 <div
                                   tabIndex={0}
                                   role="button"
@@ -413,9 +419,27 @@ class MapLeaf extends React.Component {
                                   {sideList}
                                   </div>
                                 </div>
-                              </Drawer>
+                              </Drawer>*/}
                               
                     </Map>
+                    <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
+                      <div
+                        tabIndex={0}
+                        role="button"
+                        onClick={this.toggleDrawer('right', false)}
+                        onKeyDown={this.toggleDrawer('right', false)}
+                      >
+                        <div className={classes.list}>
+                        <List>
+                          <ListItem>
+                            <ListItemText>Bridge Info</ListItemText>
+                          </ListItem>
+                        </List>
+                        <Divider />
+                        {sideList}
+                        </div>
+                      </div>
+                    </Drawer>
                   </div>
                 );
               }}
