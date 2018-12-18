@@ -83,11 +83,13 @@ class MapLeaf extends React.Component {
     // this.businessMarkers = [];
   }
 
-  toggleDrawer = (side, open) => () => {
+  toggleDrawer = (side, open, bridge) => () => {
     this.setState({
       [side]: open,
+      bridge_id: bridge.id,
+      bridge_lat: bridge.latitude_decimal,
+      bridge_lng: bridge.longitude_decimal
     });
-    console.log(this.state.bridge_id);
   };
 
   // businessPopupHTML = business => {
@@ -274,13 +276,24 @@ class MapLeaf extends React.Component {
           </ListItem>
         </List>
         <Divider />*/}
-        <List>
+        {/*<List>
           {['Test 1', 'Test 2', 'Test 3', 'Test 4'].map((text, index) => (
             <ListItem button key={text}>
               {/*<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>*/}
-              <ListItemText primary={text} />
+              {/*<ListItemText primary={text} />
             </ListItem>
           ))}
+        </List>*/}
+        <List >
+          <ListItem >
+            <ListItemText >ID: {this.state.bridge_id}</ListItemText>
+          </ListItem>
+          <ListItem >
+            <ListItemText >LAT: {this.state.bridge_lat}</ListItemText>
+          </ListItem>
+          <ListItem >
+            <ListItemText >LONG: {this.state.bridge_lng}</ListItemText>
+          </ListItem>
         </List>
         {/*<Divider />*/}
         {/*<List>
@@ -363,7 +376,7 @@ class MapLeaf extends React.Component {
                         .map(n => {
                           return (
                             
-                            <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true)}>
+                            <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
                               <Popup>
                                 {n.id} <br/> Latitude: {n.latitude_decimal} <br/> Longitude: {n.longitude_decimal}
                                 {/*A pretty CSS3 popup. <br/> Easily customizable.*/}
@@ -422,12 +435,12 @@ class MapLeaf extends React.Component {
                               </Drawer>*/}
                               
                     </Map>
-                    <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
+                    <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false, "")}>
                       <div
                         tabIndex={0}
                         role="button"
-                        onClick={this.toggleDrawer('right', false)}
-                        onKeyDown={this.toggleDrawer('right', false)}
+                        onClick={this.toggleDrawer('right', false, "")}
+                        onKeyDown={this.toggleDrawer('right', false, "")}
                       >
                         <div className={classes.list}>
                         <List>
