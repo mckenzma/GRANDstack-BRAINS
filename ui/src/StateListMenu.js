@@ -30,19 +30,19 @@ const styles = theme => ({
   // }
 });
 
-// function getSorting(order, orderBy) {
-//   return order === "desc"
-//     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
-//     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
-// }
+function getSorting(order, orderBy) {
+  return order === "desc"
+    ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
+    : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
+}
 
 class StateListMenu extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      // order: "asc",
-      // orderBy: "avgStars"
+      order: "asc",
+      orderBy: "name",
 
       checked: true
     };
@@ -64,7 +64,8 @@ class StateListMenu extends React.Component {
   // };
 
   render() {
-    // const { order, orderBy } = this.state;
+    const { order, orderBy } = this.state;
+    // const { order } = this.state;
     return (
       <Query
         query={gql`
@@ -88,10 +89,11 @@ class StateListMenu extends React.Component {
                 </ListItem>
               {data.State
                 .slice()
-                // .sort(getSorting(order, orderBy))
+                .sort(getSorting(order, orderBy))
+                // .sort(getSorting(order))
                 .map(n => {
                   return (
-                    <ListItem button key={n.id}>
+                    <ListItem key={n.id}>
                       <Checkbox
                         checked={this.state.checked}
                         onChange={this.handleChange('checked')}
