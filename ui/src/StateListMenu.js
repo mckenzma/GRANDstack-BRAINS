@@ -45,13 +45,21 @@ class StateListMenu extends React.Component {
       orderBy: "name",
 
       checked: true,
-      checked_AK: true,
-      checked_MN: true,
+      // checked: {
+      //   AK: true,
+      //   MN: true,
+      // },
+      AK: true,
+      MN: true,
     };
   }
 
   handleChange = name => event => {
+  // handleChange = (name, b_name) => event => {
     this.setState({ [name]: event.target.checked });
+    // this.setState({ [name]: event.target.name });
+    // this.setState({ [name]: event.target.checked.b_name });
+    console.log(name);
   };
 
   // handleSortRequest = property => {
@@ -68,6 +76,9 @@ class StateListMenu extends React.Component {
   render() {
     const { order, orderBy } = this.state;
     // const { order } = this.state;
+    console.log(this.state);
+    
+    ;
     return (
       <Query
         query={gql`
@@ -97,9 +108,12 @@ class StateListMenu extends React.Component {
                   return (
                     <ListItem key={n.id}>
                       <Checkbox
-                        checked={this.state.checked}
-                        onChange={this.handleChange('checked')}
-                        value="checked"
+                        // checked={this.state.checked}
+                        checked={this.state[n.name]}
+                        // onChange={this.handleChange('checked')}
+                        onChange={this.handleChange(n.name)}
+                        // value="checked"
+                        value={n.name}
                       />
                       <ListItemText>{n.name}</ListItemText>
                     </ListItem>

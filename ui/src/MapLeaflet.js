@@ -103,7 +103,7 @@ class MapLeaf extends React.Component {
 
     const { classes } = this.props;
     // console.log(classes);
-    console.log(this.state.bridge_id);
+    // console.log(this.state.bridge_id);
 
     const sideList = (
       <div className={classes.list}>
@@ -203,6 +203,8 @@ class MapLeaf extends React.Component {
               }}
             </Query>
         
+          );
+    
   }
 }
 
