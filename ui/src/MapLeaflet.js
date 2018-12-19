@@ -17,8 +17,15 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from 'leaflet';
 
+// import HeatmapLayer from 'react-leaflet-heatmap-layer/lib/HeatmapLayer';
 
+// import 'leaflet.markercluster/dist/MarkerCluster.css';
+// import MarkerClusterGroup from 'leaflet.markercluster/dist/leaflet.markercluster-src.js';
 
+// import 'react-leaflet-markercluster/dist/styles.min.css';
+// import MarkerClusterGroup from 'react-leaflet-markercluster/dist/react-leaflet-markercluster.js';
+
+// import HeatmapLayer from 'react-leaflet-heatmap-layer/src/HeatmapLayer';
 
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
@@ -29,7 +36,7 @@ import ListItem from '@material-ui/core/ListItem';
 // import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import TemporaryDrawer from './BridgeDrawer';
+// import TemporaryDrawer from './BridgeDrawer';
 
 // mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 // ReactMapboxGl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -365,75 +372,36 @@ class MapLeaf extends React.Component {
 
                 return (
                   <div>
-                    <Map center={position} zoom={this.state.zoom} className={this.props.classes.root}>
+                    <Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" > {/*className={this.props.classes.root}>*/}
+                      {/*<HeatmapLayer
+                        fitBoundsOnLoad
+                        fitBoundsOnUpdate
+                        points={data.Bridge}
+                        longitudeExtractor={m => m[2]}
+                        latitudeExtractor={m => m[1]}
+                        //intensityExtractor={m => parseFloat(m[2])} />
+                        intensityExtractor={m => 1} />*/}
                       <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                         // url='http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
                       />
+                      {/*<MarkerClusterGroup>*/}
                       {data.Bridge
                         .slice()
                         .map(n => {
                           return (
                             
                             <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
-                              <Popup>
+                              {/*<Popup>
                                 {n.id} <br/> Latitude: {n.latitude_decimal} <br/> Longitude: {n.longitude_decimal}
-                                {/*A pretty CSS3 popup. <br/> Easily customizable.*/}
-                              </Popup>
+                              </Popup>*/}
                             </Marker>
-                            
-                            // <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
-                            //   <div
-                            //     tabIndex={0}
-                            //     role="button"
-                            //     onClick={this.toggleDrawer('right', false)}
-                            //     onKeyDown={this.toggleDrawer('right', false)}
-                            //   >
-                            //     <div className={classes.list}>
-                            //       <List>
-                            //         <ListItem>
-                            //           <ListItemText>Bridge Info</ListItemText>
-                            //         </ListItem>
-                            //       </List>
-                            //       <Divider />
-                            //       <List key={n.id}>
-                            //           <ListItem >
-                            //             <ListItemText >ID: {n.id}</ListItemText>
-                            //           </ListItem>
-                            //           <ListItem >
-                            //             <ListItemText >LAT: {n.latitude_decimal}</ListItemText>
-                            //           </ListItem>
-                            //           <ListItem >
-                            //             <ListItemText >LONG: {n.longitude_decimal}</ListItemText>
-                            //           </ListItem>
-                            //       </List>
-                            //     </div>
-                            //   </div>
-                            // </Drawer>
+                          
                             
                                 );
                                 })}
-                              {/*<TemporaryDrawer />*/}
-                              {/*<Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
-                                <div
-                                  tabIndex={0}
-                                  role="button"
-                                  onClick={this.toggleDrawer('right', false)}
-                                  onKeyDown={this.toggleDrawer('right', false)}
-                                >
-                                  <div className={classes.list}>
-                                  <List>
-                                    <ListItem>
-                                      <ListItemText>Bridge Info</ListItemText>
-                                    </ListItem>
-                                  </List>
-                                  <Divider />
-                                  {sideList}
-                                  </div>
-                                </div>
-                              </Drawer>*/}
-                              
+                           {/*</MarkerClusterGroup>*/}
                     </Map>
                     <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false, "")}>
                       <div
