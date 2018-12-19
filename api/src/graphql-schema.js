@@ -46,6 +46,7 @@ type Bridge {
   id: ID!
   latitude_decimal: Float
   longitude_decimal: Float
+  yearbuilt: String
 }
 
 type Query {

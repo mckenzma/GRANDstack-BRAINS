@@ -84,7 +84,8 @@ class MapLeaf extends React.Component {
       right: false,
       bridge_id: null,
       bridge_lat: null,
-      bridge_lng: null
+      bridge_lng: null,
+      build_year: null
     };
 
     // this.businessMarkers = [];
@@ -95,7 +96,8 @@ class MapLeaf extends React.Component {
       [side]: open,
       bridge_id: bridge.id,
       bridge_lat: bridge.latitude_decimal,
-      bridge_lng: bridge.longitude_decimal
+      bridge_lng: bridge.longitude_decimal,
+      build_year: bridge.yearbuilt
     });
   };
 
@@ -116,6 +118,9 @@ class MapLeaf extends React.Component {
           </ListItem>
           <ListItem >
             <ListItemText >LONG: {this.state.bridge_lng}</ListItemText>
+          </ListItem>
+          <ListItem >
+            <ListItemText >Build Year: {this.state.build_year}</ListItemText>
           </ListItem>
         </List>
       </div>
@@ -139,6 +144,7 @@ class MapLeaf extends React.Component {
                     id
                     latitude_decimal
                     longitude_decimal
+                    yearbuilt
                   }
                 }
               `}
