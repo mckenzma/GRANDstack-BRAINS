@@ -1,5 +1,68 @@
+
+// creating Indexes for mass import
+CREATE INDEX ON :Bridge(id);
+CREATE INDEX ON :Place(id);
+CREATE INDEX ON :County(id);
+CREATE INDEX ON :State(id);
+CREATE INDEX ON :Owner(id);
+CREATE INDEX ON :MaintenanceResp(id);
+
+//
 CALL apoc.periodic.iterate("
-UNWIND ['file:///MN14.csv', 'file:///AK14.csv'] AS file
+UNWIND [
+	'file:///AK14.csv',
+	'file:///AL14.csv',
+	'file:///AR14.csv',
+	'file:///AZ14.csv',
+	'file:///CA14.csv',
+	'file:///CO14.csv',
+	'file:///CT14.csv',
+	'file:///DC14.csv',
+	'file:///DE14.csv',
+	'file:///FL14.csv',
+	'file:///GA14.csv',
+	'file:///HI14.csv',
+	'file:///IA14.csv',
+	'file:///ID14.csv',
+	'file:///IL14.csv',
+	'file:///IN14.csv',
+	'file:///KS14.csv',
+	'file:///LA14.csv',
+	'file:///MA14.csv',
+	'file:///MD14.csv',
+	'file:///ME14.csv',
+	'file:///MI14.csv',
+	'file:///MN14.csv',
+	'file:///MO14.csv',
+	'file:///MS14.csv',
+	'file:///MT14.csv',
+	'file:///NC14.csv',
+	'file:///ND14.csv',
+	'file:///NE14.csv',
+	'file:///NH14.csv',
+	'file:///NJ14.csv',
+	'file:///NM14.csv',
+	'file:///AK14.csv',
+	'file:///NV14.csv',
+	'file:///NY14.csv',
+	'file:///OH14.csv',
+	'file:///OK14.csv',
+	'file:///OR14.csv',
+	'file:///PA14.csv',
+	'file:///PR14.csv',
+	'file:///RI14.csv',
+	'file:///SC14.csv',
+	'file:///SD14.csv',
+	'file:///TN14.csv',
+	'file:///TX14.csv',
+	'file:///UT14.csv',
+	'file:///VA14.csv',
+	'file:///VT14.csv',
+	'file:///WA14.csv',
+	'file:///WI14.csv',
+	'file:///WV14.csv',
+	'file:///WY14.csv' 
+	] AS file
 LOAD CSV WITH HEADERS FROM file AS row RETURN row",
 "
 MERGE (bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
@@ -8,29 +71,29 @@ MERGE (county:County {id: row.COUNTY_CODE_003})
 MERGE (state:State {id: row.STATE_CODE_001})
 MERGE (owner:Owner {id: row.OWNER_022})
 MERGE (maintResp:MaintenanceResp {id: row.MAINTENANCE_021})
-MERGE (toll:Toll {id: row.TOLL_020})
-MERGE (funcClass:FunctionalClass {id: row.FUNCTIONAL_CLASS_026})
-MERGE (servOn:ServiceOn {id: row.SERVICE_ON_042A})
-MERGE (servUnder:ServiceUnder {id: row.SERVICE_UND_042B})
-MERGE (mainStructKind:MainStructKind {id: row.STRUCTURE_KIND_043A})
-MERGE (mainStructType:MainStructType {id: row.STRUCTURE_TYPE_043B})
-MERGE (apprStructKind:ApprStructKind {id: row.APPR_KIND_044A})
-MERGE (apprStructType:ApprStructType {id: row.APPR_TYPE_044B})
-MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+//MERGE (toll:Toll {id: row.TOLL_020})
+//MERGE (funcClass:FunctionalClass {id: row.FUNCTIONAL_CLASS_026})
+//MERGE (servOn:ServiceOn {id: row.SERVICE_ON_042A})
+//MERGE (servUnder:ServiceUnder {id: row.SERVICE_UND_042B})
+//MERGE (mainStructKind:MainStructKind {id: row.STRUCTURE_KIND_043A})
+//MERGE (mainStructType:MainStructType {id: row.STRUCTURE_TYPE_043B})
+//MERGE (apprStructKind:ApprStructKind {id: row.APPR_KIND_044A})
+//MERGE (apprStructType:ApprStructType {id: row.APPR_TYPE_044B})
+//MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
 MERGE (bridge)-[:OF_PLACE]->(place)
 MERGE (place)-[:OF_COUNTY]->(county)
 MERGE (county)-[:OF_STATE]->(state)
 MERGE (bridge)-[:OWNED_BY]->(owner)
 MERGE (bridge)-[:MAINTAINED_BY]->(maintResp)
-MERGE (bridge)-[:HAS_TOLL]->(toll)
-MERGE (bridge)-[:HAS_FUNC_CLASS]->(funcClass)
-MERGE (bridge)-[:HAS_SERVICE_TYPE]->(servOn)
-MERGE (bridge)-[:HAS_SERVICE_TYPE]->(servUnder)
-MERGE (bridge)-[:HAS_MAIN_STRUCTURE_TYPE]->(mainStructType)
-MERGE (bridge)-[:HAS_MAIN_STRUCTURE_TYPE]->(mainStructKind)
-MERGE (bridge)-[:HAS_APPR_STRUCTURE_TYPE]->(apprStructType)
-MERGE (bridge)-[:HAS_APPR_STRUCTURE_TYPE]->(apprStructKind)
-MERGE (bridge)-[:INSPECTED_ON]->(inspDate)
+//MERGE (bridge)-[:HAS_TOLL]->(toll)
+//MERGE (bridge)-[:HAS_FUNC_CLASS]->(funcClass)
+//MERGE (bridge)-[:HAS_SERVICE_TYPE]->(servOn)
+//MERGE (bridge)-[:HAS_SERVICE_TYPE]->(servUnder)
+//MERGE (bridge)-[:HAS_MAIN_STRUCTURE_TYPE]->(mainStructType)
+//MERGE (bridge)-[:HAS_MAIN_STRUCTURE_TYPE]->(mainStructKind)
+//MERGE (bridge)-[:HAS_APPR_STRUCTURE_TYPE]->(apprStructType)
+//MERGE (bridge)-[:HAS_APPR_STRUCTURE_TYPE]->(apprStructKind)
+//MERGE (bridge)-[:INSPECTED_ON]->(inspDate)
 ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  bridge.latitude = row.LAT_016,
 			  bridge.longitude = row.LONG_017,
