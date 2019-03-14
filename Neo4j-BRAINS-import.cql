@@ -7,7 +7,49 @@ CREATE INDEX ON :State(id);
 CREATE INDEX ON :Owner(id);
 CREATE INDEX ON :MaintenanceResp(id);
 
-//
+// this is to import files as listed in a CSV
+LOAD CSV WITH HEADERS FROM "file:///NBIFilesListFiles.csv" AS line1
+WITH collect("file:///"+line1.Folder+"/"+line1.File) as Files
+UNWIND Files AS file
+LOAD CSV WITH HEADERS FROM file AS row
+RETURN row
+LIMIT 10
+
+CALL apoc.periodic.iterate("
+LOAD CSV WITH HEADERS FROM 'file:///NBIFilesListFiles.csv' AS line1
+WITH collect('file:///'+line1.Folder+'/'+line1.File) as Files
+UNWIND Files AS file
+LOAD CSV WITH HEADERS FROM file AS row RETURN row",
+"
+MERGE (state:State {id: row.STATE_CODE_001})
+MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
+MERGE (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
+MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
+ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
+			  bridge.latitude = row.LAT_016,
+			  bridge.longitude = row.LONG_017,
+			  bridge.yearbuilt = row.YEAR_BUILT_027,
+			  
+			  bridge.deck_cond = row.DECK_COND_058,
+			  bridge.superstructure_cond = row.SUPERSTRUCTURE_COND_059,
+			  bridge.substructure_cond = row.SUBSTRUCTURE_COND_060,
+			  bridge.channel_cond = row.CHANNEL_COND_061,
+			  bridge.culvert_cond = row.CULVERT_COND_062,
+
+			  bridge.structural_eval = row.STRUCTURAL_EVAL_067,
+			  bridge.deck_geometry_eval = row.DECK_GEOMETRY_EVAL_068,
+			  bridge.undclrence_eval = row.UNDCLRENCE_EVAL_069,
+			  bridge.posting_eval = row.POSTING_EVAL_070,
+			  bridge.waterway_eval = row.WATERWAY_EVAL_071,
+			  bridge.appr_road_eval = row.APPR_ROAD_EVAL_072,
+			  
+			  place.name = row.PLACE_CODE_004,
+			  county.name = row.COUNTY_CODE_003,
+			  state.name = row.STATE_CODE_001
+",
+{batchSize:1000,iterateList:true})
+
+// this is not the correct query because it connects counties across statesb-- oops
 CALL apoc.periodic.iterate("
 UNWIND [
 	'file:///AK14.csv',
@@ -109,7 +151,60 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 
 // build state, county, place like a timeline tree
 CALL apoc.periodic.iterate("
-UNWIND ['file:///MN14.csv', 'file:///AK14.csv'] AS file
+UNWIND [
+	'file:///AK14.csv',
+	'file:///AL14.csv',
+	'file:///AR14.csv',
+	'file:///AZ14.csv',
+	'file:///CA14.csv',
+	'file:///CO14.csv',
+	'file:///CT14.csv',
+	'file:///DC14.csv',
+	'file:///DE14.csv',
+	'file:///FL14.csv',
+	'file:///GA14.csv',
+	'file:///HI14.csv',
+	'file:///IA14.csv',
+	'file:///ID14.csv',
+	'file:///IL14.csv',
+	'file:///IN14.csv',
+	'file:///KS14.csv',
+	'file:///LA14.csv',
+	'file:///MA14.csv',
+	'file:///MD14.csv',
+	'file:///ME14.csv',
+	'file:///MI14.csv',
+	'file:///MN14.csv',
+	'file:///MO14.csv',
+	'file:///MS14.csv',
+	'file:///MT14.csv',
+	'file:///NC14.csv',
+	'file:///ND14.csv',
+	'file:///NE14.csv',
+	'file:///NH14.csv',
+	'file:///NJ14.csv',
+	'file:///NM14.csv',
+	'file:///AK14.csv',
+	'file:///NV14.csv',
+	'file:///NY14.csv',
+	'file:///OH14.csv',
+	'file:///OK14.csv',
+	'file:///OR14.csv',
+	'file:///PA14.csv',
+	'file:///PR14.csv',
+	'file:///RI14.csv',
+	'file:///SC14.csv',
+	'file:///SD14.csv',
+	'file:///TN14.csv',
+	'file:///TX14.csv',
+	'file:///UT14.csv',
+	'file:///VA14.csv',
+	'file:///VT14.csv',
+	'file:///WA14.csv',
+	'file:///WI14.csv',
+	'file:///WV14.csv',
+	'file:///WY14.csv' 
+	] AS file
 LOAD CSV WITH HEADERS FROM file AS row RETURN row",
 "
 MERGE (state:State {id: row.STATE_CODE_001})
