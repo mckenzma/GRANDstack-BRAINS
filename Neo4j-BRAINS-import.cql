@@ -7,6 +7,48 @@ CREATE INDEX ON :State(id);
 CREATE INDEX ON :Owner(id);
 CREATE INDEX ON :MaintenanceResp(id);
 
+// Loading data into the database
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+WITH CASE
+	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
+    END AS fileURLs
+//RETURN fileURLs
+UNWIND fileURLs as fileURL
+//RETURN fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row RETURN row
+//CALL apoc.load.csv($url) YIELD map AS row RETURN row
+','
+MERGE (state:State {id: row.STATE_CODE_001})
+MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
+MERGE (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
+MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
+ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
+			  bridge.latitude = row.LAT_016,
+			  bridge.longitude = row.LONG_017,
+			  bridge.yearbuilt = row.YEAR_BUILT_027,
+			  
+			  //bridge.deck_cond = row.DECK_COND_058,
+			  //bridge.superstructure_cond = row.SUPERSTRUCTURE_COND_059,
+			  //bridge.substructure_cond = row.SUBSTRUCTURE_COND_060,
+			  //bridge.channel_cond = row.CHANNEL_COND_061,
+			  //bridge.culvert_cond = row.CULVERT_COND_062,
+			  //bridge.structural_eval = row.STRUCTURAL_EVAL_067,
+			  //bridge.deck_geometry_eval = row.DECK_GEOMETRY_EVAL_068,
+			  //bridge.undclrence_eval = row.UNDCLRENCE_EVAL_069,
+			  //bridge.posting_eval = row.POSTING_EVAL_070,
+			  //bridge.waterway_eval = row.WATERWAY_EVAL_071,
+			  //bridge.appr_road_eval = row.APPR_ROAD_EVAL_072,
+			  
+			  place.name = row.PLACE_CODE_004,
+			  county.name = row.COUNTY_CODE_003,
+			  state.name = row.STATE_CODE_001
+',
+{batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
+
+
 // this is to import files as listed in a CSV
 LOAD CSV WITH HEADERS FROM "file:///NBIFilesListFiles.csv" AS line1
 WITH collect("file:///"+line1.Folder+"/"+line1.File) as Files
@@ -15,11 +57,13 @@ LOAD CSV WITH HEADERS FROM file AS row
 RETURN row
 LIMIT 10
 
-CALL apoc.periodic.iterate("
+CALL apoc.periodic.iterate(
+"
 LOAD CSV WITH HEADERS FROM 'file:///NBIFilesListFiles.csv' AS line1
 WITH collect('file:///'+line1.Folder+'/'+line1.File) as Files
 UNWIND Files AS file
-LOAD CSV WITH HEADERS FROM file AS row RETURN row",
+LOAD CSV WITH HEADERS FROM file AS row RETURN row
+",
 "
 MERGE (state:State {id: row.STATE_CODE_001})
 MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
@@ -375,11 +419,66 @@ ORDER BY Long
 
 
 //query to change state name from id to state letters
+//query to change state name from id to state letters
 MATCH (state:State)
 SET state.name = 
 CASE state.name
-	WHEN "2" THEN "AK"
-	WHEN "27" THEN "MN"
+	WHEN "01" THEN "AL"
+    WHEN "02" THEN "AK"
+    //WHEN "03" THEN ""
+    WHEN "04" THEN "AZ"
+    WHEN "05" THEN "AR"
+    WHEN "06" THEN "CA"
+    //WHEN "07" THEN ""
+    WHEN "08" THEN "CO"
+    WHEN "09" THEN "CT"
+    WHEN "10" THEN "DE"
+    WHEN "11" THEN "DC"
+    WHEN "12" THEN "FL"
+    WHEN "13" THEN "GA"
+    //WHEN "14" THEN ""
+    WHEN "15" THEN "HI"
+    WHEN "16" THEN "ID"
+    WHEN "17" THEN "IL"
+    WHEN "18" THEN "IN"
+    WHEN "19" THEN "IA"
+    WHEN "20" THEN "KS"
+    WHEN "21" THEN "KY"
+    WHEN "22" THEN "LA"
+    WHEN "23" THEN "ME"
+    WHEN "24" THEN "MD"
+    WHEN "25" THEN "MA"
+    WHEN "26" THEN "MI"
+    WHEN "27" THEN "MN"
+    WHEN "28" THEN "MS"
+    WHEN "29" THEN "MO"
+    WHEN "30" THEN "MT"
+    WHEN "31" THEN "NE"
+    WHEN "32" THEN "NV"
+    WHEN "33" THEN "NH"
+    WHEN "34" THEN "NJ"
+    WHEN "35" THEN "NM"
+    WHEN "36" THEN "NY"
+    WHEN "37" THEN "NC"
+    WHEN "38" THEN "ND"
+    WHEN "39" THEN "OH"
+    WHEN "40" THEN "OK"
+    WHEN "41" THEN "OR"
+    WHEN "42" THEN "PA"
+    //WHEN "43" THEN ""
+    WHEN "44" THEN "RI"
+    WHEN "45" THEN "SC"
+    WHEN "46" THEN "SD"
+    WHEN "47" THEN "TN"
+    WHEN "48" THEN "TX"
+    WHEN "49" THEN "UT"
+    WHEN "50" THEN "VT"
+    WHEN "51" THEN "VA"
+    WHEN "53" THEN "WA"
+    WHEN "54" THEN "WV"
+    WHEN "55" THEN "WI"
+    WHEN "56" THEN "WY"
+    WHEN "72" THEN "PR"
 END
 
 
