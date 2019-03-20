@@ -114,7 +114,8 @@ MERGE (bridge)-[:BUILT_IN]->(yearBuilt)
 {batchSize:1000, parallel:true, params:{build_year:buildYear}}) YIELD batches, total
 RETURN batches, total
 
-
+///////////
+// Inspection date data has issues...needs to be cleaned
 // create (inspDate) nodes
 CALL apoc.periodic.iterate("
 UNWIND ['file:///MN14.csv', 'file:///AK14.csv'] AS file
@@ -123,6 +124,13 @@ LOAD CSV WITH HEADERS FROM file AS row RETURN row",
 MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
 ",
 {batchSize:1000,iterateList:true});
+
+// trying to understand what data is valid
+MATCH (iD:InspectionDate)
+WHERE size(replace(iD.id," ", "")) = 3 
+OR size(replace(iD.id," ", "")) = 4
+RETURN iD.id, right(iD.id,2) AS year
+ORDER BY year
 
 // set Inspection Date month and year properties
 MATCH (inspDate:InspectionDate)
