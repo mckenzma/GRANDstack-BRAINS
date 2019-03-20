@@ -26,7 +26,7 @@ MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
 ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  bridge.latitude = row.LAT_016,
 			  bridge.longitude = row.LONG_017,
-			  bridge.yearbuilt = row.YEAR_BUILT_027,
+			  bridge.yearbuilt = toInteger(row.YEAR_BUILT_027),
 			  
 			  place.name = row.PLACE_CODE_004,
 			  county.name = row.COUNTY_CODE_003,
@@ -78,7 +78,20 @@ SET bridge.location = point({ longitude: longitude_decimal, latitude: latitude_d
 {batchSize:10000, parallel:true}) YIELD batches, total
 RETURN batches, total
 
-
+// Load and create :InspectionDate
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+WITH CASE
+	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
+    END AS fileURLs
+UNWIND fileURLs as fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row RETURN row
+','
+MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+',
+{batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
 
 
 
@@ -290,8 +303,15 @@ ORDER BY s.name
 
 // Count number of bridges built each year
 MATCH (bridge:Bridge)
-RETURN bridge.yearbuilt, count(bridge.yearbuilt)
-ORDER BY bridge.yearbuilt
+WHERE length(toString(bridge.yearbuilt)) = 4 //this ignores null values, and bridges where year recorded doesn't match designated format
+WITH collect(DISTINCT bridge.yearbuilt) AS buildYears
+UNWIND buildYears as buildYear
+MATCH (bridge2:Bridge)
+WHERE bridge2.yearbuilt = buildYear
+RETURN buildYear, count(bridge2) AS Num_Bridges_Built
+ORDER BY buildYear
+
+
 
 ///////////////////////////////////////////////
 // Everything below here references the different headers to be incorporated.
