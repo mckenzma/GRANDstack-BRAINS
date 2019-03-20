@@ -7,7 +7,8 @@ CREATE INDEX ON :State(id);
 CREATE INDEX ON :Owner(id);
 CREATE INDEX ON :MaintenanceResp(id);
 
-// Loading data into the database
+// Load and connect :State, :County, :Place, and :Bridge
+// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
 WITH CASE
 	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
@@ -28,18 +29,6 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  bridge.latitude = row.LAT_016,
 			  bridge.longitude = row.LONG_017,
 			  bridge.yearbuilt = row.YEAR_BUILT_027,
-			  
-			  //bridge.deck_cond = row.DECK_COND_058,
-			  //bridge.superstructure_cond = row.SUPERSTRUCTURE_COND_059,
-			  //bridge.substructure_cond = row.SUBSTRUCTURE_COND_060,
-			  //bridge.channel_cond = row.CHANNEL_COND_061,
-			  //bridge.culvert_cond = row.CULVERT_COND_062,
-			  //bridge.structural_eval = row.STRUCTURAL_EVAL_067,
-			  //bridge.deck_geometry_eval = row.DECK_GEOMETRY_EVAL_068,
-			  //bridge.undclrence_eval = row.UNDCLRENCE_EVAL_069,
-			  //bridge.posting_eval = row.POSTING_EVAL_070,
-			  //bridge.waterway_eval = row.WATERWAY_EVAL_071,
-			  //bridge.appr_road_eval = row.APPR_ROAD_EVAL_072,
 			  
 			  place.name = row.PLACE_CODE_004,
 			  county.name = row.COUNTY_CODE_003,
@@ -418,25 +407,24 @@ RETURN size(bridge.longitude),
 ORDER BY Long
 
 
-//query to change state name from id to state letters
-//query to change state name from id to state letters
+// This changes the state "numeric" code to the 2-letter state abreviation
 MATCH (state:State)
 SET state.name = 
 CASE state.name
 	WHEN "01" THEN "AL"
     WHEN "02" THEN "AK"
-    //WHEN "03" THEN ""
+    //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
     WHEN "04" THEN "AZ"
     WHEN "05" THEN "AR"
     WHEN "06" THEN "CA"
-    //WHEN "07" THEN ""
+    //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
     WHEN "08" THEN "CO"
     WHEN "09" THEN "CT"
     WHEN "10" THEN "DE"
     WHEN "11" THEN "DC"
     WHEN "12" THEN "FL"
     WHEN "13" THEN "GA"
-    //WHEN "14" THEN ""
+    //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
     WHEN "15" THEN "HI"
     WHEN "16" THEN "ID"
     WHEN "17" THEN "IL"
@@ -465,7 +453,7 @@ CASE state.name
     WHEN "40" THEN "OK"
     WHEN "41" THEN "OR"
     WHEN "42" THEN "PA"
-    //WHEN "43" THEN ""
+    //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
     WHEN "44" THEN "RI"
     WHEN "45" THEN "SC"
     WHEN "46" THEN "SD"
@@ -481,7 +469,20 @@ CASE state.name
     WHEN "72" THEN "PR"
 END
 
+// Simple query to show number of counties, places, bridges per state
+MATCH (s:State)<--(c:County)
+WITH s, count(c) as NumCounties
+MATCH (s)<--(c)<--(p:Place)
+WITH s, NumCounties, count(p) AS NumPlaces
+MATCH (s)<--(c)<--(p)<--(b:Bridge)
+WITH s, NumCounties, NumPlaces, count(b) AS NumBridges
+RETURN s.name, NumCounties, NumPlaces, NumBridges
+ORDER BY s.name
 
+///////////////////////////////////////////////
+// Everything below here references the different headers to be incorporated.
+// Commented out lines reference headers that have been incoroporated in some fashion above.
+///////////////////////////////////////////////
 //STATE_CODE_001
 HIGHWAY_DISTRICT_002
 //COUNTY_CODE_003
