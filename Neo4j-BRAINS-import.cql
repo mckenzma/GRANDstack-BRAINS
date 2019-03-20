@@ -35,13 +35,31 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 {batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
 
+// Load and connect :Owner and :MaintenanceResp to :Bridge
+// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+WITH CASE
+	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
+    END AS fileURLs
+UNWIND fileURLs as fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row RETURN row
+//CALL apoc.load.csv($url) YIELD map AS row RETURN row
+','
+MATCH (bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
+MERGE (owner:Owner {id: row.OWNER_022})
+MERGE (maintResp:MaintenanceResp {id: row.MAINTENANCE_021})
+MERGE (bridge)-[:OWNED_BY]->(owner)
+MERGE (bridge)-[:MAINTAINED_BY]->(maintResp)
+ON CREATE SET owner.name = row.OWNER_022,
+			  maintResp.name = row.MAINTENANCE_021
+',
+{batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
 
 
 
-// count number of bridges built each year
-MATCH (bridge:Bridge)
-RETURN bridge.yearbuilt, count(bridge.yearbuilt)
-ORDER BY bridge.yearbuilt
 
 
 
@@ -239,6 +257,10 @@ CASE state.name
     WHEN "72" THEN "PR"
 END
 
+///////////////////////////////////////////////
+// DEFINED QUERIES TO EXPLORE DATA
+///////////////////////////////////////////////
+
 // Simple query to show number of counties, places, bridges per state
 MATCH (s:State)<--(c:County)
 WITH s, count(c) as NumCounties
@@ -248,6 +270,11 @@ MATCH (s)<--(c)<--(p)<--(b:Bridge)
 WITH s, NumCounties, NumPlaces, count(b) AS NumBridges
 RETURN s.name, NumCounties, NumPlaces, NumBridges
 ORDER BY s.name
+
+// Count number of bridges built each year
+MATCH (bridge:Bridge)
+RETURN bridge.yearbuilt, count(bridge.yearbuilt)
+ORDER BY bridge.yearbuilt
 
 ///////////////////////////////////////////////
 // Everything below here references the different headers to be incorporated.
