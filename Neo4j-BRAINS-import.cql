@@ -125,12 +125,24 @@ MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
 ",
 {batchSize:1000,iterateList:true});
 
+
+
+
 // trying to understand what data is valid
 MATCH (iD:InspectionDate)
-WHERE size(replace(iD.id," ", "")) = 3 
-OR size(replace(iD.id," ", "")) = 4
-RETURN iD.id, right(iD.id,2) AS year
-ORDER BY year
+WHERE (size(replace(iD.id," ", "")) = 3 OR size(replace(iD.id," ", "")) = 4)
+AND NOT iD.id CONTAINS "."
+RETURN replace(iD.id," ", ""), 
+	   right(replace(iD.id," ", ""),2) AS year,
+       CASE size(replace(iD.id," ", ""))
+       	WHEN 3 THEN "0" + left(replace(iD.id," ", ""), 1)
+        WHEN 4 THEN left(replace(iD.id," ", ""), 2)
+       END AS month
+ORDER BY year, month
+
+
+
+
 
 // set Inspection Date month and year properties
 MATCH (inspDate:InspectionDate)
