@@ -81,17 +81,68 @@ RETURN batches, total
 // Load and create :InspectionDate
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
 WITH CASE
-	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
+	WHEN NOT row1.Year IS NULL THEN collect([row1.URL,row1.Year])
     END AS fileURLs
 UNWIND fileURLs as fileURL
 CALL apoc.periodic.iterate(
 '
 LOAD CSV WITH HEADERS FROM $url AS row RETURN row
 ','
-MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+CREATE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090, inspDate.year = $fileYear}) 
+//MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+//ON CREATE SET inspDate.year = $fileYear
 ',
-{batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+{batchSize:1000, parallel:false, params:{url:fileURL[0], fileYear:fileURL[1]}}) YIELD batches, total
 RETURN batches, total
+
+
+
+
+// trying to understand what data is valid
+MATCH (iD:InspectionDate)
+WHERE (size(replace(iD.id," ", "")) = 3 OR size(replace(iD.id," ", "")) = 4)
+AND NOT iD.id CONTAINS "."
+WITH iD, 
+	 replace(iD.id," ", "") AS tempDate
+//RETURN replace(iD.id," ", ""), 
+//	   right(replace(iD.id," ", ""),2) AS year,
+//       CASE size(replace(iD.id," ", ""))
+//       	WHEN 3 THEN "0" + left(replace(iD.id," ", ""), 1)
+//        WHEN 4 THEN left(replace(iD.id," ", ""), 2)
+//       END AS month
+//ORDER BY year, month
+WITH iD,
+	 tempDate,
+	 right(tempDate, 2) AS year,
+	 CASE size(tempDate)
+	 	WHEN 3 THEN "0" + left(tempDate, 1)
+	 	WHEN 4 THEN left(tempDate, 2)
+	 END AS month
+RETURN iD.year, tempDate, year, month
+ORDER BY year, month
+//SET iD.date({ year})
+
+
+
+
+
+// set Inspection Date month and year properties
+MATCH (inspDate:InspectionDate)
+SET inspDate.year = right(inspDate.id, 2)
+WITH inspDate.year AS inspDateYear
+MATCH (inspDate:InspectionDate)
+WHERE size(inspDate.id) = 3
+SET inspDate.month = left(inspDate.id, 1)
+WITH inspDateYear, inspDate.month AS inspDateMonth
+MATCH (inspDate:InspectionDate)
+WHERE size(inspDate.id) = 4
+SET inspDate.month = left(inspDate.id, 2)
+
+
+
+
+
+
 
 // Create (:YearBuilt) and connect to (:Bridge)
 MATCH (bridge:Bridge)
@@ -114,47 +165,8 @@ MERGE (bridge)-[:BUILT_IN]->(yearBuilt)
 {batchSize:1000, parallel:true, params:{build_year:buildYear}}) YIELD batches, total
 RETURN batches, total
 
-///////////
-// Inspection date data has issues...needs to be cleaned
-// create (inspDate) nodes
-CALL apoc.periodic.iterate("
-UNWIND ['file:///MN14.csv', 'file:///AK14.csv'] AS file
-LOAD CSV WITH HEADERS FROM file AS row RETURN row",
-"
-MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
-",
-{batchSize:1000,iterateList:true});
 
 
-
-
-// trying to understand what data is valid
-MATCH (iD:InspectionDate)
-WHERE (size(replace(iD.id," ", "")) = 3 OR size(replace(iD.id," ", "")) = 4)
-AND NOT iD.id CONTAINS "."
-RETURN replace(iD.id," ", ""), 
-	   right(replace(iD.id," ", ""),2) AS year,
-       CASE size(replace(iD.id," ", ""))
-       	WHEN 3 THEN "0" + left(replace(iD.id," ", ""), 1)
-        WHEN 4 THEN left(replace(iD.id," ", ""), 2)
-       END AS month
-ORDER BY year, month
-
-
-
-
-
-// set Inspection Date month and year properties
-MATCH (inspDate:InspectionDate)
-SET inspDate.year = right(inspDate.id, 2)
-WITH inspDate.year AS inspDateYear
-MATCH (inspDate:InspectionDate)
-WHERE size(inspDate.id) = 3
-SET inspDate.month = left(inspDate.id, 1)
-WITH inspDateYear, inspDate.month AS inspDateMonth
-MATCH (inspDate:InspectionDate)
-WHERE size(inspDate.id) = 4
-SET inspDate.month = left(inspDate.id, 2)
 
 // build timeline tree
 MATCH (inspDate:InspectionDate)
