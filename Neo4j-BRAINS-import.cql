@@ -7,18 +7,17 @@ CREATE INDEX ON :State(id);
 CREATE INDEX ON :Owner(id);
 CREATE INDEX ON :MaintenanceResp(id);
 
-// Loading data into the database
+// Load and connect :State, :County, :Place, and :Bridge
+// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
 WITH CASE
 	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
     END AS fileURLs
-//RETURN fileURLs
 UNWIND fileURLs as fileURL
-//RETURN fileURL
 CALL apoc.periodic.iterate(
 '
 LOAD CSV WITH HEADERS FROM $url AS row RETURN row
-//CALL apoc.load.csv($url) YIELD map AS row RETURN row
+
 ','
 MERGE (state:State {id: row.STATE_CODE_001})
 MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
@@ -27,19 +26,7 @@ MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
 ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  bridge.latitude = row.LAT_016,
 			  bridge.longitude = row.LONG_017,
-			  bridge.yearbuilt = row.YEAR_BUILT_027,
-			  
-			  //bridge.deck_cond = row.DECK_COND_058,
-			  //bridge.superstructure_cond = row.SUPERSTRUCTURE_COND_059,
-			  //bridge.substructure_cond = row.SUBSTRUCTURE_COND_060,
-			  //bridge.channel_cond = row.CHANNEL_COND_061,
-			  //bridge.culvert_cond = row.CULVERT_COND_062,
-			  //bridge.structural_eval = row.STRUCTURAL_EVAL_067,
-			  //bridge.deck_geometry_eval = row.DECK_GEOMETRY_EVAL_068,
-			  //bridge.undclrence_eval = row.UNDCLRENCE_EVAL_069,
-			  //bridge.posting_eval = row.POSTING_EVAL_070,
-			  //bridge.waterway_eval = row.WATERWAY_EVAL_071,
-			  //bridge.appr_road_eval = row.APPR_ROAD_EVAL_072,
+			  bridge.yearbuilt = toInteger(row.YEAR_BUILT_027),
 			  
 			  place.name = row.PLACE_CODE_004,
 			  county.name = row.COUNTY_CODE_003,
@@ -48,254 +35,96 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 {batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
 
-
-// this is to import files as listed in a CSV
-LOAD CSV WITH HEADERS FROM "file:///NBIFilesListFiles.csv" AS line1
-WITH collect("file:///"+line1.Folder+"/"+line1.File) as Files
-UNWIND Files AS file
-LOAD CSV WITH HEADERS FROM file AS row
-RETURN row
-LIMIT 10
-
+// Load and connect :Owner and :MaintenanceResp to :Bridge
+// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+WITH CASE
+	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
+    END AS fileURLs
+UNWIND fileURLs as fileURL
 CALL apoc.periodic.iterate(
-"
-LOAD CSV WITH HEADERS FROM 'file:///NBIFilesListFiles.csv' AS line1
-WITH collect('file:///'+line1.Folder+'/'+line1.File) as Files
-UNWIND Files AS file
-LOAD CSV WITH HEADERS FROM file AS row RETURN row
-",
-"
-MERGE (state:State {id: row.STATE_CODE_001})
-MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
-MERGE (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
-MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
-ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
-			  bridge.latitude = row.LAT_016,
-			  bridge.longitude = row.LONG_017,
-			  bridge.yearbuilt = row.YEAR_BUILT_027,
-			  
-			  bridge.deck_cond = row.DECK_COND_058,
-			  bridge.superstructure_cond = row.SUPERSTRUCTURE_COND_059,
-			  bridge.substructure_cond = row.SUBSTRUCTURE_COND_060,
-			  bridge.channel_cond = row.CHANNEL_COND_061,
-			  bridge.culvert_cond = row.CULVERT_COND_062,
-
-			  bridge.structural_eval = row.STRUCTURAL_EVAL_067,
-			  bridge.deck_geometry_eval = row.DECK_GEOMETRY_EVAL_068,
-			  bridge.undclrence_eval = row.UNDCLRENCE_EVAL_069,
-			  bridge.posting_eval = row.POSTING_EVAL_070,
-			  bridge.waterway_eval = row.WATERWAY_EVAL_071,
-			  bridge.appr_road_eval = row.APPR_ROAD_EVAL_072,
-			  
-			  place.name = row.PLACE_CODE_004,
-			  county.name = row.COUNTY_CODE_003,
-			  state.name = row.STATE_CODE_001
-",
-{batchSize:1000,iterateList:true})
-
-// this is not the correct query because it connects counties across statesb-- oops
-CALL apoc.periodic.iterate("
-UNWIND [
-	'file:///AK14.csv',
-	'file:///AL14.csv',
-	'file:///AR14.csv',
-	'file:///AZ14.csv',
-	'file:///CA14.csv',
-	'file:///CO14.csv',
-	'file:///CT14.csv',
-	'file:///DC14.csv',
-	'file:///DE14.csv',
-	'file:///FL14.csv',
-	'file:///GA14.csv',
-	'file:///HI14.csv',
-	'file:///IA14.csv',
-	'file:///ID14.csv',
-	'file:///IL14.csv',
-	'file:///IN14.csv',
-	'file:///KS14.csv',
-	'file:///LA14.csv',
-	'file:///MA14.csv',
-	'file:///MD14.csv',
-	'file:///ME14.csv',
-	'file:///MI14.csv',
-	'file:///MN14.csv',
-	'file:///MO14.csv',
-	'file:///MS14.csv',
-	'file:///MT14.csv',
-	'file:///NC14.csv',
-	'file:///ND14.csv',
-	'file:///NE14.csv',
-	'file:///NH14.csv',
-	'file:///NJ14.csv',
-	'file:///NM14.csv',
-	'file:///AK14.csv',
-	'file:///NV14.csv',
-	'file:///NY14.csv',
-	'file:///OH14.csv',
-	'file:///OK14.csv',
-	'file:///OR14.csv',
-	'file:///PA14.csv',
-	'file:///PR14.csv',
-	'file:///RI14.csv',
-	'file:///SC14.csv',
-	'file:///SD14.csv',
-	'file:///TN14.csv',
-	'file:///TX14.csv',
-	'file:///UT14.csv',
-	'file:///VA14.csv',
-	'file:///VT14.csv',
-	'file:///WA14.csv',
-	'file:///WI14.csv',
-	'file:///WV14.csv',
-	'file:///WY14.csv' 
-	] AS file
-LOAD CSV WITH HEADERS FROM file AS row RETURN row",
-"
-MERGE (bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
-MERGE (place:Place {id: row.PLACE_CODE_004})
-MERGE (county:County {id: row.COUNTY_CODE_003})
-MERGE (state:State {id: row.STATE_CODE_001})
+'
+LOAD CSV WITH HEADERS FROM $url AS row RETURN row
+','
+MATCH (bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
 MERGE (owner:Owner {id: row.OWNER_022})
 MERGE (maintResp:MaintenanceResp {id: row.MAINTENANCE_021})
-//MERGE (toll:Toll {id: row.TOLL_020})
-//MERGE (funcClass:FunctionalClass {id: row.FUNCTIONAL_CLASS_026})
-//MERGE (servOn:ServiceOn {id: row.SERVICE_ON_042A})
-//MERGE (servUnder:ServiceUnder {id: row.SERVICE_UND_042B})
-//MERGE (mainStructKind:MainStructKind {id: row.STRUCTURE_KIND_043A})
-//MERGE (mainStructType:MainStructType {id: row.STRUCTURE_TYPE_043B})
-//MERGE (apprStructKind:ApprStructKind {id: row.APPR_KIND_044A})
-//MERGE (apprStructType:ApprStructType {id: row.APPR_TYPE_044B})
-//MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
-MERGE (bridge)-[:OF_PLACE]->(place)
-MERGE (place)-[:OF_COUNTY]->(county)
-MERGE (county)-[:OF_STATE]->(state)
 MERGE (bridge)-[:OWNED_BY]->(owner)
 MERGE (bridge)-[:MAINTAINED_BY]->(maintResp)
-//MERGE (bridge)-[:HAS_TOLL]->(toll)
-//MERGE (bridge)-[:HAS_FUNC_CLASS]->(funcClass)
-//MERGE (bridge)-[:HAS_SERVICE_TYPE]->(servOn)
-//MERGE (bridge)-[:HAS_SERVICE_TYPE]->(servUnder)
-//MERGE (bridge)-[:HAS_MAIN_STRUCTURE_TYPE]->(mainStructType)
-//MERGE (bridge)-[:HAS_MAIN_STRUCTURE_TYPE]->(mainStructKind)
-//MERGE (bridge)-[:HAS_APPR_STRUCTURE_TYPE]->(apprStructType)
-//MERGE (bridge)-[:HAS_APPR_STRUCTURE_TYPE]->(apprStructKind)
-//MERGE (bridge)-[:INSPECTED_ON]->(inspDate)
-ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
-			  bridge.latitude = row.LAT_016,
-			  bridge.longitude = row.LONG_017,
-			  bridge.yearbuilt = row.YEAR_BUILT_027,
-			  place.name = row.PLACE_CODE_004,
-			  county.name = row.COUNTY_CODE_003,
-			  state.name = row.STATE_CODE_001,
-			  owner.name = row.OWNER_022,
+ON CREATE SET owner.name = row.OWNER_022,
 			  maintResp.name = row.MAINTENANCE_021
-",
-{batchSize:1000,iterateList:true});
+',
+{batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
 
-
-// build state, county, place like a timeline tree
-CALL apoc.periodic.iterate("
-UNWIND [
-	'file:///AK14.csv',
-	'file:///AL14.csv',
-	'file:///AR14.csv',
-	'file:///AZ14.csv',
-	'file:///CA14.csv',
-	'file:///CO14.csv',
-	'file:///CT14.csv',
-	'file:///DC14.csv',
-	'file:///DE14.csv',
-	'file:///FL14.csv',
-	'file:///GA14.csv',
-	'file:///HI14.csv',
-	'file:///IA14.csv',
-	'file:///ID14.csv',
-	'file:///IL14.csv',
-	'file:///IN14.csv',
-	'file:///KS14.csv',
-	'file:///LA14.csv',
-	'file:///MA14.csv',
-	'file:///MD14.csv',
-	'file:///ME14.csv',
-	'file:///MI14.csv',
-	'file:///MN14.csv',
-	'file:///MO14.csv',
-	'file:///MS14.csv',
-	'file:///MT14.csv',
-	'file:///NC14.csv',
-	'file:///ND14.csv',
-	'file:///NE14.csv',
-	'file:///NH14.csv',
-	'file:///NJ14.csv',
-	'file:///NM14.csv',
-	'file:///AK14.csv',
-	'file:///NV14.csv',
-	'file:///NY14.csv',
-	'file:///OH14.csv',
-	'file:///OK14.csv',
-	'file:///OR14.csv',
-	'file:///PA14.csv',
-	'file:///PR14.csv',
-	'file:///RI14.csv',
-	'file:///SC14.csv',
-	'file:///SD14.csv',
-	'file:///TN14.csv',
-	'file:///TX14.csv',
-	'file:///UT14.csv',
-	'file:///VA14.csv',
-	'file:///VT14.csv',
-	'file:///WA14.csv',
-	'file:///WI14.csv',
-	'file:///WV14.csv',
-	'file:///WY14.csv' 
-	] AS file
-LOAD CSV WITH HEADERS FROM file AS row RETURN row",
-"
-MERGE (state:State {id: row.STATE_CODE_001})
-MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
-MERGE (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
-MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
-ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
-			  bridge.latitude = row.LAT_016,
-			  bridge.longitude = row.LONG_017,
-			  bridge.yearbuilt = row.YEAR_BUILT_027,
-			  
-			  bridge.deck_cond = row.DECK_COND_058,
-			  bridge.superstructure_cond = row.SUPERSTRUCTURE_COND_059,
-			  bridge.substructure_cond = row.SUBSTRUCTURE_COND_060,
-			  bridge.channel_cond = row.CHANNEL_COND_061,
-			  bridge.culvert_cond = row.CULVERT_COND_062,
-
-			  bridge.structural_eval = row.STRUCTURAL_EVAL_067,
-			  bridge.deck_geometry_eval = row.DECK_GEOMETRY_EVAL_068,
-			  bridge.undclrence_eval = row.UNDCLRENCE_EVAL_069,
-			  bridge.posting_eval = row.POSTING_EVAL_070,
-			  bridge.waterway_eval = row.WATERWAY_EVAL_071,
-			  bridge.appr_road_eval = row.APPR_ROAD_EVAL_072,
-			  
-			  place.name = row.PLACE_CODE_004,
-			  county.name = row.COUNTY_CODE_003,
-			  state.name = row.STATE_CODE_001
-",
-{batchSize:1000,iterateList:true});
-
-// count number of bridges built each year
+// Convert Latitude and Longitude from initial import to point (spatial)
+CALL apoc.periodic.iterate('
 MATCH (bridge:Bridge)
-RETURN bridge.yearbuilt, count(bridge.yearbuilt)
-ORDER BY bridge.yearbuilt
+WHERE NOT bridge.latitude IS NULL
+AND NOT bridge.longitude IS NULL
+RETURN bridge
+','
+WITH bridge,
+	 toFloat(left(bridge.latitude, 2)) + toFloat(substring(bridge.latitude,2,2))/60 + toFloat(right(bridge.latitude,4))/100/3600 AS latitude_decimal,
+     size(bridge.longitude) AS long_size
+WITH bridge,
+	 latitude_decimal,
+     CASE long_size
+	 	WHEN 8 THEN -1 * ( toFloat(left(bridge.longitude, 2)) + toFloat(substring(bridge.longitude,2,2))/60 + toFloat(right(bridge.longitude,4))/100/3600 )
+     	WHEN 9 THEN -1 * ( toFloat(left(bridge.longitude, 3)) + toFloat(substring(bridge.longitude,3,2))/60 + toFloat(right(bridge.longitude,4))/100/3600 )
+	 END AS longitude_decimal
+SET bridge.location = point({ longitude: longitude_decimal, latitude: latitude_decimal }) 
+',
+{batchSize:10000, parallel:true}) YIELD batches, total
+RETURN batches, total
+
+// Load and create :InspectionDate
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+WITH CASE
+	WHEN NOT row1.Year IS NULL THEN collect([row1.URL,row1.Year])
+    END AS fileURLs
+UNWIND fileURLs as fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row RETURN row
+','
+CREATE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090, inspDate.year = $fileYear}) 
+//MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+//ON CREATE SET inspDate.year = $fileYear
+',
+{batchSize:1000, parallel:false, params:{url:fileURL[0], fileYear:fileURL[1]}}) YIELD batches, total
+RETURN batches, total
 
 
 
 
+// trying to understand what data is valid
+MATCH (iD:InspectionDate)
+WHERE (size(replace(iD.id," ", "")) = 3 OR size(replace(iD.id," ", "")) = 4)
+AND NOT iD.id CONTAINS "."
+WITH iD, 
+	 replace(iD.id," ", "") AS tempDate
+//RETURN replace(iD.id," ", ""), 
+//	   right(replace(iD.id," ", ""),2) AS year,
+//       CASE size(replace(iD.id," ", ""))
+//       	WHEN 3 THEN "0" + left(replace(iD.id," ", ""), 1)
+//        WHEN 4 THEN left(replace(iD.id," ", ""), 2)
+//       END AS month
+//ORDER BY year, month
+WITH iD,
+	 tempDate,
+	 right(tempDate, 2) AS year,
+	 CASE size(tempDate)
+	 	WHEN 3 THEN "0" + left(tempDate, 1)
+	 	WHEN 4 THEN left(tempDate, 2)
+	 END AS month
+RETURN iD.year, tempDate, year, month
+ORDER BY year, month
+//SET iD.date({ year})
 
-// create (inspDate) nodes
-CALL apoc.periodic.iterate("
-UNWIND ['file:///MN14.csv', 'file:///AK14.csv'] AS file
-LOAD CSV WITH HEADERS FROM file AS row RETURN row",
-"
-MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
-",
-{batchSize:1000,iterateList:true});
+
+
+
 
 // set Inspection Date month and year properties
 MATCH (inspDate:InspectionDate)
@@ -308,6 +137,36 @@ WITH inspDateYear, inspDate.month AS inspDateMonth
 MATCH (inspDate:InspectionDate)
 WHERE size(inspDate.id) = 4
 SET inspDate.month = left(inspDate.id, 2)
+
+
+
+
+
+
+
+// Create (:YearBuilt) and connect to (:Bridge)
+MATCH (bridge:Bridge)
+WHERE length(toString(bridge.yearbuilt)) = 4 //this ignores null values, and bridges where year recorded doesn't match designated format`
+WITH collect(DISTINCT bridge.yearbuilt) AS buildYears
+UNWIND buildYears as buildYear
+MERGE(yearBuilt:YearBuilt {year: buildYear})
+WITH yearBuilt, buildYear
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)
+WHERE bridge.yearbuilt = $build_year
+MATCH (yearBuilt:YearBuilt)
+WHERE yearBuilt.year = $build_year
+RETURN bridge, yearBuilt
+',
+'
+MERGE (bridge)-[:BUILT_IN]->(yearBuilt)
+',
+{batchSize:1000, parallel:true, params:{build_year:buildYear}}) YIELD batches, total
+RETURN batches, total
+
+
+
 
 // build timeline tree
 MATCH (inspDate:InspectionDate)
@@ -418,6 +277,7 @@ RETURN size(bridge.longitude),
 ORDER BY Long
 
 
+<<<<<<< HEAD
 // adding Bridge long & lat as point
 MATCH (bridge:Bridge)
 WHERE NOT bridge.latitude IS NULL
@@ -437,23 +297,26 @@ SET bridge.location = point({ longitude: longitude_decimal, latitude: latitude_d
 
 //query to change state name from id to state letters
 //query to change state name from id to state letters
+=======
+// This changes the state "numeric" code to the 2-letter state abreviation
+>>>>>>> d3df350222b0efc892a4b6dfa218542389eb5ceb
 MATCH (state:State)
 SET state.name = 
 CASE state.name
 	WHEN "01" THEN "AL"
     WHEN "02" THEN "AK"
-    //WHEN "03" THEN ""
+    //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
     WHEN "04" THEN "AZ"
     WHEN "05" THEN "AR"
     WHEN "06" THEN "CA"
-    //WHEN "07" THEN ""
+    //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
     WHEN "08" THEN "CO"
     WHEN "09" THEN "CT"
     WHEN "10" THEN "DE"
     WHEN "11" THEN "DC"
     WHEN "12" THEN "FL"
     WHEN "13" THEN "GA"
-    //WHEN "14" THEN ""
+    //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
     WHEN "15" THEN "HI"
     WHEN "16" THEN "ID"
     WHEN "17" THEN "IL"
@@ -482,7 +345,7 @@ CASE state.name
     WHEN "40" THEN "OK"
     WHEN "41" THEN "OR"
     WHEN "42" THEN "PA"
-    //WHEN "43" THEN ""
+    //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
     WHEN "44" THEN "RI"
     WHEN "45" THEN "SC"
     WHEN "46" THEN "SD"
@@ -498,7 +361,36 @@ CASE state.name
     WHEN "72" THEN "PR"
 END
 
+///////////////////////////////////////////////
+// DEFINED QUERIES TO EXPLORE DATA
+///////////////////////////////////////////////
 
+// Simple query to show number of counties, places, bridges per state
+MATCH (s:State)<--(c:County)
+WITH s, count(c) as NumCounties
+MATCH (s)<--(c)<--(p:Place)
+WITH s, NumCounties, count(p) AS NumPlaces
+MATCH (s)<--(c)<--(p)<--(b:Bridge)
+WITH s, NumCounties, NumPlaces, count(b) AS NumBridges
+RETURN s.name, NumCounties, NumPlaces, NumBridges
+ORDER BY s.name
+
+// Count number of bridges built each year
+MATCH (bridge:Bridge)
+WHERE length(toString(bridge.yearbuilt)) = 4 //this ignores null values, and bridges where year recorded doesn't match designated format
+WITH collect(DISTINCT bridge.yearbuilt) AS buildYears
+UNWIND buildYears as buildYear
+MATCH (bridge2:Bridge)
+WHERE bridge2.yearbuilt = buildYear
+RETURN buildYear, count(bridge2) AS Num_Bridges_Built
+ORDER BY buildYear
+
+
+
+///////////////////////////////////////////////
+// Everything below here references the different headers to be incorporated.
+// Commented out lines reference headers that have been incoroporated in some fashion above.
+///////////////////////////////////////////////
 //STATE_CODE_001
 HIGHWAY_DISTRICT_002
 //COUNTY_CODE_003
