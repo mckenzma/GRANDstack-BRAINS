@@ -113,12 +113,12 @@ class MapLeaf extends React.Component {
           <ListItem >
             <ListItemText >ID: {this.state.bridge_id}</ListItemText>
           </ListItem>
-          <ListItem >
+          {/*<ListItem >
             <ListItemText >LAT: {this.state.bridge_lat}</ListItemText>
           </ListItem>
           <ListItem >
             <ListItemText >LONG: {this.state.bridge_lng}</ListItemText>
-          </ListItem>
+          </ListItem>*/}
           <ListItem >
             <ListItemText >Build Year: {this.state.build_year}</ListItemText>
           </ListItem>
@@ -140,7 +140,7 @@ class MapLeaf extends React.Component {
             <Query
               query={gql`
                 {
-                  Bridge(first: 500) {
+                  Bridge(first: 50) {
                     id
                     latitude_decimal
                     longitude_decimal
