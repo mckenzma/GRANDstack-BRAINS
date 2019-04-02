@@ -17,7 +17,7 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from 'leaflet';
 
-// import HeatmapLayer from 'react-leaflet-heatmap-layer/lib/HeatmapLayer';
+import HeatmapLayer from 'react-leaflet-heatmap-layer/lib/HeatmapLayer';
 
 // import 'leaflet.markercluster/dist/MarkerCluster.css';
 // import MarkerClusterGroup from 'leaflet.markercluster/dist/leaflet.markercluster-src.js';
@@ -133,14 +133,14 @@ class MapLeaf extends React.Component {
             shadowUrl: iconShadow
           });
 
-
+          
 
 
           return (
             <Query
               query={gql`
                 {
-                  Bridge(first: 50) {
+                  Bridge(first: 5000) {
                     id
                     latitude_decimal
                     longitude_decimal
@@ -154,38 +154,40 @@ class MapLeaf extends React.Component {
                 if (error) return <p>Error</p>
 
                 return (
+
                   <div>
-                    <Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" > {/*className={this.props.classes.root}>*/}
-                      {/*<HeatmapLayer
-                        fitBoundsOnLoad
-                        fitBoundsOnUpdate
-                        points={data.Bridge}
-                        longitudeExtractor={m => m[2]}
-                        latitudeExtractor={m => m[1]}
-                        //intensityExtractor={m => parseFloat(m[2])} />
-                        intensityExtractor={m => 1} />*/}
+                    {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
                       <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                        // url='http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
                       />
-                      {/*<MarkerClusterGroup>*/}
                       {data.Bridge
                         .slice()
                         .map(n => {
                           return (
                             
                             <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
-                              {/*<Popup>
-                                {n.id} <br/> Latitude: {n.latitude_decimal} <br/> Longitude: {n.longitude_decimal}
-                              </Popup>*/}
                             </Marker>
                           
                             
                                 );
                                 })}
-                           {/*</MarkerClusterGroup>*/}
+                    </Map>*/}
+
+                    <Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
+                      <HeatmapLayer
+                        fitBoundsOnLoad
+                        fitBoundsOnUpdate
+                        points={data.Bridge}
+                        longitudeExtractor={m => m['longitude_decimal']}
+                        latitudeExtractor={m => m['latitude_decimal']}
+                        intensityExtractor={m => 5.0} />
+                      <TileLayer
+                        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                      />
                     </Map>
+
                     <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false, "")}>
                       <div
                         tabIndex={0}
