@@ -140,7 +140,7 @@ class MapLeaf extends React.Component {
             <Query
               query={gql`
                 {
-                  Bridge(first: 5000) {
+                  Bridge(first: 10000) {
                     id
                     latitude_decimal
                     longitude_decimal
@@ -176,6 +176,8 @@ class MapLeaf extends React.Component {
 
                     <Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
                       <HeatmapLayer
+                        //blur={10.0}
+                        //radius={10.0}
                         fitBoundsOnLoad
                         fitBoundsOnUpdate
                         points={data.Bridge}
