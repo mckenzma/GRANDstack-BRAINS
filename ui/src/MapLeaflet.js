@@ -22,8 +22,9 @@ import HeatmapLayer from 'react-leaflet-heatmap-layer/lib/HeatmapLayer';
 // import 'leaflet.markercluster/dist/MarkerCluster.css';
 // import MarkerClusterGroup from 'leaflet.markercluster/dist/leaflet.markercluster-src.js';
 
-// import 'react-leaflet-markercluster/dist/styles.min.css';
-// import MarkerClusterGroup from 'react-leaflet-markercluster/dist/react-leaflet-markercluster.js';
+import 'react-leaflet-markercluster/dist/styles.min.css';
+//import MarkerClusterGroup from 'react-leaflet-markercluster/dist/react-leaflet-markercluster.js';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 
 // import HeatmapLayer from 'react-leaflet-heatmap-layer/src/HeatmapLayer';
 
@@ -140,7 +141,7 @@ class MapLeaf extends React.Component {
             <Query
               query={gql`
                 {
-                  Bridge(first: 10000) {
+                  Bridge(first: 100) {
                     id
                     latitude_decimal
                     longitude_decimal
@@ -156,11 +157,12 @@ class MapLeaf extends React.Component {
                 return (
 
                   <div>
-                    {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
+                    <Map center={position} zoom={this.state.zoom} maxZoom={18} className="absolute top right left bottom" >
                       <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                       />
+                      <MarkerClusterGroup>
                       {data.Bridge
                         .slice()
                         .map(n => {
@@ -172,9 +174,10 @@ class MapLeaf extends React.Component {
                             
                                 );
                                 })}
-                    </Map>*/}
+                        </MarkerClusterGroup>
+                    </Map>
 
-                    <Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
+                    {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
                       <HeatmapLayer
                         //blur={10.0}
                         //radius={10.0}
@@ -188,7 +191,7 @@ class MapLeaf extends React.Component {
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                       />
-                    </Map>
+                    </Map>*/}
 
                     <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false, "")}>
                       <div
