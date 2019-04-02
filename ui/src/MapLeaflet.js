@@ -141,7 +141,7 @@ class MapLeaf extends React.Component {
             <Query
               query={gql`
                 {
-                  Bridge(first: 100) {
+                  Bridge(first: 50000) {
                     id
                     latitude_decimal
                     longitude_decimal
