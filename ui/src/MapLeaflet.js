@@ -50,7 +50,9 @@ class MapLeaf extends React.Component {
       bridge_id: null,
       bridge_lat: null,
       bridge_lng: null,
-      build_year: null
+      build_year: null,
+      owned_by: null,
+      maintained_by: null
     };
 
   }
@@ -58,6 +60,7 @@ class MapLeaf extends React.Component {
   toggleDrawer = (side, open, bridge) => () => {
     this.setState({
       [side]: open,
+      bridge_name: bridge.name,
       bridge_id: bridge.id,
       bridge_lat: bridge.latitude_decimal,
       bridge_lng: bridge.longitude_decimal,
@@ -72,9 +75,9 @@ class MapLeaf extends React.Component {
     const sideList = (
       <div className={classes.list}>
         <List >
-          <ListItem >
-            <ListItemText >ID: {this.state.bridge_id}</ListItemText>
-          </ListItem>
+          {/*<ListItem >
+            <ListItemText >NAME: {this.state.bridge_name}</ListItemText>
+          </ListItem>*/}
           <ListItem >
             <ListItemText >LAT: {this.state.bridge_lat}</ListItemText>
           </ListItem>
@@ -83,6 +86,13 @@ class MapLeaf extends React.Component {
           </ListItem>
           <ListItem >
             <ListItemText >Build Year: {this.state.build_year}</ListItemText>
+          </ListItem>
+          <Divider />
+          <ListItem >
+            <ListItemText >Owned By: {/*{this.state.build_year}*/}</ListItemText>
+          </ListItem>
+          <ListItem >
+            <ListItemText >Maintained By: {/*{this.state.build_year}*/}</ListItemText>
           </ListItem>
         </List>
       </div>
@@ -99,8 +109,9 @@ class MapLeaf extends React.Component {
             <Query
               query={gql`
                 {
-                  Bridge(first: 50) {
+                  Bridge(first: 500) {
                     id
+                    name
                     latitude_decimal
                     longitude_decimal
                     yearbuilt

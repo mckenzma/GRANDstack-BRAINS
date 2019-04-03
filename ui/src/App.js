@@ -230,10 +230,11 @@ class App extends Component {
         
 
 
-        {/*<Divider />*/}
-        {/*<StateListMenu />
-        <Divider />*/}
+        
+        
         <CustomizedDialogDemo />
+        <Divider />
+        <StateListMenu />
       </Drawer>
     );
 
@@ -267,7 +268,8 @@ class App extends Component {
               <Typography variant="title" color="inherit" noWrap className={classes.root}>
                 National Bridge Index
               </Typography>
-              <Button variant="contained" color="inherit" disabled >Filters</Button>
+              {/*<Button variant="contained" color="inherit" disabled >Summary</Button>
+              <Button variant="contained" color="inherit" disabled >Filters</Button>*/}
             </Toolbar>
           </AppBar>
           {before}

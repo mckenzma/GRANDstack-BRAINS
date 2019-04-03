@@ -37,21 +37,48 @@ type State {
   id: ID!
   name: String
 
+  bridges(first: Int = 3, offset: Int = 0): [Bridge] @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(bridge:Bridge) RETURN bridge")
+
   numCounties: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(c:County) RETURN count(DISTINCT c)")
   numPlaces: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(p:Place) RETURN count(DISTINCT p)")
   numBridges: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(b:Bridge) RETURN count(DISTINCT b)")
+
+  county: County @relation(name: "OF_STATE", direction: "IN")
+}
+
+type County {
+  id: ID!
+  name: String
+
+  state: State @relation(name: "OF_STATE", direction: "OUT")
+  place: Place @relation(name: "OF_COUNTY", direction: "IN")
+}
+
+type Place {
+  id: ID!
+  name: String
+
+  county: County @relation(name: "OF_COUNTY", direction: "OUT")
+  bridge: Bridge @relation(name: "OF_PLACE", direction: "IN")
 }
 
 type Bridge {
   id: ID!
+  name: String
   latitude_decimal: Float
   longitude_decimal: Float
-  yearbuilt: String
+  yearbuilt: Int
+
+  place: Place @relation(name: "OF_PLACE", direction: "OUT")
+
+  
 }
 
 type Query {
     
-    usersBySubstring(substring: String, first: Int = 10, offset: Int = 0): [User] @cypher(statement: "MATCH (u:User) WHERE u.name CONTAINS $substring RETURN u")
+  Bridge(id: ID, name: String, yearbuilt: Int): [Bridge]
+
+  usersBySubstring(substring: String, first: Int = 10, offset: Int = 0): [User] @cypher(statement: "MATCH (u:User) WHERE u.name CONTAINS $substring RETURN u")
 
     
 }

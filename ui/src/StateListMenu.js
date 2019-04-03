@@ -32,19 +32,19 @@ class StateListMenu extends React.Component {
       order: "asc",
       orderBy: "name",
 
-      checked: false,
+      //checked: false,
       // checked: {
       //   AK: true,
       //   MN: true,
       // },
-      AK: false,
-      MN: false,
+      //AK: false,
+      //MN: false,
     };
   }
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
-    console.log(name);
+    //console.log(name);
   };
 
   render() {
@@ -64,6 +64,23 @@ class StateListMenu extends React.Component {
           }
         `}
       >
+      {/*<Query
+        query={gql`
+          {
+            State {
+              id
+              name
+              bridges {
+                id
+                name
+                latitude_decimal
+                longitude_decimal
+                yearbuilt
+              }
+            }
+          }
+        `}
+      >*/}
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;

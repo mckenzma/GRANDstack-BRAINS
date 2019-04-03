@@ -28,7 +28,7 @@ const DialogTitle = withStyles(theme => ({
   const { children, classes, onClose } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root}>
-      <Typography variant="h6">{children}</Typography>
+      <Typography >{children}</Typography>
       {onClose ? (
         <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
           <CloseIcon />
@@ -44,14 +44,6 @@ const DialogContent = withStyles(theme => ({
     padding: theme.spacing.unit * 2,
   },
 }))(MuiDialogContent);
-
-// const DialogActions = withStyles(theme => ({
-//   root: {
-//     borderTop: `1px solid ${theme.palette.divider}`,
-//     margin: 0,
-//     padding: theme.spacing.unit,
-//   },
-// }))(MuiDialogActions);
 
 class CustomizedDialogDemo extends React.Component {
   state = {
@@ -71,9 +63,6 @@ class CustomizedDialogDemo extends React.Component {
   render() {
     return (
       <div>
-        {/*<Button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
-          Open dialog
-        </Button>*/}
         <ListItem button variant="outlined" color="secondary" onClick={this.handleClickOpen}>
           <ListItemText>
             About
@@ -89,16 +78,14 @@ class CustomizedDialogDemo extends React.Component {
           </DialogTitle>
           <DialogContent>
             <Typography gutterBottom>
-              This demo was built on the GRANDstack utilizing GraphQL, React, Apollo, and Neo4j Desktop.
+              This demo was built on the <a href="https://grandstack.io/"><u>GRANDstack</u></a> utilizing GraphQL, React, Apollo, and Neo4j Database.
+            </Typography>
+            <Typography gutterBottom>
+              All data included in this web application can be found at <a href="https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm"><u>Nation Bride Index</u></a> website. Some data cleaning was conducted for importation into the <a href="https://neo4j.com/"><u>Neo4j</u></a> database.
             </Typography>
             <Typography gutterBottom>
               The purpose of this web application is to provide an interactive experience for you to explore the National Bridge Index data.
             </Typography>
-            {/*<Typography gutterBottom>
-              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-              scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-              auctor fringilla.
-            </Typography>*/}
           </DialogContent>
           {/*<DialogActions>
             <Button onClick={this.handleClose} color="primary">
