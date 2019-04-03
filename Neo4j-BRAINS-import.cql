@@ -22,7 +22,7 @@ LOAD CSV WITH HEADERS FROM $url AS row RETURN row
 MERGE (state:State {id: row.STATE_CODE_001})
 MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
 MERGE (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
-MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
+MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + row.COUNTY_CODE_003 + "_" + row.PLACE_CODE_004 + "_" + row.STRUCTURE_NUMBER_008})
 ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  bridge.latitude = row.LAT_016,
 			  bridge.longitude = row.LONG_017,
@@ -32,7 +32,7 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  county.name = row.COUNTY_CODE_003,
 			  state.name = row.STATE_CODE_001
 ',
-{batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+{batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
 
 // Load and connect :Owner and :MaintenanceResp to :Bridge
@@ -279,7 +279,6 @@ RETURN size(bridge.longitude),
 ORDER BY Long
 
 
-<<<<<<< HEAD
 // adding Bridge long & lat as point
 MATCH (bridge:Bridge)
 WHERE NOT bridge.latitude IS NULL
@@ -299,9 +298,7 @@ SET bridge.location = point({ longitude: longitude_decimal, latitude: latitude_d
 
 //query to change state name from id to state letters
 //query to change state name from id to state letters
-=======
 // This changes the state "numeric" code to the 2-letter state abreviation
->>>>>>> d3df350222b0efc892a4b6dfa218542389eb5ceb
 MATCH (state:State)
 SET state.name = 
 CASE state.name

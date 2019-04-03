@@ -44,13 +44,13 @@ class StateListMenu extends React.Component {
       order: "asc",
       orderBy: "name",
 
-      checked: true,
+      checked: false,
       // checked: {
       //   AK: true,
       //   MN: true,
       // },
-      AK: true,
-      MN: true,
+      AK: false,
+      MN: false,
     };
   }
 

@@ -25,6 +25,11 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 // import { mailFolderListItems, otherMailFolderListItems } from './tileData';
 import StateListMenu from './StateListMenu';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+// import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
 // import TemporaryDrawer from './BridgeDrawer';
 
 // import React, { Fragment } from 'react';
@@ -48,6 +53,13 @@ import StateListMenu from './StateListMenu';
 // import MoreIcon from '@material-ui/icons/MoreVert';
 
 import CustomizedDialogDemo from './About';
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const drawerWidth = 240;
 
@@ -162,6 +174,9 @@ const styles = theme => ({
     right: 0,
     margin: '0 auto',
   },
+  button: {
+    margin: theme.spacing.unit,
+  },
 });
 
 // const messages = [
@@ -217,6 +232,8 @@ class App extends Component {
   state = {
     open: false,
     anchor: 'left',
+    openDialog: false,
+
 
     // businesses: [],
     // mapCenter: {
@@ -240,9 +257,19 @@ class App extends Component {
     });
   };
 
+  handleDialogOpen = () => {
+    this.setState({ openDialog: true });
+  };
+  handleDialogClose = () => {
+    this.setState({ openDialog: false})
+  };
+
+
+
   render() {
     const { classes, theme } = this.props;
     const { anchor, open } = this.state;
+    const { openDialog } = this.state;
 
     const drawer = (
       <Drawer
@@ -259,14 +286,45 @@ class App extends Component {
           </IconButton>
         </div>
         <Divider />
+        
+
+        <List>
+          <ListItem >
+            <Button onClick={this.handleDialogOpen}>
+              About
+            </Button>
+            <Dialog
+              open={this.state.openDialog}
+              onClose={this.handleDialogClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"About"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Interesting information about this project goes here!
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleDialogClose} color="primary">
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </ListItem>
+        </List>
+        
+
+
+        <Divider />
+        <StateListMenu />
+        <Divider />
         {/*<List>{mailFolderListItems}</List>*/}
         {/*something*/}
         {/*<Divider />*/}
         {/*<List>{otherMailFolderListItems}</List>*/}
         {/*something else*/}
         {/*<Divider />*/}
-        <StateListMenu />
-        <Divider />
         <CustomizedDialogDemo />
       </Drawer>
     );
@@ -310,7 +368,7 @@ class App extends Component {
                 <MenuIcon />
               </IconButton>
               <Typography variant="title" color="inherit" noWrap>
-                B.R.A.I.N.S.
+                National Bridge Index
               </Typography>
             </Toolbar>
           </AppBar>

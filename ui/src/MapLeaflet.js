@@ -67,12 +67,14 @@ class MapLeaf extends React.Component {
 
     this.state = {
       // lng: 5,
-      lng: -93.2650,
+      //lng: -93.2650, //center of MN
+      lng: -98.5795, // center of US
       // lat: 34,
-      lat: 44.9778,
+      //lat: 44.9778, // center of MN
+      lat: 39.8283, //center of US
       // zoom: 1.5
       // zoom: 13,
-      zoom: 6,
+      zoom: 4,
       // order: "asc",
       // orderBy: "avgStars"
     //   viewport: {
@@ -141,7 +143,7 @@ class MapLeaf extends React.Component {
             <Query
               query={gql`
                 {
-                  Bridge(first: 50000) {
+                  Bridge(first: 50) {
                     id
                     latitude_decimal
                     longitude_decimal
