@@ -202,7 +202,7 @@ class App extends Component {
         <Divider />
         
 
-        <List>
+        {/*<List>
           <ListItem >
             <Button onClick={this.handleDialogOpen}>
               About
@@ -226,13 +226,13 @@ class App extends Component {
               </DialogActions>
             </Dialog>
           </ListItem>
-        </List>
+        </List>*/}
         
 
 
-        <Divider />
-        <StateListMenu />
-        <Divider />
+        {/*<Divider />*/}
+        {/*<StateListMenu />
+        <Divider />*/}
         <CustomizedDialogDemo />
       </Drawer>
     );
