@@ -31,6 +31,7 @@ class StateListMenu extends React.Component {
     this.state = {
       order: "asc",
       orderBy: "name",
+      //name: null
 
       //checked: false,
       // checked: {
@@ -43,16 +44,19 @@ class StateListMenu extends React.Component {
   }
 
   handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-    //console.log(name);
+    //this.setState({ [name]: event.target.checked });
+    this.setState({ name: name });
+    //this.setState({ name: [name, event.target.checked] });
+    console.log(name);
   };
 
   render() {
-    const { order, orderBy } = this.state;
+    const { order, orderBy, name } = this.state;
+    //const { _name } = this.state.name;
     // const { order } = this.state;
     console.log(this.state);
     
-    ;
+    
     return (
       <Query
         query={gql`

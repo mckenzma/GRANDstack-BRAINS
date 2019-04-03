@@ -52,7 +52,9 @@ class MapLeaf extends React.Component {
       bridge_lng: null,
       build_year: null,
       owned_by: null,
-      maintained_by: null
+      maintained_by: null,
+
+      name: "AZ"
     };
 
   }
@@ -105,8 +107,28 @@ class MapLeaf extends React.Component {
             shadowUrl: iconShadow
           });
 
+          const { name } = this.state;
+
           return (
             <Query
+              query={gql`
+                query statesPaginateQuery(
+                  $name: String
+                )
+                {
+                  State (name: $name){
+                    bridges(first: 3){
+                      id
+                      name
+                      latitude_decimal
+                      longitude_decimal
+                      yearbuilt
+                    }
+                  }
+                }
+              `}
+            >
+            {/*<Query
               query={gql`
                 {
                   Bridge(first: 500) {
@@ -118,7 +140,7 @@ class MapLeaf extends React.Component {
                   }
                 }
               `}
-            >
+            >*/}
               {({ loading, error, data }) => {
                 if (loading) return <p>Loading...</p>
                 if (error) return <p>Error</p>
@@ -132,7 +154,8 @@ class MapLeaf extends React.Component {
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                       />
                       <MarkerClusterGroup>
-                      {data.Bridge
+                      {/*{data.Bridge*/}
+                      {/*{data.State.bridges
                         .slice()
                         .map(n => {
                           return (
@@ -141,6 +164,27 @@ class MapLeaf extends React.Component {
                             </Marker>
                           
                             
+                                );
+                                })}*/}
+                      
+                      {data.State
+                        .slice()
+                        .map(b => {
+                          return (
+                            <div>
+                            {b.bridges
+                        .slice()
+                        .map(n => {
+                          return (
+                            
+                            <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
+                            </Marker>
+                          
+                            
+                                );
+                                })}
+                          
+                            </div>
                                 );
                                 })}
                         </MarkerClusterGroup>
@@ -176,7 +220,7 @@ class MapLeaf extends React.Component {
                           </ListItem>
                         </List>
                         <Divider />
-                        {sideList}
+                        {/*{sideList}*/}
                         </div>
                       </div>
                     </Drawer>
