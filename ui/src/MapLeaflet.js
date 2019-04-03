@@ -4,12 +4,6 @@ import gql from "graphql-tag";
 import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
-// import Paper from "@material-ui/core/Paper";
-
-// import mapboxgl from "mapbox-gl";
-// import 'mapbox-gl/dist/mapbox-gl.css';
-// import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
-// import ReactMapboxGl from "react-mapbox-gl";
 
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -19,29 +13,15 @@ import L from 'leaflet';
 
 import HeatmapLayer from 'react-leaflet-heatmap-layer/lib/HeatmapLayer';
 
-// import 'leaflet.markercluster/dist/MarkerCluster.css';
-// import MarkerClusterGroup from 'leaflet.markercluster/dist/leaflet.markercluster-src.js';
-
 import 'react-leaflet-markercluster/dist/styles.min.css';
-//import MarkerClusterGroup from 'react-leaflet-markercluster/dist/react-leaflet-markercluster.js';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-
-// import HeatmapLayer from 'react-leaflet-heatmap-layer/src/HeatmapLayer';
 
 import PropTypes from 'prop-types';
 import Drawer from '@material-ui/core/Drawer';
-// import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-// import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
-// import TemporaryDrawer from './BridgeDrawer';
-
-// mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
-// ReactMapboxGl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
-// mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
 
 const styles = theme => ({
   root: {
@@ -58,32 +38,14 @@ const styles = theme => ({
   
 });
 
-// console.log(icon);
-// console.log(iconShadow);
-
 class MapLeaf extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      // lng: 5,
-      //lng: -93.2650, //center of MN
       lng: -98.5795, // center of US
-      // lat: 34,
-      //lat: 44.9778, // center of MN
       lat: 39.8283, //center of US
-      // zoom: 1.5
-      // zoom: 13,
       zoom: 4,
-      // order: "asc",
-      // orderBy: "avgStars"
-    //   viewport: {
-	  	// width: 400,
-	  	// height: 400,
-	  	// latitude: 37.7577,
-	  	// longitude: -122.4376,
-	  	// zoom: 8
-	  // },
       right: false,
       bridge_id: null,
       bridge_lat: null,
@@ -91,7 +53,6 @@ class MapLeaf extends React.Component {
       build_year: null
     };
 
-    // this.businessMarkers = [];
   }
 
   toggleDrawer = (side, open, bridge) => () => {
@@ -107,21 +68,19 @@ class MapLeaf extends React.Component {
   render() {
 
     const { classes } = this.props;
-    // console.log(classes);
-    // console.log(this.state.bridge_id);
-
+    
     const sideList = (
       <div className={classes.list}>
         <List >
           <ListItem >
             <ListItemText >ID: {this.state.bridge_id}</ListItemText>
           </ListItem>
-          {/*<ListItem >
+          <ListItem >
             <ListItemText >LAT: {this.state.bridge_lat}</ListItemText>
           </ListItem>
           <ListItem >
             <ListItemText >LONG: {this.state.bridge_lng}</ListItemText>
-          </ListItem>*/}
+          </ListItem>
           <ListItem >
             <ListItemText >Build Year: {this.state.build_year}</ListItemText>
           </ListItem>
@@ -135,9 +94,6 @@ class MapLeaf extends React.Component {
             iconUrl: icon,
             shadowUrl: iconShadow
           });
-
-          
-
 
           return (
             <Query
