@@ -1,20 +1,11 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-// import "./StateList.css";
+
 import { withStyles } from "@material-ui/core/styles";
-// import Table from "@material-ui/core/Table";
-// import TableBody from "@material-ui/core/TableBody";
-// import TableCell from "@material-ui/core/TableCell";
-// import TableHead from "@material-ui/core/TableHead";
-// import TableRow from "@material-ui/core/TableRow";
-// import Tooltip from "@material-ui/core/Tooltip";
-// import Paper from "@material-ui/core/Paper";
-// import { TableSortLabel } from "@material-ui/core";
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-// import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 
@@ -25,9 +16,6 @@ const styles = theme => ({
     // overflowX: "auto",
     // margin: "auto"
   }
-  // table: {
-  //   minWidth: 700
-  // }
 });
 
 function getSorting(order, orderBy) {
@@ -55,23 +43,9 @@ class StateListMenu extends React.Component {
   }
 
   handleChange = name => event => {
-  // handleChange = (name, b_name) => event => {
     this.setState({ [name]: event.target.checked });
-    // this.setState({ [name]: event.target.name });
-    // this.setState({ [name]: event.target.checked.b_name });
     console.log(name);
   };
-
-  // handleSortRequest = property => {
-  //   const orderBy = property;
-  //   let order = "desc";
-
-  //   if (this.state.orderBy === property && this.state.order === "desc") {
-  //     order = "asc";
-  //   }
-
-  //   this.setState({ order, orderBy });
-  // };
 
   render() {
     const { order, orderBy } = this.state;
@@ -103,7 +77,6 @@ class StateListMenu extends React.Component {
               {data.State
                 .slice()
                 .sort(getSorting(order, orderBy))
-                // .sort(getSorting(order))
                 .map(n => {
                   return (
                     <ListItem key={n.id}>
