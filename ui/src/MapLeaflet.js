@@ -147,7 +147,7 @@ class MapLeaf extends React.Component {
           {
             State (name: $name){
               id
-              bridges(first: 10){
+              bridges {
                 id
                 name
                 latitude_decimal

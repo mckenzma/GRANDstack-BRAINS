@@ -56,6 +56,7 @@ class StateListMenu extends React.Component {
       order: "asc",
       orderBy: "name",
       name: null,
+      selectedStates: [],
     }
   }
 
@@ -69,6 +70,7 @@ class StateListMenu extends React.Component {
     //this.setState({ name: name });
     this.props.triggerParentUpdate(name);
     this.setState({ selectedValue: event.target.value });
+    this.state.selectedStates = this.state.selectedStates.concat(name); //this adds selected state to an array
 
     //this.setState({ name: name }, () => { this.MapLeaf.render() } );
     //this.setState({ name: [name, event.target.checked] });
@@ -128,7 +130,7 @@ class StateListMenu extends React.Component {
                 .map(n => {
                   return (
                     <ListItem key={n.id}>
-                      {/*<Checkbox
+                      <Checkbox
                         // checked={this.state.checked}
                         checked={this.state[n.name]}
                         //checked={this.props[n.name]}
@@ -136,7 +138,7 @@ class StateListMenu extends React.Component {
                         onChange={this.handleChange(n.name)}
                         // value="checked"
                         value={n.name}
-                      />*/}
+                      />
                       <Radio
                         checked={this.state.selectedValue === n.name}
                         onChange={this.handleChange(n.name)}
