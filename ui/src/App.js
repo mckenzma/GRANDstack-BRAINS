@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import BridgeList from './BridgeList';
-
-
+//import BridgeList from './BridgeList';
+import MapLeaf from './MapLeaflet';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -151,11 +150,41 @@ const styles = theme => ({
 });
 
 class App extends Component {
-  state = {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      // from StateMenuList.js
+      order: "asc",
+      orderBy: "name",
+      // from MapLeaflet.js
+      lng: -98.5795, // center of US
+      lat: 39.8283, //center of US
+      zoom: 4,
+      right: false,
+      bridge_id: null,
+      bridge_lat: null,
+      bridge_lng: null,
+      build_year: null,
+      owned_by: null,
+      maintained_by: null,
+
+      //name: "AZ",
+      name: "",
+
+      // from here
+      open: false,
+      anchor: 'left',
+      openDialog: false,
+    };
+    this.updateThisProperty = this.updateThisProperty.bind(this);
+  }
+
+/*  state = {
     open: false,
     anchor: 'left',
     openDialog: false,
-  };
+  };*/
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -178,7 +207,10 @@ class App extends Component {
     this.setState({ openDialog: false})
   };
 
-
+  updateThisProperty(name) {
+    this.setState({ name: name });
+    console.log("look at me");
+  }
 
   render() {
     const { classes, theme } = this.props;
@@ -234,7 +266,8 @@ class App extends Component {
         
         <CustomizedDialogDemo />
         <Divider />
-        <StateListMenu />
+        {/*<StateListMenu />*/}
+        <StateListMenu triggerParentUpdate={this.updateThisProperty} />
       </Drawer>
     );
 
@@ -280,7 +313,9 @@ class App extends Component {
             })}
           >
             <div className={classes.drawerHeader} />
-            <BridgeList />
+            {/*<BridgeList />*/}
+            <MapLeaf name={this.state.name}/>
+            {/*<MapLeaf triggerParentUpdate={this.updateThisProperty}/>*/}
           </main>
           {after}
         </div>

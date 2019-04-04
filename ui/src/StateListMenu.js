@@ -9,6 +9,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import MapLeaf from './MapLeaflet';
+
 const styles = theme => ({
   root: {
     // maxWidth: 700,
@@ -25,7 +27,7 @@ function getSorting(order, orderBy) {
 }
 
 class StateListMenu extends React.Component {
-  constructor(props) {
+/*}  constructor(props) {
     super(props);
 
     this.state = {
@@ -41,17 +43,38 @@ class StateListMenu extends React.Component {
       //AK: false,
       //MN: false,
     };
+  }*/
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      order: "asc",
+      orderBy: "name",
+      name: null,
+    }
   }
+
+  // componentWillReceiveProps(props) {
+  //   //this.setState({ name: props.name, order: props.order, orderBy: props.orderBy })
+  //   this.setState({ order: props.order, orderBy: props.orderBy })
+  // }
 
   handleChange = name => event => {
     //this.setState({ [name]: event.target.checked });
-    this.setState({ name: name });
+    //this.setState({ name: name });
+    this.props.triggerParentUpdate(name);
+
+
+    //this.setState({ name: name }, () => { this.MapLeaf.render() } );
     //this.setState({ name: [name, event.target.checked] });
     console.log(name);
   };
 
   render() {
     const { order, orderBy, name } = this.state;
+    //const { order, orderBy, name } = this.props;
+    
     //const { _name } = this.state.name;
     // const { order } = this.state;
     console.log(this.state);
@@ -104,6 +127,7 @@ class StateListMenu extends React.Component {
                       <Checkbox
                         // checked={this.state.checked}
                         checked={this.state[n.name]}
+                        //checked={this.props[n.name]}
                         // onChange={this.handleChange('checked')}
                         onChange={this.handleChange(n.name)}
                         // value="checked"

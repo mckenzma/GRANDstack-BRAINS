@@ -39,6 +39,26 @@ const styles = theme => ({
 });
 
 class MapLeaf extends React.Component {
+/*  constructor(props) {
+    super(props);
+
+    this.state = {
+      lng: -98.5795, // center of US
+      lat: 39.8283, //center of US
+      zoom: 4,
+      right: false,
+      bridge_id: null,
+      bridge_lat: null,
+      bridge_lng: null,
+      build_year: null,
+      owned_by: null,
+      maintained_by: null,
+
+      //name: "AZ",
+      name: "",
+    };
+
+  }*/
   constructor(props) {
     super(props);
 
@@ -54,10 +74,15 @@ class MapLeaf extends React.Component {
       owned_by: null,
       maintained_by: null,
 
-      name: "AZ"
+      //name: "AZ",
+      //name: "",
     };
 
   }
+
+  // componentWillReceiveProps(props) {
+  //   this.setState({ name: props.name })
+  // }
 
   toggleDrawer = (side, open, bridge) => () => {
     this.setState({
@@ -71,6 +96,8 @@ class MapLeaf extends React.Component {
   };
 
   render() {
+
+    console.log("name is: " + this.props.name);
 
     const { classes } = this.props;
     
@@ -102,139 +129,141 @@ class MapLeaf extends React.Component {
 
     const position = [this.state.lat, this.state.lng];
 
-          const myIcon = L.icon({
-            iconUrl: icon,
-            shadowUrl: iconShadow
-          });
+    const myIcon = L.icon({
+      iconUrl: icon,
+      shadowUrl: iconShadow
+    });
 
-          const { name } = this.state;
-          console.log("MapLeaflet.js: " + this.state.name);
+    const { name } = this.state;
+    //const { name } = this.props.name;
+    //console.log("MapLeaflet.js: " + this.state.name);
+
+    return (
+      <Query
+        query={gql`
+          query statesPaginateQuery(
+            $name: String
+          )
+          {
+            State (name: $name){
+              id
+              bridges(first: 10){
+                id
+                name
+                latitude_decimal
+                longitude_decimal
+                yearbuilt
+              }
+            }
+          }
+        `}
+        variables={{
+          //name: this.state.name
+          name: this.props.name
+        }}
+      >
+      {/*<Query
+        query={gql`
+          {
+            Bridge(first: 500) {
+              id
+              name
+              latitude_decimal
+              longitude_decimal
+              yearbuilt
+            }
+          }
+        `}
+      >*/}
+        {({ loading, error, data }) => {
+          if (loading) return <p>Loading...</p>
+          if (error) return <p>Error</p>
 
           return (
-            <Query
-              query={gql`
-                query statesPaginateQuery(
-                  $name: String
-                )
-                {
-                  State (name: $name){
-                    id
-                    bridges(first: 10){
-                      id
-                      name
-                      latitude_decimal
-                      longitude_decimal
-                      yearbuilt
-                    }
-                  }
-                }
-              `}
-              variables={{
-                name: this.state.name
-              }}
-            >
-            {/*<Query
-              query={gql`
-                {
-                  Bridge(first: 500) {
-                    id
-                    name
-                    latitude_decimal
-                    longitude_decimal
-                    yearbuilt
-                  }
-                }
-              `}
-            >*/}
-              {({ loading, error, data }) => {
-                if (loading) return <p>Loading...</p>
-                if (error) return <p>Error</p>
 
-                return (
-
-                  <div>
-                    <Map center={position} zoom={this.state.zoom} maxZoom={18} className="absolute top right left bottom" >
-                      <TileLayer
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                      />
-                      <MarkerClusterGroup>
-                      {/*{data.Bridge*/}
-                      {/*{data.State.bridges
-                        .slice()
-                        .map(n => {
-                          return (
-                            
-                            <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
-                            </Marker>
-                          
-                            
-                                );
-                                })}*/}
+            <div>
+              <Map center={position} zoom={this.state.zoom} maxZoom={18} className="absolute top right left bottom" >
+                <TileLayer
+                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                />
+                <MarkerClusterGroup>
+                {/*{data.Bridge*/}
+                {/*{data.State.bridges
+                  .slice()
+                  .map(n => {
+                    return (
                       
-                      {data.State
-                        .slice()
-                        .map(b => {
-                          return (
-                            <div>
-                            {b.bridges
-                        .slice()
-                        .map(n => {
-                          return (
-                            
-                            <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
-                            </Marker>
-                          
-                            
-                                );
-                                })}
-                          
-                            </div>
-                                );
-                                })}
-                        </MarkerClusterGroup>
-                    </Map>
-
-                    {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
-                      <HeatmapLayer
-                        //blur={10.0}
-                        //radius={10.0}
-                        fitBoundsOnLoad
-                        fitBoundsOnUpdate
-                        points={data.Bridge}
-                        longitudeExtractor={m => m['longitude_decimal']}
-                        latitudeExtractor={m => m['latitude_decimal']}
-                        intensityExtractor={m => 5.0} />
-                      <TileLayer
-                        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                      />
-                    </Map>*/}
-
-                    <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false, "")}>
-                      <div
-                        tabIndex={0}
-                        role="button"
-                        onClick={this.toggleDrawer('right', false, "")}
-                        onKeyDown={this.toggleDrawer('right', false, "")}
-                      >
-                        <div className={classes.list}>
-                        <List>
-                          <ListItem>
-                            <ListItemText>Bridge Info</ListItemText>
-                          </ListItem>
-                        </List>
-                        <Divider />
-                        {sideList}
-                        </div>
+                      <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
+                      </Marker>
+                    
+                      
+                          );
+                          })}*/}
+                
+                {data.State
+                  .slice()
+                  .map(b => {
+                    return (
+                      <div>
+                      {b.bridges
+                  .slice()
+                  .map(n => {
+                    return (
+                      
+                      <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
+                      </Marker>
+                    
+                      
+                          );
+                          })}
+                    
                       </div>
-                    </Drawer>
+                          );
+                          })}
+                  </MarkerClusterGroup>
+              </Map>
+
+              {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
+                <HeatmapLayer
+                  //blur={10.0}
+                  //radius={10.0}
+                  fitBoundsOnLoad
+                  fitBoundsOnUpdate
+                  points={data.Bridge}
+                  longitudeExtractor={m => m['longitude_decimal']}
+                  latitudeExtractor={m => m['latitude_decimal']}
+                  intensityExtractor={m => 5.0} />
+                <TileLayer
+                  url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                />
+              </Map>*/}
+
+              <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false, "")}>
+                <div
+                  tabIndex={0}
+                  role="button"
+                  onClick={this.toggleDrawer('right', false, "")}
+                  onKeyDown={this.toggleDrawer('right', false, "")}
+                >
+                  <div className={classes.list}>
+                  <List>
+                    <ListItem>
+                      <ListItemText>Bridge Info</ListItemText>
+                    </ListItem>
+                  </List>
+                  <Divider />
+                  {sideList}
                   </div>
-                );
-              }}
-            </Query>
-        
+                </div>
+              </Drawer>
+            </div>
           );
+        }}
+      </Query>
+  
+    );
     
   }
 }
