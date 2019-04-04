@@ -9,6 +9,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import Radio from '@material-ui/core/Radio';
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+
 import MapLeaf from './MapLeaflet';
 
 const styles = theme => ({
@@ -64,7 +68,7 @@ class StateListMenu extends React.Component {
     //this.setState({ [name]: event.target.checked });
     //this.setState({ name: name });
     this.props.triggerParentUpdate(name);
-
+    this.setState({ selectedValue: event.target.value });
 
     //this.setState({ name: name }, () => { this.MapLeaf.render() } );
     //this.setState({ name: [name, event.target.checked] });
@@ -124,13 +128,18 @@ class StateListMenu extends React.Component {
                 .map(n => {
                   return (
                     <ListItem key={n.id}>
-                      <Checkbox
+                      {/*<Checkbox
                         // checked={this.state.checked}
                         checked={this.state[n.name]}
                         //checked={this.props[n.name]}
                         // onChange={this.handleChange('checked')}
                         onChange={this.handleChange(n.name)}
                         // value="checked"
+                        value={n.name}
+                      />*/}
+                      <Radio
+                        checked={this.state.selectedValue === n.name}
+                        onChange={this.handleChange(n.name)}
                         value={n.name}
                       />
                       <ListItemText>{n.name}</ListItemText>
