@@ -108,6 +108,7 @@ class MapLeaf extends React.Component {
           });
 
           const { name } = this.state;
+          console.log("MapLeaflet.js: " + this.state.name);
 
           return (
             <Query
@@ -117,7 +118,8 @@ class MapLeaf extends React.Component {
                 )
                 {
                   State (name: $name){
-                    bridges(first: 3){
+                    id
+                    bridges(first: 10){
                       id
                       name
                       latitude_decimal
@@ -127,6 +129,9 @@ class MapLeaf extends React.Component {
                   }
                 }
               `}
+              variables={{
+                name: this.state.name
+              }}
             >
             {/*<Query
               query={gql`
@@ -220,7 +225,7 @@ class MapLeaf extends React.Component {
                           </ListItem>
                         </List>
                         <Divider />
-                        {/*{sideList}*/}
+                        {sideList}
                         </div>
                       </div>
                     </Drawer>
