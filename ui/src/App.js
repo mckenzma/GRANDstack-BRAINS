@@ -18,18 +18,18 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import StateListMenu from './StateListMenu';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+//import List from '@material-ui/core/List';
+//import ListItem from '@material-ui/core/ListItem';
+//import ListItemText from '@material-ui/core/ListItemText';
 
 import CustomizedDialogDemo from './About';
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+//import Button from '@material-ui/core/Button';
+//import Dialog from '@material-ui/core/Dialog';
+//import DialogActions from '@material-ui/core/DialogActions';
+//import DialogContent from '@material-ui/core/DialogContent';
+//import DialogContentText from '@material-ui/core/DialogContentText';
+//import DialogTitle from '@material-ui/core/DialogTitle';
 
 const drawerWidth = 240;
 
@@ -209,13 +209,13 @@ class App extends Component {
 
   updateThisProperty(name) {
     this.setState({ name: name });
-    console.log("look at me");
+    //console.log("look at me");
   }
 
   render() {
     const { classes, theme } = this.props;
     const { anchor, open } = this.state;
-    const { openDialog } = this.state;
+    //const { openDialog } = this.state;
 
     const drawer = (
       <Drawer

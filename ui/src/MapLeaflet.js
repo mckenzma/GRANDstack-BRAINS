@@ -5,13 +5,14 @@ import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
 
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+//import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import { Map, Marker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from 'leaflet';
 
-import HeatmapLayer from 'react-leaflet-heatmap-layer/lib/HeatmapLayer';
+//import HeatmapLayer from 'react-leaflet-heatmap-layer/lib/HeatmapLayer';
 
 import 'react-leaflet-markercluster/dist/styles.min.css';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
@@ -84,9 +85,10 @@ class MapLeaf extends React.Component {
   //   this.setState({ name: props.name })
   // }
 
-  toggleDrawer = (side, open, bridge) => () => {
+  toggleDrawer = (side, open, bridge, stateName) => () => {
     this.setState({
       [side]: open,
+      bridge_state: stateName,
       bridge_name: bridge.name,
       bridge_id: bridge.id,
       bridge_lat: bridge.latitude_decimal,
@@ -97,7 +99,7 @@ class MapLeaf extends React.Component {
 
   render() {
 
-    console.log("name is: " + this.props.name);
+    //console.log("name is: " + this.props.name);
 
     const { classes } = this.props;
     
@@ -108,21 +110,25 @@ class MapLeaf extends React.Component {
             <ListItemText >NAME: {this.state.bridge_name}</ListItemText>
           </ListItem>*/}
           <ListItem >
+            <ListItemText >State: {this.state.bridge_state}</ListItemText>
+          </ListItem>
+          <Divider />
+          <ListItem >
             <ListItemText >LAT: {this.state.bridge_lat}</ListItemText>
           </ListItem>
           <ListItem >
             <ListItemText >LONG: {this.state.bridge_lng}</ListItemText>
           </ListItem>
+          <Divider />
           <ListItem >
             <ListItemText >Build Year: {this.state.build_year}</ListItemText>
           </ListItem>
-          <Divider />
-          <ListItem >
-            <ListItemText >Owned By: {/*{this.state.build_year}*/}</ListItemText>
+          {/*<ListItem >
+            <ListItemText >Owned By: </ListItemText>
           </ListItem>
           <ListItem >
-            <ListItemText >Maintained By: {/*{this.state.build_year}*/}</ListItemText>
-          </ListItem>
+            <ListItemText >Maintained By: </ListItemText>
+          </ListItem>*/}
         </List>
       </div>
     );
@@ -134,7 +140,7 @@ class MapLeaf extends React.Component {
       shadowUrl: iconShadow
     });
 
-    const { name } = this.state;
+    //const { name } = this.state;
     //const { name } = this.props.name;
     //console.log("MapLeaflet.js: " + this.state.name);
 
@@ -147,6 +153,7 @@ class MapLeaf extends React.Component {
           {
             State (name: $name){
               id
+              name
               bridges {
                 id
                 name
@@ -205,13 +212,13 @@ class MapLeaf extends React.Component {
                   .slice()
                   .map(b => {
                     return (
-                      <div>
+                      <div key={b.id}>
                       {b.bridges
                   .slice()
                   .map(n => {
                     return (
                       
-                      <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
+                      <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n, b.name)}>
                       </Marker>
                     
                       

@@ -22,7 +22,12 @@ LOAD CSV WITH HEADERS FROM $url AS row RETURN row
 MERGE (state:State {id: row.STATE_CODE_001})
 MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
 MERGE (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
-MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + row.COUNTY_CODE_003 + "_" + row.PLACE_CODE_004 + "_" + row.STRUCTURE_NUMBER_008})
+MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+                                               row.COUNTY_CODE_003 + "_" + 
+                                               row.PLACE_CODE_004 + "_" + 
+                                               row.STRUCTURE_NUMBER_008 + 
+                                               "_LAT_" + row.LAT_016 + 
+                                               "_LONG_" +row.LONG_017})
 ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  bridge.latitude = row.LAT_016,
 			  bridge.longitude = row.LONG_017,

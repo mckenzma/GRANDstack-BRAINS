@@ -2,27 +2,27 @@ import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-import { withStyles } from "@material-ui/core/styles";
+//import { withStyles } from "@material-ui/core/styles";
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
+//import Checkbox from '@material-ui/core/Checkbox';
 
 import Radio from '@material-ui/core/Radio';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+//import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+//import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
-import MapLeaf from './MapLeaflet';
+//import MapLeaf from './MapLeaflet';
 
-const styles = theme => ({
+/*const styles = theme => ({
   root: {
     // maxWidth: 700,
     // marginTop: theme.spacing.unit * 3,
     // overflowX: "auto",
     // margin: "auto"
   }
-});
+});*/
 
 function getSorting(order, orderBy) {
   return order === "desc"
@@ -74,7 +74,7 @@ class StateListMenu extends React.Component {
 
     //this.setState({ name: name }, () => { this.MapLeaf.render() } );
     //this.setState({ name: [name, event.target.checked] });
-    console.log(name);
+    //console.log(name);
   };
 
   render() {
@@ -83,7 +83,7 @@ class StateListMenu extends React.Component {
     
     //const { _name } = this.state.name;
     // const { order } = this.state;
-    console.log(this.state);
+    //console.log(this.state);
     
     
     return (
@@ -130,7 +130,7 @@ class StateListMenu extends React.Component {
                 .map(n => {
                   return (
                     <ListItem key={n.id}>
-                      <Checkbox
+                      {/*<Checkbox
                         // checked={this.state.checked}
                         checked={this.state[n.name]}
                         //checked={this.props[n.name]}
@@ -138,7 +138,7 @@ class StateListMenu extends React.Component {
                         onChange={this.handleChange(n.name)}
                         // value="checked"
                         value={n.name}
-                      />
+                      />*/}
                       <Radio
                         checked={this.state.selectedValue === n.name}
                         onChange={this.handleChange(n.name)}
