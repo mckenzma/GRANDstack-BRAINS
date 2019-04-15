@@ -378,7 +378,6 @@ SET bridge.location = point({ longitude: longitude_decimal, latitude: latitude_d
 
 
 //query to change state name from id to state letters
-//query to change state name from id to state letters
 // This changes the state "numeric" code to the 2-letter state abreviation
 MATCH (state:State)
 SET state.name = 
@@ -465,6 +464,12 @@ WHERE bridge2.yearbuilt = buildYear
 RETURN buildYear, count(bridge2) AS Num_Bridges_Built
 ORDER BY buildYear
 
+// Count number of bridge built each year by state
+MATCH (yb:YearBuilt)
+MATCH (s:State)
+MATCH (yb)<-[:BUILT_IN]-(bridge:Bridge)-[:OF_PLACE]->()-[:OF_COUNTY]->()-[:OF_STATE]->(s)   
+RETURN yb.year.year, s.name, count(bridge)
+ORDER BY yb.year.year, s.name
 
 
 ///////////////////////////////////////////////
