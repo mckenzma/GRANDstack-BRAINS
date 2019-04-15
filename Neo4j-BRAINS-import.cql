@@ -5,6 +5,7 @@ CREATE INDEX ON :County(id);
 CREATE INDEX ON :State(id);
 CREATE INDEX ON :Owner(id);
 CREATE INDEX ON :MaintenanceResp(id);
+CREATE INDEX ON :InspectionDate(id);
 
 // Load and connect :State, :County, :Place, and :Bridge
 
@@ -99,27 +100,30 @@ RETURN batches, total
 
 
 
-
-
-
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 // Load and create :InspectionDate
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
 // Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row1
 WITH CASE
-	WHEN NOT row1.Year IS NULL THEN collect([row1.URL,row1.Year])
+    //WHEN NOT row1.Year IS NULL THEN collect([row1.URL,row1.Year])
+	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
     END AS fileURLs
 UNWIND fileURLs as fileURL
 CALL apoc.periodic.iterate(
 '
 LOAD CSV WITH HEADERS FROM $url AS row RETURN row
 ','
-CREATE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090, inspDate.year = $fileYear}) 
-//MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+//CREATE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090, inspDate.year = $fileYear}) 
+MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
 //ON CREATE SET inspDate.year = $fileYear
+ON CREATE DET inspDate.id = row.DATE_OF_INSPECT_090
 ',
-{batchSize:10000, parallel:false, params:{url:fileURL[0], fileYear:fileURL[1]}}) YIELD batches, total
+//{batchSize:10000, parallel:false, params:{url:fileURL[0], fileYear:fileURL[1]}}) YIELD batches, total
+{batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
 
 
@@ -137,7 +141,9 @@ WITH row, temp,
     END AS year
 RETURN row.DATE_OF_INSPECT_090, size(row.DATE_OF_INSPECT_090), temp, month, year
 ORDER BY month
-
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
 
 
