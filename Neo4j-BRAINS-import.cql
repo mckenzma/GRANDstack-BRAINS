@@ -1,4 +1,3 @@
-
 // creating Indexes for mass import
 CREATE INDEX ON :Bridge(id);
 CREATE INDEX ON :Place(id);
@@ -209,23 +208,24 @@ SET inspDate.month = left(inspDate.id, 2)
 
 // Create (:YearBuilt) and connect to (:Bridge)
 MATCH (bridge:Bridge)
-WHERE length(toString(bridge.yearbuilt)) = 4 //this ignores null values, and bridges where year recorded doesn't match designated format`
+WHERE size(toString(bridge.yearbuilt)) = 4 //this ignores null values, and bridges where year recorded doesn't match designated format`
 WITH collect(DISTINCT bridge.yearbuilt) AS buildYears
 UNWIND buildYears as buildYear
-MERGE(yearBuilt:YearBuilt {year: buildYear})
+MERGE (yearBuilt:YearBuilt {year: date({ year: buildYear})})
+//MERGE(yearBuilt:YearBuilt {year: buildYear})
 WITH yearBuilt, buildYear
 CALL apoc.periodic.iterate(
 '
 MATCH (bridge:Bridge)
 WHERE bridge.yearbuilt = $build_year
 MATCH (yearBuilt:YearBuilt)
-WHERE yearBuilt.year = $build_year
+WHERE yearBuilt.year.year = $build_year
 RETURN bridge, yearBuilt
 ',
 '
 MERGE (bridge)-[:BUILT_IN]->(yearBuilt)
 ',
-{batchSize:1000, parallel:true, params:{build_year:buildYear}}) YIELD batches, total
+{batchSize:10000, parallel:true, params:{build_year:buildYear}}) YIELD batches, total
 RETURN batches, total
 
 
@@ -498,7 +498,7 @@ DETOUR_KILOS_019
 //MAINTENANCE_021
 //OWNER_022
 
-//FUNCTIONAL_CLASS_026
+FUNCTIONAL_CLASS_026
 //YEAR_BUILT_027
 TRAFFIC_LANES_ON_028A
 TRAFFIC_LANES_UND_028B
@@ -518,12 +518,12 @@ NAVIGATION_038
 NAV_VERT_CLR_MT_039
 NAV_HORR_CLR_MT_040
 OPEN_CLOSED_POSTED_041
-//SERVICE_ON_042A
-//SERVICE_UND_042B
-//STRUCTURE_KIND_043A
-//STRUCTURE_TYPE_043B
-//APPR_KIND_044A
-//APPR_TYPE_044B
+SERVICE_ON_042A
+SERVICE_UND_042B
+STRUCTURE_KIND_043A
+STRUCTURE_TYPE_043B
+APPR_KIND_044A
+APPR_TYPE_044B
 MAIN_UNIT_SPANS_045
 APPR_SPANS_046
 HORR_CLR_MT_047
