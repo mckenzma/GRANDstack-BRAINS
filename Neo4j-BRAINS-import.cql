@@ -47,6 +47,8 @@ RETURN batches, total
 // Load and connect :Owner and :MaintenanceResp to :Bridge
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+// Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row1
 WITH CASE
 	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
     END AS fileURLs
@@ -55,7 +57,12 @@ CALL apoc.periodic.iterate(
 '
 LOAD CSV WITH HEADERS FROM $url AS row RETURN row
 ','
-MATCH (bridge:Bridge {id: row.STRUCTURE_NUMBER_008})
+MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+                          row.COUNTY_CODE_003 + "_" + 
+                          row.PLACE_CODE_004 + "_" + 
+                          row.STRUCTURE_NUMBER_008 + 
+                          "_LAT_" + row.LAT_016 + 
+                          "_LONG_" +row.LONG_017})
 MERGE (owner:Owner {id: row.OWNER_022})
 MERGE (maintResp:MaintenanceResp {id: row.MAINTENANCE_021})
 MERGE (bridge)-[:OWNED_BY]->(owner)
@@ -63,7 +70,7 @@ MERGE (bridge)-[:MAINTAINED_BY]->(maintResp)
 ON CREATE SET owner.name = row.OWNER_022,
 			  maintResp.name = row.MAINTENANCE_021
 ',
-{batchSize:1000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+{batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
 
 // Convert Latitude and Longitude from initial import to point (spatial)
@@ -89,8 +96,18 @@ SET bridge.location = point({ longitude: longitude_decimal, latitude: latitude_d
 {batchSize:10000, parallel:true}) YIELD batches, total
 RETURN batches, total
 
+
+
+
+
+
+
+
 // Load and create :InspectionDate
+// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+// Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row1
 WITH CASE
 	WHEN NOT row1.Year IS NULL THEN collect([row1.URL,row1.Year])
     END AS fileURLs
@@ -103,8 +120,43 @@ CREATE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090, inspDate.year = $f
 //MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
 //ON CREATE SET inspDate.year = $fileYear
 ',
-{batchSize:1000, parallel:false, params:{url:fileURL[0], fileYear:fileURL[1]}}) YIELD batches, total
+{batchSize:10000, parallel:false, params:{url:fileURL[0], fileYear:fileURL[1]}}) YIELD batches, total
 RETURN batches, total
+
+
+// working on inspectindate
+LOAD CSV WITH HEADERS FROM "https://www.fhwa.dot.gov/bridge/nbi/2018/delimited/AL18.txt" AS row
+WITH row, replace(row.DATE_OF_INSPECT_090, " ", "") AS temp
+WITH row, temp, 
+    CASE size(temp)
+        WHEN 3 THEN toInteger(left(temp,1))
+        WHEN 4 THEN toInteger(left(temp,2))
+    END AS month,
+    CASE 
+        WHEN ( toInteger(right(temp,2)) <= 99 AND toInteger(right(temp,2)) >= 92 ) THEN toInteger("19" + right(temp,2))
+        WHEN ( toInteger(right(temp,2)) >= 00 AND toInteger(right(temp,2)) < 92 ) THEN toInteger("20" + right(temp,2))
+    END AS year
+RETURN row.DATE_OF_INSPECT_090, size(row.DATE_OF_INSPECT_090), temp, month, year
+ORDER BY month
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
