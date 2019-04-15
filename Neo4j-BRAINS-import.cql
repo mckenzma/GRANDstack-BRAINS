@@ -8,8 +8,12 @@ CREATE INDEX ON :Owner(id);
 CREATE INDEX ON :MaintenanceResp(id);
 
 // Load and connect :State, :County, :Place, and :Bridge
+
+
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+// Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row1
 WITH CASE
 	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
     END AS fileURLs
@@ -198,8 +202,18 @@ MATCH (year:Year {id: inspDate.year})-[:MONTH]->(month:Month {id: inspDate.month
 MERGE (inspDate)-[:DATE_OF_INSPECTION]->(month)
 
 // Create Condition Rating Nodes
-UNWIND ['N', '9', '8', '7', '6', '5', '4', '3', '2', '1', '0'] AS code
-CREATE (:ConditionRating {id: code})
+UNWIND [['N', 'NOT APPLICABLE', ''], 
+        ['9', 'EXCELLENT CONDITION', ''],
+        ['8', 'VERY GOOD CONDITION', 'No problems noted.'],
+        ['7', 'GOOD CONDITION', 'Some minor problems.'],
+        ['6', 'SATISFACTORY CONDITION', 'structural elements show some minor deterioration.'],
+        ['5', 'FAIR CONDITION', 'All primary structural elements are sound but may have minor section loss, cracking, spalling or scour.'],
+        ['4', 'POOR CONDITION', 'Advanced section loss, deterioration, spalling or scour.'],
+        ['3', 'SERIOUS CONDITION', 'Loss of section, deterioration, spalling or scour have seriously affected primary structural components. Local failures are possible. Fatigue cracks in stell or shear cracks in concrete may be present.'],
+        ['2', 'CRITICAL CONDITION', 'Advanced deterioration of primary structural elements. Fatigue cracks in steel or shear cracks in concrete may be present or scour may have removed substructure support. Unless closesly monitored it may be necessary to close the bridge until corrective action is taken.'],
+        ['1', '"IMMINENT" FAILURE CONDITION', 'Major deterioration or section loss present in critical structural components or obvious vertical or horizontal movement affecting structure stability. Bridge is closed to traffic but corrective action may put back in light service.'],
+        ['0', 'FAILED CONDITION', 'Out of Service - Beyond corrective action.']] AS rating_code
+CREATE (:ConditionRating {code: rating_code[0], generalDescription: rating_code[1], additionalDescription: rating_code[2]})
 
 // Create Appraisal Rating Nodes
 UNWIND ['N', '9', '8', '7', '6', '5', '4', '3', '2', '1', '0'] AS code
