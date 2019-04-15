@@ -216,8 +216,18 @@ UNWIND [['N', 'NOT APPLICABLE', ''],
 CREATE (:ConditionRating {code: rating_code[0], generalDescription: rating_code[1], additionalDescription: rating_code[2]})
 
 // Create Appraisal Rating Nodes
-UNWIND ['N', '9', '8', '7', '6', '5', '4', '3', '2', '1', '0'] AS code
-CREATE (:AppraisalRating {id: code})
+UNWIND [['N', 'Not applicable'], 
+        ['9', 'Superior to present desirable criteria'],
+        ['8', 'Equal to present desirable criteria'],
+        ['7', 'Better than present minimum criteria'],
+        ['6', 'Equal to present minimum criteria'],
+        ['5', 'Somewhat better than minimum adequacy to tolerate being left in place as is'],
+        ['4', 'Meets minimum tolerable limits to be left in place as is'],
+        ['3', 'Basically intolerable requiring high priority of corrective action'],
+        ['2', 'Basically intolerable requiring high priority of replacement'],
+        ['1', 'This value of raiting cide not used'],
+        ['0', 'Bridge closed']] AS appraisal_code
+CREATE (:AppraisalRating {code: appraisal_code[0], description: appraisal_code[1]})
 
 
 // create (:Evaluation) and connect to (:InspectionDate) and (:Bridge)
