@@ -231,17 +231,7 @@ RETURN batches, total
 
 
 
-// build timeline tree
-MATCH (inspDate:InspectionDate)
-MERGE (year:Year {id: inspDate.year})
-MERGE (year)-[:MONTH]->(month:Month {id: inspDate.month})
-MERGE (month)-[:INSPECTED_ON]->(inspDate)
 
-
-// connect bridge to year
-MATCH (bridge:Bridge)
-MERGE (year:Year {id: right(bridge.yearbuilt, 2)})
-MERGE (bridge)-[:BUILT_ON]->(year)
 
 
 
