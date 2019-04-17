@@ -517,6 +517,13 @@ MATCH (yb)<-[:BUILT_IN]-(bridge:Bridge)-[:OF_PLACE]->()-[:OF_COUNTY]->()-[:OF_ST
 RETURN yb.year.year, s.name, count(bridge)
 ORDER BY yb.year.year, s.name
 
+// count the number of (:Bridges) by (:State) and (:MaintenanceResp)
+MATCH (state:State)
+MATCH (maintResp:MaintenanceResp)
+MATCH (state)<-[*]-(bridge:Bridge)-->(maintResp)
+RETURN state.name, maintResp.description, count(bridge)
+ORDER BY count(bridge) DESC
+
 
 ///////////////////////////////////////////////
 // Everything below here references the different headers to be incorporated.
