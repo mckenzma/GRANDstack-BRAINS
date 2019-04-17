@@ -118,6 +118,16 @@ CALL apoc.periodic.iterate(
 '
 LOAD CSV WITH HEADERS FROM $url AS row RETURN row
 ','
+//MATCH (state:State {id: row.STATE_CODE_001})
+//MATCH (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
+//MATCH (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
+//MATCH (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+//                                               row.COUNTY_CODE_003 + "_" + 
+//                                               row.PLACE_CODE_004 + "_" + 
+//                                               row.STRUCTURE_NUMBER_008 + 
+//                                               "_LAT_" + row.LAT_016 + 
+//                                               "_LONG_" +row.LONG_017})
+
 MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
                           row.COUNTY_CODE_003 + "_" + 
                           row.PLACE_CODE_004 + "_" + 
@@ -439,6 +449,41 @@ CASE state.name
     WHEN "55" THEN "WI"
     WHEN "56" THEN "WY"
     WHEN "72" THEN "PR"
+END
+
+//query to add Maintenance Responsibility Code Description
+MATCH (maintResp:MaintenanceResp)
+SET maintResp.description = 
+CASE maintResp.name
+    WHEN "01" THEN "State Highway Agency"
+    WHEN "02" THEN "County Highway Agency"
+    WHEN "03" THEN "Town or Township Highway Agency"
+    WHEN "04" THEN "City or Municipal Highway Agency"
+    WHEN "11" THEN "State Park, Forest, or Reservation Agency"
+    WHEN "12" THEN "Local Park, Forest, or Reservation Agency"
+    WHEN "21" THEN "Other State Agencies"
+    WHEN "25" THEN "Othe Local Agencies"
+    WHEN "26" THEN "Private (other than railroad)"
+    WHEN "27" THEN "Railroad"
+    WHEN "31" THEN "State Toll Authority"
+    WHEN "32" THEN "Local Toll Authority"
+    WHEN "60" THEN "Other Federal Agencies"// (not listed below)"
+    WHEN "61" THEN "Indian Tribal Government"
+    WHEN "62" THEN "Bureau of Indian Affairs"
+    WHEN "63" THEN "Bureau of Fish and Wildlife"
+    WHEN "64" THEN "U.S. Forest Service"
+    WHEN "66" THEN "National Park Service"
+    WHEN "67" THEN "Tennessee Valley Authority"
+    WHEN "68" THEN "Bureau of Land Management"
+    WHEN "69" THEN "Bureau of Reclamation"
+    WHEN "70" THEN "Corps of Engineers (Civil)"
+    WHEN "71" THEN "Corps of Engineers (Military)"
+    WHEN "72" THEN "Air Force"
+    WHEN "73" THEN "Navy/Marines"
+    WHEN "74" THEN "Army"
+    WHEN "75" THEN "NASA"
+    WHEN "76" THEN "Metropolitan Washington Airports Service"
+    WHEN "80" THEN "Unkown"
 END
 
 ///////////////////////////////////////////////
