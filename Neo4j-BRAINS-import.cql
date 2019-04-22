@@ -118,36 +118,27 @@ CALL apoc.periodic.iterate(
 '
 LOAD CSV WITH HEADERS FROM $url AS row RETURN row
 ','
-//MATCH (state:State {id: row.STATE_CODE_001})
-//MATCH (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
-//MATCH (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
-//MATCH (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
-//                                               row.COUNTY_CODE_003 + "_" + 
-//                                               row.PLACE_CODE_004 + "_" + 
-//                                               row.STRUCTURE_NUMBER_008 + 
-//                                               "_LAT_" + row.LAT_016 + 
-//                                               "_LONG_" +row.LONG_017})
-
-MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
-                          row.COUNTY_CODE_003 + "_" + 
-                          row.PLACE_CODE_004 + "_" + 
-                          row.STRUCTURE_NUMBER_008 + 
-                          "_LAT_" + row.LAT_016 + 
-                          "_LONG_" +row.LONG_017})
-MERGE (bridge)-[:INSPECTED_ON]->(inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+//MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+//                          row.COUNTY_CODE_003 + "_" + 
+//                          row.PLACE_CODE_004 + "_" + 
+//                          row.STRUCTURE_NUMBER_008 + 
+//                          "_LAT_" + row.LAT_016 + 
+//                          "_LONG_" +row.LONG_017})
+MERGE (inspDate:InspectionDate {id: row.DATE_OF_INSPECT_090})
+//MERGE (bridge)-[:INSPECTED_ON]->(inspDate)
 ON CREATE SET inspDate.id = row.DATE_OF_INSPECT_090
 ',
 //{batchSize:10000, parallel:false, params:{url:fileURL[0], fileYear:fileURL[1]}}) YIELD batches, total
-{batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+{batchSize:5000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
 
 
 // need to update, clean, and change insp dates to temporal format
-LOAD CSV WITH HEADERS FROM "https://www.fhwa.dot.gov/bridge/nbi/2018/delimited/AL18.txt" AS row
+LOAD CSV WITH HEADERS FROM "https://www.fhwa.dot.gov/bridge/nbi/2017/delimited/AL17.txt" AS row
 WITH row, replace(row.DATE_OF_INSPECT_090, " ", "") AS temp
 WITH row, temp, 
     CASE size(temp)
-        WHEN 3 THEN toInteger(left(temp,1))
+        //WHEN 3 THEN toInteger(left(temp,1))
         WHEN 4 THEN toInteger(left(temp,2))
     END AS month,
     CASE 
@@ -156,6 +147,28 @@ WITH row, temp,
     END AS year
 RETURN row.DATE_OF_INSPECT_090, size(row.DATE_OF_INSPECT_090), temp, month, year
 ORDER BY month
+
+CALL apoc.periodic.iterate(
+'
+MATCH (inspDate:InspectionDate) 
+//WHERE NOT exists(inspDate.date)
+//AND size(inspDate.id) = 4
+RETURN inspDate
+','
+WITH inspDate,
+     CASE size(inspDate.id)
+        WHEN 3 THEN toInteger(left(inspDate.id,1))
+        WHEN 4 THEN toInteger(left(inspDate.id,2))
+    END AS month,
+    CASE
+        WHEN ( toInteger(right(inspDate.id,2)) <= 99 AND toInteger(right(inspDate.id,2)) >= 92 ) THEN toInteger("19" + right(inspDate.id,2))
+        WHEN ( toInteger(right(inspDate.id,2)) >= 00 AND toInteger(right(inspDate.id,2)) < 92 ) THEN toInteger("20" + right(inspDate.id,2))
+    END AS year
+SET inspDate.date = date({ year: year, month: month})
+',
+{batchSize:1000,parallel:false}) YIELD batches, total
+RETURN batches, total
+
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
