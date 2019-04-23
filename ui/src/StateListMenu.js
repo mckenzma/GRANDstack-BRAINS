@@ -4,12 +4,12 @@ import gql from "graphql-tag";
 
 //import { withStyles } from "@material-ui/core/styles";
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 //import Checkbox from '@material-ui/core/Checkbox';
 
-import Radio from '@material-ui/core/Radio';
+import Radio from "@material-ui/core/Radio";
 //import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 //import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
@@ -31,7 +31,7 @@ function getSorting(order, orderBy) {
 }
 
 class StateListMenu extends React.Component {
-/*}  constructor(props) {
+  /*}  constructor(props) {
     super(props);
 
     this.state = {
@@ -50,14 +50,14 @@ class StateListMenu extends React.Component {
   }*/
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       order: "asc",
       orderBy: "name",
       name: null,
-      selectedStates: [],
-    }
+      selectedStates: []
+    };
   }
 
   // componentWillReceiveProps(props) {
@@ -70,7 +70,7 @@ class StateListMenu extends React.Component {
     //this.setState({ name: name });
     this.props.triggerParentUpdate(name);
     this.setState({ selectedValue: event.target.value });
-    this.state.selectedStates = this.state.selectedStates.concat(name); //this adds selected state to an array
+    //this.state.selectedStates = this.state.selectedStates.concat(name); //this adds selected state to an array
 
     //this.setState({ name: name }, () => { this.MapLeaf.render() } );
     //this.setState({ name: [name, event.target.checked] });
@@ -78,14 +78,14 @@ class StateListMenu extends React.Component {
   };
 
   render() {
-    const { order, orderBy, name } = this.state;
+    //const { order, orderBy, name } = this.state;
+    const { order, orderBy } = this.state;
     //const { order, orderBy, name } = this.props;
-    
+
     //const { _name } = this.state.name;
     // const { order } = this.state;
     //console.log(this.state);
-    
-    
+
     return (
       <Query
         query={gql`
@@ -97,7 +97,7 @@ class StateListMenu extends React.Component {
           }
         `}
       >
-      {/*<Query
+        {/*<Query
         query={gql`
           {
             State {
@@ -121,16 +121,15 @@ class StateListMenu extends React.Component {
           return (
             <div>
               <List>
-                <ListItem >
+                <ListItem>
                   <ListItemText>States</ListItemText>
                 </ListItem>
-              {data.State
-                .slice()
-                .sort(getSorting(order, orderBy))
-                .map(n => {
-                  return (
-                    <ListItem key={n.id}>
-                      {/*<Checkbox
+                {data.State.slice()
+                  .sort(getSorting(order, orderBy))
+                  .map(n => {
+                    return (
+                      <ListItem key={n.id}>
+                        {/*<Checkbox
                         // checked={this.state.checked}
                         checked={this.state[n.name]}
                         //checked={this.props[n.name]}
@@ -139,16 +138,16 @@ class StateListMenu extends React.Component {
                         // value="checked"
                         value={n.name}
                       />*/}
-                      <Radio
-                        checked={this.state.selectedValue === n.name}
-                        onChange={this.handleChange(n.name)}
-                        value={n.name}
-                      />
-                      <ListItemText>{n.name}</ListItemText>
-                    </ListItem>
-                  );
-                })}
-                </List>
+                        <Radio
+                          checked={this.state.selectedValue === n.name}
+                          onChange={this.handleChange(n.name)}
+                          value={n.name}
+                        />
+                        <ListItemText>{n.name}</ListItemText>
+                      </ListItem>
+                    );
+                  })}
+              </List>
             </div>
           );
         }}
