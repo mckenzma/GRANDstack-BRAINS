@@ -1,4 +1,7 @@
 import React from "react";
+
+import PropTypes from "prop-types";
+
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
@@ -7,11 +10,13 @@ import gql from "graphql-tag";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-//import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from "@material-ui/core/Checkbox";
 
 import Radio from "@material-ui/core/Radio";
 //import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 //import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
+
+import Divider from "@material-ui/core/Divider";
 
 //import MapLeaf from './MapLeaflet';
 
@@ -56,7 +61,8 @@ class StateListMenu extends React.Component {
       order: "asc",
       orderBy: "name",
       name: null,
-      selectedStates: []
+      selectedStates: [],
+      selected: []
     };
   }
 
@@ -77,11 +83,42 @@ class StateListMenu extends React.Component {
     //console.log(name);
   };
 
+  handleClick = (event, id) => {
+    const { selected } = this.state;
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    this.setState({ selected: newSelected });
+  };
+
+  handleSelectAllClick = event => {
+    if (event.target.checked) {
+      this.setState(state => ({ selected: state.data.map(n => n.id) }));
+      return;
+    }
+    this.setState({ selected: [] });
+  };
+
+  isSelected = id => this.state.selected.indexOf(id) !== -1;
+
   render() {
     //const { order, orderBy, name } = this.state;
-    const { order, orderBy } = this.state;
+    const { order, orderBy, selected } = this.state;
+    const { onSelectAllClick, numSelected, rowCount } = this.props;
     //const { order, orderBy, name } = this.props;
-
     //const { _name } = this.state.name;
     // const { order } = this.state;
     //console.log(this.state);
@@ -118,26 +155,43 @@ class StateListMenu extends React.Component {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
+          //console.log("onSelectAllClick: " + onSelectAllClick);
+          //console.log("numSelected: " + numSelected);
+          //console.log("rowCount: " + rowCount);
+
           return (
             <div>
-              <List>
+              <List numSelected={selected.length} rowCount={data.length}>
                 <ListItem>
                   <ListItemText>States</ListItemText>
                 </ListItem>
+                <ListItem>
+                  <Checkbox
+                    indeterminate={numSelected > 0 && numSelected < rowCount}
+                    //checked={numSelected === rowCount}
+                    selected={numSelected === rowCount}
+                    //onChange={onSelectAllClick}
+                    onSelectAllClick={this.handleSelectAllClick}
+                  />
+                  <ListItemText>Select All</ListItemText>
+                </ListItem>
+                <Divider />
                 {data.State.slice()
                   .sort(getSorting(order, orderBy))
                   .map(n => {
+                    const isSelected = this.isSelected(n.id);
                     return (
                       <ListItem key={n.id}>
-                        {/*<Checkbox
-                        // checked={this.state.checked}
-                        checked={this.state[n.name]}
-                        //checked={this.props[n.name]}
-                        // onChange={this.handleChange('checked')}
-                        onChange={this.handleChange(n.name)}
-                        // value="checked"
-                        value={n.name}
-                      />*/}
+                        <Checkbox
+                          // checked={this.state.checked}
+                          //  checked={this.state[n.name]}
+                          //checked={this.props[n.name]}
+                          // onChange={this.handleChange('checked')}
+                          //  onChange={this.handleChange(n.name)}
+                          // value="checked"
+                          value={n.name}
+                          selected={isSelected}
+                        />
                         <Radio
                           checked={this.state.selectedValue === n.name}
                           onChange={this.handleChange(n.name)}
@@ -155,6 +209,12 @@ class StateListMenu extends React.Component {
     );
   }
 }
+
+// List.propTypes = {
+//   numSelected: PropTypes.number.isRequired,
+//   onSelectAllClick: PropTypes.func.isRequired,
+//   rowCount: PropTypes.number.isRequired,
+// };
 
 export default StateListMenu;
 // export default withStyles(styles)(StateListMenu);
