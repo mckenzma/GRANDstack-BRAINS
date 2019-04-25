@@ -4,25 +4,24 @@ import gql from "graphql-tag";
 import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
-
 //import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
-import { Map, Marker, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import L from 'leaflet';
+import { Map, Marker, TileLayer } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import icon from "leaflet/dist/images/marker-icon.png";
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import L from "leaflet";
 
 //import HeatmapLayer from 'react-leaflet-heatmap-layer/lib/HeatmapLayer';
 
-import 'react-leaflet-markercluster/dist/styles.min.css';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
+import "react-leaflet-markercluster/dist/styles.min.css";
+import MarkerClusterGroup from "react-leaflet-markercluster";
 
-import PropTypes from 'prop-types';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import PropTypes from "prop-types";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const styles = theme => ({
   root: {
@@ -30,17 +29,16 @@ const styles = theme => ({
     height: 400,
     // maxWidth: 700,
     // marginTop: theme.spacing.unit * 3,
-    overflowX: "auto",
+    overflowX: "auto"
     // margin: "auto"
   },
   list: {
-    width: 250,
-  },
-  
+    width: 250
+  }
 });
 
 class MapLeaf extends React.Component {
-/*  constructor(props) {
+  /*  constructor(props) {
     super(props);
 
     this.state = {
@@ -73,12 +71,11 @@ class MapLeaf extends React.Component {
       bridge_lng: null,
       build_year: null,
       owned_by: null,
-      maintained_by: null,
+      maintained_by: null
 
       //name: "AZ",
       //name: "",
     };
-
   }
 
   // componentWillReceiveProps(props) {
@@ -98,30 +95,32 @@ class MapLeaf extends React.Component {
   };
 
   render() {
-
     //console.log("name is: " + this.props.name);
 
     const { classes } = this.props;
-    
+
+    const { selected } = this.props;
+    console.log(selected);
+
     const sideList = (
       <div className={classes.list}>
-        <List >
+        <List>
           {/*<ListItem >
             <ListItemText >NAME: {this.state.bridge_name}</ListItemText>
           </ListItem>*/}
-          <ListItem >
-            <ListItemText >State: {this.state.bridge_state}</ListItemText>
+          <ListItem>
+            <ListItemText>State: {this.state.bridge_state}</ListItemText>
           </ListItem>
           <Divider />
-          <ListItem >
-            <ListItemText >LAT: {this.state.bridge_lat}</ListItemText>
+          <ListItem>
+            <ListItemText>LAT: {this.state.bridge_lat}</ListItemText>
           </ListItem>
-          <ListItem >
-            <ListItemText >LONG: {this.state.bridge_lng}</ListItemText>
+          <ListItem>
+            <ListItemText>LONG: {this.state.bridge_lng}</ListItemText>
           </ListItem>
           <Divider />
-          <ListItem >
-            <ListItemText >Build Year: {this.state.build_year}</ListItemText>
+          <ListItem>
+            <ListItemText>Build Year: {this.state.build_year}</ListItemText>
           </ListItem>
           {/*<ListItem >
             <ListItemText >Owned By: </ListItemText>
@@ -148,10 +147,11 @@ class MapLeaf extends React.Component {
       <Query
         query={gql`
           query statesPaginateQuery(
+            #$selected: [String!]
             $name: String
-          )
-          {
-            State (name: $name){
+          ) {
+            #State (filter: {name_in: $selected }){
+            State(name: $name) {
               id
               name
               bridges {
@@ -166,10 +166,12 @@ class MapLeaf extends React.Component {
         `}
         variables={{
           //name: this.state.name
-          name: this.props.name
+          name: this.props.name,
+          selected: this.props.selected
+          // selected: ["AZ","AL","DC","WA"]
         }}
       >
-      {/*<Query
+        {/*<Query
         query={gql`
           {
             Bridge(first: 500) {
@@ -183,20 +185,24 @@ class MapLeaf extends React.Component {
         `}
       >*/}
         {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>
-          if (error) return <p>Error</p>
+          if (loading) return <p>Loading...</p>;
+          if (error) return <p>Error</p>;
 
           return (
-
             <div>
-              <Map center={position} zoom={this.state.zoom} maxZoom={18} className="absolute top right left bottom" >
+              <Map
+                center={position}
+                zoom={this.state.zoom}
+                maxZoom={18}
+                className="absolute top right left bottom"
+              >
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
                 <MarkerClusterGroup>
-                {/*{data.Bridge*/}
-                {/*{data.State.bridges
+                  {/*{data.Bridge*/}
+                  {/*{data.State.bridges
                   .slice()
                   .map(n => {
                     return (
@@ -207,28 +213,32 @@ class MapLeaf extends React.Component {
                       
                           );
                           })}*/}
-                
-                {data.State
-                  .slice()
-                  .map(b => {
+
+                  {data.State.slice().map(b => {
                     return (
                       <div key={b.id}>
-                      {b.bridges
-                  .slice()
-                  .map(n => {
-                    return (
-                      
-                      <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n, b.name)}>
-                      </Marker>
-                    
-                      
+                        {b.bridges.slice().map(n => {
+                          return (
+                            <Marker
+                              key={n.id}
+                              position={[
+                                n.latitude_decimal,
+                                n.longitude_decimal
+                              ]}
+                              icon={myIcon}
+                              onClick={this.toggleDrawer(
+                                "right",
+                                true,
+                                n,
+                                b.name
+                              )}
+                            />
                           );
-                          })}
-                    
+                        })}
                       </div>
-                          );
-                          })}
-                  </MarkerClusterGroup>
+                    );
+                  })}
+                </MarkerClusterGroup>
               </Map>
 
               {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
@@ -247,21 +257,25 @@ class MapLeaf extends React.Component {
                 />
               </Map>*/}
 
-              <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false, "")}>
+              <Drawer
+                anchor="right"
+                open={this.state.right}
+                onClose={this.toggleDrawer("right", false, "")}
+              >
                 <div
                   tabIndex={0}
                   role="button"
-                  onClick={this.toggleDrawer('right', false, "")}
-                  onKeyDown={this.toggleDrawer('right', false, "")}
+                  onClick={this.toggleDrawer("right", false, "")}
+                  onKeyDown={this.toggleDrawer("right", false, "")}
                 >
                   <div className={classes.list}>
-                  <List>
-                    <ListItem>
-                      <ListItemText>Bridge Info</ListItemText>
-                    </ListItem>
-                  </List>
-                  <Divider />
-                  {sideList}
+                    <List>
+                      <ListItem>
+                        <ListItemText>Bridge Info</ListItemText>
+                      </ListItem>
+                    </List>
+                    <Divider />
+                    {sideList}
                   </div>
                 </div>
               </Drawer>
@@ -269,14 +283,12 @@ class MapLeaf extends React.Component {
           );
         }}
       </Query>
-  
     );
-    
   }
 }
 
 MapLeaf.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(MapLeaf);

@@ -1,6 +1,6 @@
 import React from "react";
 
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
@@ -106,10 +106,11 @@ class StateListMenu extends React.Component {
 
     this.props.triggerParentUpdate(newSelected);
 
-    console.log("selected: " + selected);
-    console.log("numSelected: " + numSelected);
+    //console.log("selected: " + selected);
+    //console.log("numSelected: " + numSelected);
 
-    console.log(this.state);
+    //console.log(this.state);
+
     //this.setState(state => ({ rowCount: state.data.length}));
     //console.log("rowCount: " + this.state);
     //this.setState({ numSelected: selected.length});
@@ -178,9 +179,9 @@ class StateListMenu extends React.Component {
           if (error) return <p>Error</p>;
 
           const rowCount = Object.keys(data.State).length;
-          console.log(data);
-          console.log("rowCount: " + rowCount);
-          console.log("numSelected: " + numSelected);
+          //console.log(data);
+          //console.log("rowCount: " + rowCount);
+          //console.log("numSelected: " + numSelected);
 
           //console.log("onSelectAllClick: " + onSelectAllClick);
           //console.log("numSelected: " + numSelected);
