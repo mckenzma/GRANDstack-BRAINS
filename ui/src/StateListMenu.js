@@ -84,7 +84,7 @@ class StateListMenu extends React.Component {
   };
 
   handleClick = (event, id) => {
-    const { selected } = this.state;
+    const { selected, numSelected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
@@ -102,14 +102,31 @@ class StateListMenu extends React.Component {
     }
 
     this.setState({ selected: newSelected });
+    this.setState({ numSelected: newSelected.length });
+
+    this.props.triggerParentUpdate(newSelected);
+
+    console.log("selected: " + selected);
+    console.log("numSelected: " + numSelected);
+
+    console.log(this.state);
+    //this.setState(state => ({ rowCount: state.data.length}));
+    //console.log("rowCount: " + this.state);
+    //this.setState({ numSelected: selected.length});
+    //console.log("numSelected: " + selected.length);
   };
 
-  handleSelectAllClick = event => {
+  //handleSelectAllClick = event => {
+  handleSelectAllClick = (event, data) => {
+    const { numSelected } = this.state;
     if (event.target.checked) {
-      this.setState(state => ({ selected: state.data.map(n => n.id) }));
+      this.setState({ selected: data.map(n => n.id) });
+      this.setState(state => ({ numSelected: state.selected.length }));
+      //this.setState(state => ({ selected: state.data.map(n => n.id) }));
       return;
     }
     this.setState({ selected: [] });
+    this.setState(state => ({ numSelected: state.selected.length }));
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -117,7 +134,12 @@ class StateListMenu extends React.Component {
   render() {
     //const { order, orderBy, name } = this.state;
     const { order, orderBy, selected } = this.state;
-    const { onSelectAllClick, numSelected, rowCount } = this.props;
+    //const { data } = this.state;
+    const { onSelectAllClick, numSelected, rowCount } = this.state;
+    //console.log("onSelectAllClick: " + onSelectAllClick);
+    //console.log("numSelected: " + numSelected);
+    //console.log("select.length: " + this.state.select.length);
+    //console.log("rowCount: " + rowCount);
     //const { order, orderBy, name } = this.props;
     //const { _name } = this.state.name;
     // const { order } = this.state;
@@ -155,23 +177,32 @@ class StateListMenu extends React.Component {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
+          const rowCount = Object.keys(data.State).length;
+          console.log(data);
+          console.log("rowCount: " + rowCount);
+          console.log("numSelected: " + numSelected);
+
           //console.log("onSelectAllClick: " + onSelectAllClick);
           //console.log("numSelected: " + numSelected);
           //console.log("rowCount: " + rowCount);
 
           return (
             <div>
-              <List numSelected={selected.length} rowCount={data.length}>
+              <List>
                 <ListItem>
                   <ListItemText>States</ListItemText>
                 </ListItem>
                 <ListItem>
                   <Checkbox
                     indeterminate={numSelected > 0 && numSelected < rowCount}
-                    //checked={numSelected === rowCount}
-                    selected={numSelected === rowCount}
+                    checked={numSelected === rowCount}
+                    //selected={numSelected === rowCount}
                     //onChange={onSelectAllClick}
-                    onSelectAllClick={this.handleSelectAllClick}
+                    //  onChange={this.handleSelectAllClick}
+                    onChange={event =>
+                      this.handleSelectAllClick(event, Object(data.State))
+                    }
+                    //onSelectAllClick={this.handleSelectAllClick}
                   />
                   <ListItemText>Select All</ListItemText>
                 </ListItem>
@@ -184,13 +215,15 @@ class StateListMenu extends React.Component {
                       <ListItem key={n.id}>
                         <Checkbox
                           // checked={this.state.checked}
-                          //  checked={this.state[n.name]}
+                          //    checked={this.state[n.name]}
+                          checked={isSelected}
                           //checked={this.props[n.name]}
                           // onChange={this.handleChange('checked')}
-                          //  onChange={this.handleChange(n.name)}
+                          onChange={this.handleChange(n.name)}
                           // value="checked"
                           value={n.name}
                           selected={isSelected}
+                          onClick={event => this.handleClick(event, n.id)}
                         />
                         <Radio
                           checked={this.state.selectedValue === n.name}
