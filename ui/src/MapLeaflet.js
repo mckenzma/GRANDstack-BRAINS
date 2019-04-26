@@ -4,7 +4,6 @@ import gql from "graphql-tag";
 import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
-//import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import { Map, Marker, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -38,32 +37,12 @@ const styles = theme => ({
 });
 
 class MapLeaf extends React.Component {
-  /*  constructor(props) {
-    super(props);
-
-    this.state = {
-      lng: -98.5795, // center of US
-      lat: 39.8283, //center of US
-      zoom: 4,
-      right: false,
-      bridge_id: null,
-      bridge_lat: null,
-      bridge_lng: null,
-      build_year: null,
-      owned_by: null,
-      maintained_by: null,
-
-      //name: "AZ",
-      name: "",
-    };
-
-  }*/
   constructor(props) {
     super(props);
 
     this.state = {
-      lng: -98.5795, // center of US
-      lat: 39.8283, //center of US
+      lng: -98.5795, // center of US --> Long. 103 46 17.60283(W)
+      lat: 39.8283, //center of US --> Lat. 44 58 02.07622(N)
       zoom: 4,
       right: false,
       bridge_id: null,
@@ -72,15 +51,8 @@ class MapLeaf extends React.Component {
       build_year: null,
       owned_by: null,
       maintained_by: null
-
-      //name: "AZ",
-      //name: "",
     };
   }
-
-  // componentWillReceiveProps(props) {
-  //   this.setState({ name: props.name })
-  // }
 
   toggleDrawer = (side, open, bridge, stateName) => () => {
     this.setState({
@@ -95,13 +67,7 @@ class MapLeaf extends React.Component {
   };
 
   render() {
-    //console.log("name is: " + this.props.name);
-
     const { classes } = this.props;
-    //console.log(classes);
-    // const { selected } = this.props;
-    console.log("selected: " + this.props.selected);
-    console.log("name: " + this.props.name);
 
     const sideList = (
       <div className={classes.list}>
@@ -140,9 +106,14 @@ class MapLeaf extends React.Component {
       shadowUrl: iconShadow
     });
 
-    //const { name } = this.state;
-    //const { name } = this.props.name;
-    //console.log("MapLeaflet.js: " + this.state.name);
+    if (this.props.selected.length === 52) {
+      // maybe use rowCount here?
+      // return {}
+      console.log("just load bridges");
+    } else {
+      // return {name_in: this.props.selected};
+      console.log("load state then bridges");
+    }
 
     return (
       <Query
@@ -170,19 +141,6 @@ class MapLeaf extends React.Component {
           // selected: []
         }}
       >
-        {/*<Query
-        query={gql`
-          {
-            Bridge(first: 500) {
-              id
-              name
-              latitude_decimal
-              longitude_decimal
-              yearbuilt
-            }
-          }
-        `}
-      >*/}
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
@@ -194,25 +152,13 @@ class MapLeaf extends React.Component {
                 zoom={this.state.zoom}
                 maxZoom={18}
                 className="absolute top right left bottom"
+                preferCanvas={true}
               >
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
                 <MarkerClusterGroup>
-                  {/*{data.Bridge*/}
-                  {/*{data.State.bridges
-                  .slice()
-                  .map(n => {
-                    return (
-                      
-                      <Marker key={n.id} position={[n.latitude_decimal, n.longitude_decimal]} icon={myIcon} onClick={this.toggleDrawer('right', true,n)}>
-                      </Marker>
-                    
-                      
-                          );
-                          })}*/}
-
                   {data.State.slice().map(b => {
                     return (
                       <div key={b.id}>
@@ -291,4 +237,3 @@ MapLeaf.propTypes = {
 };
 
 export default withStyles(styles)(MapLeaf);
-// export default Map;

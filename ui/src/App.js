@@ -18,18 +18,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import StateListMenu from "./StateListMenu";
 
-//import List from '@material-ui/core/List';
-//import ListItem from '@material-ui/core/ListItem';
-//import ListItemText from '@material-ui/core/ListItemText';
-
 import CustomizedDialogDemo from "./About";
-
-//import Button from '@material-ui/core/Button';
-//import Dialog from '@material-ui/core/Dialog';
-//import DialogActions from '@material-ui/core/DialogActions';
-//import DialogContent from '@material-ui/core/DialogContent';
-//import DialogContentText from '@material-ui/core/DialogContentText';
-//import DialogTitle from '@material-ui/core/DialogTitle';
 
 const drawerWidth = 240;
 
@@ -38,12 +27,14 @@ const styles = theme => ({
     flexGrow: 1
   },
   appFrame: {
-    //height: 430,
+    height: 800,
+    // height: `calc(${window.screen.availHeight}px - 90px)`,// fix this to get map to fill the entire browser window and adjust as window size adjusts
     zIndex: 1,
     overflow: "hidden",
     position: "relative",
     display: "flex",
-    width: "100%"
+    width: "100%",
+    flexGrow: 1
   },
   appBar: {
     position: "absolute",
@@ -73,7 +64,7 @@ const styles = theme => ({
     display: "none"
   },
   drawerPaper: {
-    position: "relative",
+    // position: "relative",
     width: drawerWidth
   },
   drawerHeader: {
@@ -123,9 +114,9 @@ const styles = theme => ({
   },
   main: {
     // height: 400,
-    overflowY: "auto",
+    overflowY: "auto"
     // position: 'relative',
-    position: "relative"
+    // position: "relative"
   },
   list: {
     marginBottom: theme.spacing.unit * 2
@@ -180,14 +171,7 @@ class App extends Component {
       selected: [] //trying to pull selected array up to pass into bridge query
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
-    // this.updateThisPropertySelected = this.updateThisPropertySelected.bind(this);
   }
-
-  /*  state = {
-    open: false,
-    anchor: 'left',
-    openDialog: false,
-  };*/
 
   handleDrawerOpen = () => {
     this.setState({ open: true });
@@ -210,29 +194,13 @@ class App extends Component {
     this.setState({ openDialog: false });
   };
 
-  // updateThisProperty(name) {
-  //   this.setState({ name: name });
-  //   // console.log("update property: " + selected);
-  //   // this.setState({ selected: selected }); //trying to pull selected array up to pass into bridge query
-  //   //console.log("look at me");
-  // }
-
   updateThisProperty(propertyName, value) {
     this.setState({ [propertyName]: value });
-    // console.log("update property: " + propertyName + ": " + value);
   }
-
-  // updateThisPropertySelected(selected) {
-  //   this.setState({ selected: selected });
-  //   console.log("update property: " + selected);
-  //   // this.setState({ selected: selected }); //trying to pull selected array up to pass into bridge query
-  //   //console.log("look at me");
-  // }
 
   render() {
     const { classes, theme } = this.props;
     const { anchor, open } = this.state;
-    //const { openDialog } = this.state;
 
     const drawer = (
       <Drawer
@@ -254,35 +222,8 @@ class App extends Component {
         </div>
         <Divider />
 
-        {/*<List>
-          <ListItem >
-            <Button onClick={this.handleDialogOpen}>
-              About
-            </Button>
-            <Dialog
-              open={this.state.openDialog}
-              onClose={this.handleDialogClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">{"About"}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  Interesting information about this project goes here!
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={this.handleDialogClose} color="primary">
-                  Close
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </ListItem>
-        </List>*/}
-
         <CustomizedDialogDemo />
         <Divider />
-        {/*<StateListMenu />*/}
         <StateListMenu triggerParentUpdate={this.updateThisProperty} />
       </Drawer>
     );
@@ -322,8 +263,6 @@ class App extends Component {
               >
                 National Bridge Index
               </Typography>
-              {/*<Button variant="contained" color="inherit" disabled >Summary</Button>
-              <Button variant="contained" color="inherit" disabled >Filters</Button>*/}
             </Toolbar>
           </AppBar>
           {before}
@@ -337,15 +276,15 @@ class App extends Component {
               }
             )}
           >
-            <div className={classes.drawerHeader} />
-            {/*<BridgeList />*/}
+            {/*<div className={classes.drawerHeader} />*/}{" "}
+            {/*does this do anything?*/}
             <MapLeaf name={this.state.name} selected={this.state.selected} />
-            {/*<MapLeaf triggerParentUpdate={this.updateThisProperty}/>*/}
           </main>
           {after}
         </div>
 
-        <div className={classes.container} />
+        {/*<div className={classes.container} />*/}
+        {/* does this do anything */}
       </div>
     );
   }
