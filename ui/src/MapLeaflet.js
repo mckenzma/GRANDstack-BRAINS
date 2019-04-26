@@ -98,9 +98,10 @@ class MapLeaf extends React.Component {
     //console.log("name is: " + this.props.name);
 
     const { classes } = this.props;
-
-    const { selected } = this.props;
-    console.log(selected);
+    //console.log(classes);
+    // const { selected } = this.props;
+    console.log("selected: " + this.props.selected);
+    console.log("name: " + this.props.name);
 
     const sideList = (
       <div className={classes.list}>
@@ -146,12 +147,10 @@ class MapLeaf extends React.Component {
     return (
       <Query
         query={gql`
-          query statesPaginateQuery(
-            #$selected: [String!]
-            $name: String
-          ) {
-            #State (filter: {name_in: $selected }){
-            State(name: $name) {
+          query statesPaginateQuery($selected: [String!]) #$name: String
+          {
+            State(filter: { name_in: $selected }) {
+              #State(name: $name) {
               id
               name
               bridges {
@@ -168,7 +167,7 @@ class MapLeaf extends React.Component {
           //name: this.state.name
           name: this.props.name,
           selected: this.props.selected
-          // selected: ["AZ","AL","DC","WA"]
+          // selected: []
         }}
       >
         {/*<Query

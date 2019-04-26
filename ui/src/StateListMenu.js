@@ -74,7 +74,8 @@ class StateListMenu extends React.Component {
   handleChange = name => event => {
     //this.setState({ [name]: event.target.checked });
     //this.setState({ name: name });
-    this.props.triggerParentUpdate(name);
+    // this.props.triggerParentUpdate(name);
+    this.props.triggerParentUpdate("name", name);
     this.setState({ selectedValue: event.target.value });
     //this.state.selectedStates = this.state.selectedStates.concat(name); //this adds selected state to an array
 
@@ -83,13 +84,13 @@ class StateListMenu extends React.Component {
     //console.log(name);
   };
 
-  handleClick = (event, id) => {
+  handleClick = (event, name) => {
     const { selected, numSelected } = this.state;
-    const selectedIndex = selected.indexOf(id);
+    const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
+      newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -103,8 +104,11 @@ class StateListMenu extends React.Component {
 
     this.setState({ selected: newSelected });
     this.setState({ numSelected: newSelected.length });
-
-    this.props.triggerParentUpdate(newSelected);
+    // console.log("here: " + this.state.selected);
+    // console.log("selected: " + this.state.selected);
+    //this.props.triggerParentUpdate(newSelected);
+    // this.props.triggerParentUpdate(selected);
+    this.props.triggerParentUpdate("selected", newSelected);
 
     //console.log("selected: " + selected);
     //console.log("numSelected: " + numSelected);
@@ -121,20 +125,25 @@ class StateListMenu extends React.Component {
   handleSelectAllClick = (event, data) => {
     const { numSelected } = this.state;
     if (event.target.checked) {
-      this.setState({ selected: data.map(n => n.id) });
+      // this.setState({ selected: data.map(n => n.id) });
+      this.setState({ selected: data.map(n => n.name) });
       this.setState(state => ({ numSelected: state.selected.length }));
+      this.props.triggerParentUpdate(state => ({ selected: state.selected }));
       //this.setState(state => ({ selected: state.data.map(n => n.id) }));
       return;
     }
     this.setState({ selected: [] });
     this.setState(state => ({ numSelected: state.selected.length }));
+    this.props.triggerParentUpdate(state => ({ selected: state.selected }));
   };
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
+  // isSelected = id => this.state.selected.indexOf(id) !== -1;
+  isSelected = name => this.state.selected.indexOf(name) !== -1;
 
   render() {
     //const { order, orderBy, name } = this.state;
-    const { order, orderBy, selected } = this.state;
+    const { order, orderBy } = this.state;
+    const { selected } = this.props;
     //const { data } = this.state;
     const { onSelectAllClick, numSelected, rowCount } = this.state;
     //console.log("onSelectAllClick: " + onSelectAllClick);
@@ -211,9 +220,11 @@ class StateListMenu extends React.Component {
                 {data.State.slice()
                   .sort(getSorting(order, orderBy))
                   .map(n => {
-                    const isSelected = this.isSelected(n.id);
+                    // const isSelected = this.isSelected(n.id);
+                    const isSelected = this.isSelected(n.name);
                     return (
-                      <ListItem key={n.id}>
+                      //{/*<ListItem key={n.id}>*/}
+                      <ListItem key={n.name}>
                         <Checkbox
                           // checked={this.state.checked}
                           //    checked={this.state[n.name]}
@@ -223,8 +234,9 @@ class StateListMenu extends React.Component {
                           onChange={this.handleChange(n.name)}
                           // value="checked"
                           value={n.name}
-                          selected={isSelected}
-                          onClick={event => this.handleClick(event, n.id)}
+                          selected={isSelected} // is this actually needed? - test removal
+                          // onClick={event => this.handleClick(event, n.id)}
+                          onClick={event => this.handleClick(event, n.name)}
                         />
                         <Radio
                           checked={this.state.selectedValue === n.name}

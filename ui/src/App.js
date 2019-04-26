@@ -180,6 +180,7 @@ class App extends Component {
       selected: [] //trying to pull selected array up to pass into bridge query
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
+    // this.updateThisPropertySelected = this.updateThisPropertySelected.bind(this);
   }
 
   /*  state = {
@@ -209,11 +210,24 @@ class App extends Component {
     this.setState({ openDialog: false });
   };
 
-  updateThisProperty(name, selected) {
-    this.setState({ name: name });
-    this.setState({ selected: selected }); //trying to pull selected array up to pass into bridge query
-    //console.log("look at me");
+  // updateThisProperty(name) {
+  //   this.setState({ name: name });
+  //   // console.log("update property: " + selected);
+  //   // this.setState({ selected: selected }); //trying to pull selected array up to pass into bridge query
+  //   //console.log("look at me");
+  // }
+
+  updateThisProperty(propertyName, value) {
+    this.setState({ [propertyName]: value });
+    // console.log("update property: " + propertyName + ": " + value);
   }
+
+  // updateThisPropertySelected(selected) {
+  //   this.setState({ selected: selected });
+  //   console.log("update property: " + selected);
+  //   // this.setState({ selected: selected }); //trying to pull selected array up to pass into bridge query
+  //   //console.log("look at me");
+  // }
 
   render() {
     const { classes, theme } = this.props;
@@ -325,7 +339,7 @@ class App extends Component {
           >
             <div className={classes.drawerHeader} />
             {/*<BridgeList />*/}
-            <MapLeaf name={this.state.name} />
+            <MapLeaf name={this.state.name} selected={this.state.selected} />
             {/*<MapLeaf triggerParentUpdate={this.updateThisProperty}/>*/}
           </main>
           {after}
