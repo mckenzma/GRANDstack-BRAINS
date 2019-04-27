@@ -10,6 +10,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+import StateListMenu from "./StateListMenu";
+
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit
@@ -38,10 +40,21 @@ const styles = theme => ({
 // export default withStyles(styles)(FiltersButton);
 
 class FiltersDialog extends React.Component {
-  state = {
-    open: false,
-    scroll: "paper"
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false,
+      scroll: "paper",
+      value: props.value,
+      fullWidth: true,
+      maxWidth: "xl",
+
+      selected: [] //trying to pull selected array up to pass into bridge query
+    };
+
+    this.updateThisProperty = this.updateThisProperty.bind(this);
+  }
 
   handleClickOpen = scroll => () => {
     this.setState({ open: true, scroll });
@@ -50,6 +63,23 @@ class FiltersDialog extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  // handleApply = () => {
+  //   this.props.onClose(this.state.value);
+  // };
+
+  // handleCancel = () => {
+  //   this.props.onClose(this.props.value);
+  // };
+
+  // handleChange = (event, value) => {
+  //   this.setState({ value });
+  // };
+
+  updateThisProperty(propertyName, value) {
+    this.setState({ [propertyName]: value });
+    this.props.triggerParentUpdate(propertyName, value);
+  }
 
   render() {
     return (
@@ -63,6 +93,12 @@ class FiltersDialog extends React.Component {
           Filters
         </Button>
         <Dialog
+          // fullWidth={this.state.fullWidth}
+          fullWidth={true}
+          maxWidth={this.state.maxWidth}
+          disableBackdropClick
+          disableEscapeKeyDown
+          //maxWidth="xl"
           open={this.state.open}
           onClose={this.handleClose}
           scroll={this.state.scroll}
@@ -70,15 +106,18 @@ class FiltersDialog extends React.Component {
         >
           <DialogTitle id="scroll-dialog-title">Filters</DialogTitle>
           <DialogContent>
-            <DialogContentText>
+            {/*<DialogContentText>
               Filters go either here or outside of this div
-            </DialogContentText>
+            </DialogContentText>*/}
+            <StateListMenu triggerParentUpdate={this.updateThisProperty} />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
+              {/*<Button onClick={this.handleCancel} color="primary" value="Cancel">*/}
               Cancel
             </Button>
             <Button onClick={this.handleClose} color="primary">
+              {/*<Button onClick={this.handleApply} color="primary" value="Apply">*/}
               Apply
             </Button>
           </DialogActions>
@@ -87,5 +126,9 @@ class FiltersDialog extends React.Component {
     );
   }
 }
+
+FiltersDialog.propTypes = {
+  onClose: PropTypes.func
+};
 
 export default FiltersDialog;
