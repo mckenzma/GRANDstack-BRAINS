@@ -12,7 +12,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-// import Button from "@material-ui/core/Button";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -20,7 +20,10 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import StateListMenu from "./StateListMenu";
 
 import CustomizedDialogDemo from "./About";
-import FiltersButton from "./Filters";
+// import FiltersButton from "./Filters";
+import FiltersDialog from "./Filters";
+
+import BallotIcon from "@material-ui/icons/Ballot";
 
 const drawerWidth = 240;
 
@@ -270,9 +273,11 @@ class App extends Component {
                 className={classes.button}
                 variant="contained"
               >
+                <BallotIcon />
                 Filters
-              </Button>*/}
-              <FiltersButton />
+              </Button>
+              {/*<FiltersButton />*/}
+              <FiltersDialog />
             </Toolbar>
           </AppBar>
           {before}
