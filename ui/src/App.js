@@ -228,7 +228,7 @@ class App extends Component {
         <Divider />
 
         <CustomizedDialogDemo />
-        <Divider />
+        {/*<Divider />*/}
         {/*<StateListMenu triggerParentUpdate={this.updateThisProperty} />*/}
       </Drawer>
     );
@@ -277,7 +277,10 @@ class App extends Component {
                 Filters
               </Button>
               {/*<FiltersButton />*/}
-              <FiltersDialog triggerParentUpdate={this.updateThisProperty} />
+              <FiltersDialog
+                triggerParentUpdate={this.updateThisProperty}
+                selected={this.state.selected}
+              />
             </Toolbar>
           </AppBar>
           {before}

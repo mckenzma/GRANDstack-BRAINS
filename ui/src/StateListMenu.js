@@ -29,7 +29,9 @@ class StateListMenu extends React.Component {
       orderBy: "name",
       name: null,
       selectedStates: [],
-      selected: []
+      // selected: []
+      selected: this.props.selected,
+      numSelected: this.props.numSelected
     };
   }
 
@@ -40,7 +42,8 @@ class StateListMenu extends React.Component {
 
   handleClick = (event, name) => {
     //const { selected, numSelected } = this.state;
-    const { selected } = this.state;
+    // const { selected } = this.state;
+    const { selected } = this.props;
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -60,6 +63,9 @@ class StateListMenu extends React.Component {
     this.setState({ selected: newSelected });
     this.setState({ numSelected: newSelected.length });
     this.props.triggerParentUpdate("selected", newSelected);
+    this.props.triggerParentUpdate("numSelected", newSelected.length);
+    console.log("select: newSelected: " + newSelected);
+    console.log("select: numSelected: " + newSelected.length);
   };
 
   handleSelectAllClick = (event, data) => {
@@ -72,6 +78,9 @@ class StateListMenu extends React.Component {
       console.log("selecte all: newSelected: " + newSelected);
       this.setState({ selected: newSelected });
       this.setState(state => ({ numSelected: state.selected.length }));
+      this.props.triggerParentUpdate(state => ({
+        numSelected: state.selected.length
+      }));
       this.props.triggerParentUpdate("selected", newSelected);
       return;
     }
@@ -86,7 +95,9 @@ class StateListMenu extends React.Component {
     const { order, orderBy } = this.state;
     // const { selected } = this.props;
     // const { onSelectAllClick, numSelected, rowCount } = this.state;
+
     const { numSelected } = this.state;
+    // const { numSelected } = this.props;
 
     return (
       <Query
