@@ -106,20 +106,21 @@ class MapLeaf extends React.Component {
       shadowUrl: iconShadow
     });
 
-    if (this.props.selected.length === 52) {
-      // maybe use rowCount here?
-      // return {}
-      console.log("just load bridges");
-    } else {
-      // return {name_in: this.props.selected};
-      console.log("load state then bridges");
-    }
+    // if (this.props.selected.length === 52) {
+    //   // maybe use rowCount here?
+    //   // return {}
+    //   console.log("just load bridges");
+    // } else {
+    //   // return {name_in: this.props.selected};
+    //   console.log("load state then bridges");
+    // }
 
     return (
       <Query
         query={gql`
-          query statesPaginateQuery($selected: [String!]) #$name: String
-          {
+          query statesPaginateQuery(
+            $selected: [String!] #$name: String
+          ) {
             State(filter: { name_in: $selected }) {
               #State(name: $name) {
               id
