@@ -67,7 +67,15 @@ type Bridge {
   yearbuilt: Int
 
   place: Place @relation(name: "OF_PLACE", direction: "OUT")
+  buildYear: BuildYear @relation(name: "BUILT_IN", direction: "OUT")
 
+}
+
+type BuildYear {
+  id: ID!
+  year: Int
+
+  bridge: Bridge @relation(name: "BUILT_IN", direction: "IN")
 }
 
 type Query {

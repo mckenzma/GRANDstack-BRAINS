@@ -173,7 +173,8 @@ class App extends Component {
       anchor: "left",
       openDialog: false,
 
-      selected: [] //trying to pull selected array up to pass into bridge query
+      selected: [], //trying to pull selected array up to pass into bridge query
+      yearSelected: [] //needed?
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
     this.handleFilters = this.handleFilters.bind(this);
@@ -211,7 +212,8 @@ class App extends Component {
     console.log("check me out: " + state.selected);
     console.log(this.state.selected);
     this.setState({
-      selected: state.selected
+      selected: state.selected,
+      yearSelected: state.yearSelected
     });
 
     console.log("filters have been handled!");
@@ -297,6 +299,7 @@ class App extends Component {
               <FiltersDialog
                 // triggerParentUpdate={this.updateThisProperty}
                 selected={this.state.selected}
+                yearSelected={this.state.yearSelected}
                 // handleFilters={this.updateThisProperty}
                 // triggerParentUpdate={this.handleApply}
                 triggerFiltersUpdate={this.handleFilters}
@@ -316,7 +319,12 @@ class App extends Component {
           >
             {/*<div className={classes.drawerHeader} />*/}{" "}
             {/*does this do anything?*/}
-            <MapLeaf name={this.state.name} selected={this.state.selected} />
+            <MapLeaf
+              name={this.state.name}
+              selected={
+                this.state.selected
+              } /*yearSelected={this.state.yearSelected}*/
+            />
           </main>
           {after}
         </div>

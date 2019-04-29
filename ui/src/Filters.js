@@ -11,6 +11,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import StateListMenu from "./StateListMenu";
+import BuildYearFilter from "./BuildYearFilter";
 
 const styles = theme => ({
   button: {
@@ -51,7 +52,8 @@ class FiltersDialog extends React.Component {
       maxWidth: "xl",
 
       // selected: [] //trying to pull selected array up to pass into bridge query
-      selected: this.props.selected
+      selected: this.props.selected,
+      yearSelected: this.props.yearSelected
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
     this.handleApply = this.handleApply.bind(this);
@@ -71,13 +73,14 @@ class FiltersDialog extends React.Component {
 
     this.setState({ open: false });
     this.setState({ selected: this.state.selected });
+    this.setState({ yearSelected: this.state.yearSelected });
     // this.props = this.state;
     // this.setState({ selected: this.state.selected });
     // this.updateThisProperty("selected", this.state.selected);
     // this.props.triggerParentUpdate("selected", this.props.selected);
     this.props.triggerFiltersUpdate(this.state);
     console.log(this.state.selected);
-    console.log("trigger filters to update in parent...but how?");
+    // console.log("trigger filters to update in parent...but how?");
   };
 
   handleCancel = () => {
@@ -135,6 +138,10 @@ class FiltersDialog extends React.Component {
               triggerParentUpdate={this.updateThisProperty}
               selected={this.props.selected}
             />
+            {/*<BuildYearFilter
+              triggerParentUpdate={this.updateThisProperty}
+              yearSelected={this.props.yearSelected}
+            />*/}
           </DialogContent>
           <DialogActions>
             {/*<Button onClick={this.handleClose} color="primary">*/}
