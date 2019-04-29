@@ -54,6 +54,7 @@ class FiltersDialog extends React.Component {
       selected: this.props.selected
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
+    this.handleApply = this.handleApply.bind(this);
   }
 
   handleClickOpen = scroll => () => {
@@ -67,12 +68,16 @@ class FiltersDialog extends React.Component {
 
   handleApply = () => {
     // this.props.onClose(this.state.value);
-    // this.props = this.state;
+
     this.setState({ open: false });
+    this.setState({ selected: this.state.selected });
+    // this.props = this.state;
     // this.setState({ selected: this.state.selected });
     // this.updateThisProperty("selected", this.state.selected);
-    // this.props.triggerParentUpdate("selected", this.state.selected);
-    console.log("filter changes applied");
+    // this.props.triggerParentUpdate("selected", this.props.selected);
+    this.props.triggerFiltersUpdate(this.state);
+    console.log(this.state.selected);
+    console.log("trigger filters to update in parent...but how?");
   };
 
   handleCancel = () => {
@@ -88,13 +93,15 @@ class FiltersDialog extends React.Component {
 
   updateThisProperty(propertyName, value) {
     this.setState({ [propertyName]: value });
-    this.props.triggerParentUpdate(propertyName, value); // move this to only happen when selecting "Apply"
+    // this.props.triggerParentUpdate(propertyName, value); // move this to only happen when selecting "Apply"
     console.log(
       "property updated at 'Filters.js': " + propertyName + ": " + value
     );
   }
 
   render() {
+    // const { selected } = this.state;
+
     return (
       <div>
         <Button
@@ -131,11 +138,17 @@ class FiltersDialog extends React.Component {
           </DialogContent>
           <DialogActions>
             {/*<Button onClick={this.handleClose} color="primary">*/}
-            <Button onClick={this.handleCancel} color="primary" value="Cancel">
+            <Button
+              onClick={this.handleCancel}
+              color="primary" /*value="Cancel"*/
+            >
               Cancel
             </Button>
             {/*<Button onClick={this.handleClose} color="primary">*/}
-            <Button onClick={this.handleApply} color="primary" value="Apply">
+            <Button
+              onClick={this.handleApply}
+              color="primary" /*value="Apply"*/
+            >
               Apply
             </Button>
           </DialogActions>

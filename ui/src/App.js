@@ -176,7 +176,7 @@ class App extends Component {
       selected: [] //trying to pull selected array up to pass into bridge query
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
-    // this.handleFilters = this.handleFilters.bind(this);
+    this.handleFilters = this.handleFilters.bind(this);
   }
 
   handleDrawerOpen = () => {
@@ -205,11 +205,20 @@ class App extends Component {
     console.log("property updated at 'App.js': " + propertyName + ": " + value);
   }
 
-  // updateFilters()
+  handleFilters(state) {
+    // this.setState({ [propertyName]: value });
+    // this.setState({ selected: this.props.selected});
+    console.log("check me out: " + state.selected);
+    console.log(this.state.selected);
+    this.setState({
+      selected: state.selected
+    });
 
-  // handleFilters = () => {
-
-  // };
+    console.log("filters have been handled!");
+    // this.setState({
+    //   selected: this.props.selected
+    // })
+  }
 
   render() {
     const { classes, theme } = this.props;
@@ -286,9 +295,11 @@ class App extends Component {
               </Button>
               {/*<FiltersButton />*/}
               <FiltersDialog
-                triggerParentUpdate={this.updateThisProperty}
+                // triggerParentUpdate={this.updateThisProperty}
                 selected={this.state.selected}
+                // handleFilters={this.updateThisProperty}
                 // triggerParentUpdate={this.handleApply}
+                triggerFiltersUpdate={this.handleFilters}
               />
             </Toolbar>
           </AppBar>
