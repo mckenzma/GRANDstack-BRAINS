@@ -14,6 +14,13 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 import Divider from "@material-ui/core/Divider";
 
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import Chip from "@material-ui/core/Chip";
+import PropTypes from "prop-types";
+
 function getSorting(order, orderBy) {
   return order === "desc"
     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
@@ -64,8 +71,8 @@ class StateListMenu extends React.Component {
     this.setState({ numSelected: newSelected.length });
     this.props.triggerParentUpdate("selected", newSelected);
     this.props.triggerParentUpdate("numSelected", newSelected.length);
-    console.log("select: newSelected: " + newSelected);
-    console.log("select: numSelected: " + newSelected.length);
+    // console.log("select: newSelected: " + newSelected);
+    // console.log("select: numSelected: " + newSelected.length);
   };
 
   handleSelectAllClick = (event, data) => {
@@ -93,11 +100,14 @@ class StateListMenu extends React.Component {
 
   render() {
     const { order, orderBy } = this.state;
+
     // const { selected } = this.props;
     // const { onSelectAllClick, numSelected, rowCount } = this.state;
 
     const { numSelected } = this.state;
     // const { numSelected } = this.props;
+
+    const { classes } = this.state;
 
     return (
       <Query
@@ -118,6 +128,54 @@ class StateListMenu extends React.Component {
 
           return (
             <div>
+              <FormControl>
+                <InputLabel>States</InputLabel>
+                <Select
+                  multiple
+                  value={this.state.selected}
+                  renderValue={selected => (
+                    <div>
+                      {this.state.selected.map(value => (
+                        <Chip
+                          key={value}
+                          label={value} /*display="flex" flexWrap="wrap"*/
+                        />
+                      ))}
+                    </div>
+                  )}
+                  // MenuProps={MenuProps}
+                >
+                  <MenuItem>
+                    <Checkbox
+                      disabled
+                      indeterminate={numSelected > 0 && numSelected < rowCount}
+                      checked={numSelected === rowCount}
+                      onChange={event =>
+                        this.handleSelectAllClick(event, Object(data.State))
+                      }
+                    />
+                    <ListItemText>Select All</ListItemText>
+                  </MenuItem>
+                  <Divider />
+                  {data.State.slice()
+                    .sort(getSorting(order, orderBy))
+                    .map(n => {
+                      const isSelected = this.isSelected(n.name);
+                      return (
+                        <MenuItem key={n.name}>
+                          <Checkbox
+                            checked={isSelected}
+                            onChange={this.handleChange(n.name)}
+                            value={n.name}
+                            selected={isSelected} // is this actually needed? - test removal
+                            onClick={event => this.handleClick(event, n.name)}
+                          />
+                          <ListItemText>{n.name}</ListItemText>
+                        </MenuItem>
+                      );
+                    })}
+                </Select>
+              </FormControl>
               <List>
                 <ListItem>
                   <ListItemText>States</ListItemText>
@@ -177,6 +235,21 @@ class StateListMenu extends React.Component {
     );
   }
 }
+
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
+// const MenuProps = {
+//   PaperProps: {
+//     style: {
+//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+//       width: 250,
+//     },
+//   },
+// };
+
+// StateListMenu.propTypes = {
+//   classes: PropTypes.object.isRequired,
+// };
 
 export default StateListMenu;
 // export default withStyles(styles)(StateListMenu);

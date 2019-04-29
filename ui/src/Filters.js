@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+// import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import BallotIcon from "@material-ui/icons/Ballot";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
+// import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import StateListMenu from "./StateListMenu";
@@ -53,7 +53,6 @@ class FiltersDialog extends React.Component {
       // selected: [] //trying to pull selected array up to pass into bridge query
       selected: this.props.selected
     };
-
     this.updateThisProperty = this.updateThisProperty.bind(this);
   }
 
@@ -62,21 +61,27 @@ class FiltersDialog extends React.Component {
   };
 
   handleClose = () => {
+    //still needed?
     this.setState({ open: false });
   };
 
   handleApply = () => {
     // this.props.onClose(this.state.value);
-    this.props = this.state;
-    console.log("props: " + this.props);
-    console.log("state: " + this.state);
+    // this.props = this.state;
+    // console.log("props: " + this.props);
+    // console.log("state: " + this.state);
     this.setState({ open: false });
+    // this.updateThisProperty("selected", this.state.selected);
+    // this.updateThisProperty("selected", this.state.selected);
+    // this.props.triggerParentUpdate("selected", this.state.selected);
+    console.log("filter changes applied");
   };
 
   handleCancel = () => {
     // this.props.onClose(this.props.value);
     this.props = this.props;
     this.setState({ open: false });
+    console.log("filter changes canceled");
   };
 
   // handleChange = (event, value) => {
@@ -86,6 +91,9 @@ class FiltersDialog extends React.Component {
   updateThisProperty(propertyName, value) {
     this.setState({ [propertyName]: value });
     this.props.triggerParentUpdate(propertyName, value); // move this to only happen when selecting "Apply"
+    console.log(
+      "property updated at 'Filters.js': " + propertyName + ": " + value
+    );
   }
 
   render() {
