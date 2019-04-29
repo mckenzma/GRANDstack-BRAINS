@@ -176,6 +176,7 @@ class App extends Component {
       selected: [] //trying to pull selected array up to pass into bridge query
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
+    // this.handleFilters = this.handleFilters.bind(this);
   }
 
   handleDrawerOpen = () => {
@@ -204,8 +205,10 @@ class App extends Component {
     console.log("property updated at 'App.js': " + propertyName + ": " + value);
   }
 
-  // updateTheseProperties(properties) {
-  //   this.setState({  })
+  // updateFilters()
+
+  // handleFilters = () => {
+
   // };
 
   render() {
@@ -285,6 +288,7 @@ class App extends Component {
               <FiltersDialog
                 triggerParentUpdate={this.updateThisProperty}
                 selected={this.state.selected}
+                // triggerParentUpdate={this.handleApply}
               />
             </Toolbar>
           </AppBar>

@@ -68,10 +68,8 @@ class FiltersDialog extends React.Component {
   handleApply = () => {
     // this.props.onClose(this.state.value);
     // this.props = this.state;
-    // console.log("props: " + this.props);
-    // console.log("state: " + this.state);
     this.setState({ open: false });
-    // this.updateThisProperty("selected", this.state.selected);
+    // this.setState({ selected: this.state.selected });
     // this.updateThisProperty("selected", this.state.selected);
     // this.props.triggerParentUpdate("selected", this.state.selected);
     console.log("filter changes applied");
@@ -102,7 +100,9 @@ class FiltersDialog extends React.Component {
         <Button
           onClick={this.handleClickOpen("paper")}
           variant="contained"
-          /*className={classes.button}*/ color="secondary"
+          /*className={classes.button}*/
+
+          color="secondary"
         >
           <BallotIcon />
           Filters

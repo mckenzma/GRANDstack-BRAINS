@@ -176,7 +176,7 @@ class StateListMenu extends React.Component {
                     })}
                 </Select>
               </FormControl>
-              <List>
+              {/*}              <List>
                 <ListItem>
                   <ListItemText>States</ListItemText>
                 </ListItem>
@@ -204,7 +204,7 @@ class StateListMenu extends React.Component {
                     const isSelected = this.isSelected(n.name);
                     return (
                       //{/*<ListItem key={n.id}>*/}
-                      <ListItem key={n.name}>
+              {/*}                      <ListItem key={n.name}>
                         <Checkbox
                           // checked={this.state.checked}
                           //    checked={this.state[n.name]}
@@ -223,11 +223,11 @@ class StateListMenu extends React.Component {
                           onChange={this.handleChange(n.name)}
                           value={n.name}
                         />*/}
-                        <ListItemText>{n.name}</ListItemText>
+              {/*}                        <ListItemText>{n.name}</ListItemText>
                       </ListItem>
                     );
                   })}
-              </List>
+              </List>*/}
             </div>
           );
         }}
