@@ -94,8 +94,7 @@ class BuildYearFilter extends React.Component {
     }));
   };
 
-  isYearSelected = year =>
-    this.state.yearSelected.indexOf(toString(year)) !== -1;
+  isYearSelected = year => this.state.yearSelected.indexOf(year) !== -1;
 
   render() {
     const { order, orderBy } = this.state;
