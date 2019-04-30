@@ -80,6 +80,7 @@ class FiltersDialog extends React.Component {
     // this.props.triggerParentUpdate("selected", this.props.selected);
     this.props.triggerFiltersUpdate(this.state);
     console.log(this.state.selected);
+    console.log(this.state.yearSelected);
     // console.log("trigger filters to update in parent...but how?");
   };
 

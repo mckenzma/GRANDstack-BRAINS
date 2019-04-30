@@ -28,7 +28,8 @@ class BuildYearFilter extends React.Component {
     super(props);
 
     this.state = {
-      order: "asc",
+      // order: "asc",
+      order: "desc",
       orderBy: "year",
       // name: null,
       //selectedStates: [],

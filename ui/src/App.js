@@ -320,10 +320,9 @@ class App extends Component {
             {/*<div className={classes.drawerHeader} />*/}{" "}
             {/*does this do anything?*/}
             <MapLeaf
-              name={this.state.name}
-              selected={
-                this.state.selected
-              } /*yearSelected={this.state.yearSelected}*/
+              // name={this.state.name}
+              selected={this.state.selected}
+              yearSelected={this.state.yearSelected}
             />
           </main>
           {after}

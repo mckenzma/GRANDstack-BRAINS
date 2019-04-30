@@ -115,14 +115,15 @@ class MapLeaf extends React.Component {
     //   console.log("load state then bridges");
     // }
 
+    console.log("map: selected: " + this.props.selected);
+    console.log("map: yearSelected: " + this.props.yearSelected);
+
     return (
       <Query
         query={gql`
-          query statesPaginateQuery(
-            $selected: [String!] #$name: String
-          ) {
+          query statesPaginateQuery($selected: [String!]) #$yearSelected: [Int!]
+          {
             State(filter: { name_in: $selected }) {
-              #State(name: $name) {
               id
               name
               bridges {
@@ -131,14 +132,19 @@ class MapLeaf extends React.Component {
                 latitude_decimal
                 longitude_decimal
                 yearbuilt
+                #buildYear(filter: { year_in: $yearSelected }) {
+                buildYear {
+                  year
+                }
               }
             }
           }
         `}
         variables={{
           //name: this.state.name
-          name: this.props.name,
-          selected: this.props.selected
+          // name: this.props.name,
+          selected: this.props.selected,
+          yearSelected: this.props.yearSelected
           // selected: []
         }}
       >
