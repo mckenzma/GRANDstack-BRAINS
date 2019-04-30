@@ -138,10 +138,10 @@ class FiltersDialog extends React.Component {
               triggerParentUpdate={this.updateThisProperty}
               selected={this.props.selected}
             />
-            {/*<BuildYearFilter
+            <BuildYearFilter
               triggerParentUpdate={this.updateThisProperty}
               yearSelected={this.props.yearSelected}
-            />*/}
+            />
           </DialogContent>
           <DialogActions>
             {/*<Button onClick={this.handleClose} color="primary">*/}

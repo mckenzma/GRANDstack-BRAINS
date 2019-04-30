@@ -49,8 +49,8 @@ class StateListMenu extends React.Component {
 
   handleClick = (event, name) => {
     //const { selected, numSelected } = this.state;
-    // const { selected } = this.state;
-    const { selected } = this.props;
+    const { selected } = this.state;
+    // const { selected } = this.props;
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 

@@ -45,8 +45,8 @@ class BuildYearFilter extends React.Component {
 
   handleClick = (event, year) => {
     //const { selected, numSelected } = this.state;
-    // const { selected } = this.state;
-    const { yearSelected } = this.props;
+    const { yearSelected } = this.state;
+    // const { yearSelected } = this.props;
     const selectedIndex = yearSelected.indexOf(year);
     let newSelected = [];
 
@@ -77,7 +77,7 @@ class BuildYearFilter extends React.Component {
     let newSelected = [];
 
     if (event.target.checked) {
-      newSelected = data.map(n => toString(n.year));
+      newSelected = data.map(n => n.year);
       console.log("selected all: newSelected: " + newSelected);
       this.setState({ yearSelected: newSelected });
       this.setState(state => ({ numYearSelected: state.yearSelected.length }));
@@ -162,10 +162,10 @@ class BuildYearFilter extends React.Component {
                         <MenuItem key={n.year}>
                           <Checkbox
                             checked={isYearSelected}
-                            onChange={this.handleChange(toString(n.year))}
+                            onChange={this.handleChange(n.year)}
                             value={toString(n.year)}
                             //selected={isYearSelected} // is this actually needed? - test removal
-                            yearSelected={isYearSelected} // is this actually needed? - test removal
+                            selected={isYearSelected} // is this actually needed? - test removal
                             onClick={event => this.handleClick(event, n.year)}
                           />
                           <ListItemText>{n.year}</ListItemText>
