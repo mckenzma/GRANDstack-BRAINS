@@ -145,8 +145,8 @@ class MapLeaf extends React.Component {
                 name
                 place {
                   name
-                  #bridge(filter: { buildYear: {year_in: $yearSelected } }) {
-                  bridge(filter: { yearbuilt_in: $yearSelected }) {
+                  bridge(filter: { buildYear: { year_in: $yearSelected } }) {
+                    #bridge(filter: { yearbuilt_in: $yearSelected }) {
                     #bridge {
                     id
                     yearbuilt

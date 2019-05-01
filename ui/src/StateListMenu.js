@@ -21,10 +21,55 @@ import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
 import PropTypes from "prop-types";
 
+import classNames from "classnames";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+    maxWidth: 300
+  },
+  chips: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  chip: {
+    margin: theme.spacing.unit / 4
+  },
+  noLabel: {
+    marginTop: theme.spacing.unit * 3
+  }
+});
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
+};
+
 function getSorting(order, orderBy) {
   return order === "desc"
     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
+}
+
+function getStyles(name, that) {
+  return {
+    fontWeight:
+      that.state.name.indexOf(name) === -1
+        ? that.props.theme.typography.fontWeightRegular
+        : that.props.theme.typography.fontWeightMedium
+  };
 }
 
 class StateListMenu extends React.Component {
@@ -107,7 +152,7 @@ class StateListMenu extends React.Component {
     const { numSelected } = this.state;
     // const { numSelected } = this.props;
 
-    const { classes } = this.state;
+    const { classes } = this.props;
 
     return (
       <Query
@@ -127,14 +172,14 @@ class StateListMenu extends React.Component {
           const rowCount = Object.keys(data.State).length;
 
           return (
-            <div>
-              <FormControl>
+            <div className={classes.root}>
+              <FormControl className={classes.formControl}>
                 <InputLabel>States</InputLabel>
                 <Select
                   multiple
                   value={this.state.selected}
                   renderValue={selected => (
-                    <div>
+                    <div className={classes.chips}>
                       {this.state.selected.map(value => (
                         <Chip
                           key={value}
@@ -247,9 +292,9 @@ class StateListMenu extends React.Component {
 //   },
 // };
 
-// StateListMenu.propTypes = {
-//   classes: PropTypes.object.isRequired,
-// };
+StateListMenu.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
-export default StateListMenu;
-// export default withStyles(styles)(StateListMenu);
+// export default StateListMenu;
+export default withStyles(styles, { withTheme: true })(StateListMenu);

@@ -17,10 +17,55 @@ import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
 import PropTypes from "prop-types";
 
+import classNames from "classnames";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+    maxWidth: 300
+  },
+  chips: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  chip: {
+    margin: theme.spacing.unit / 4
+  },
+  noLabel: {
+    marginTop: theme.spacing.unit * 3
+  }
+});
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
+};
+
 function getSorting(order, orderBy) {
   return order === "desc"
     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
+}
+
+function getStyles(name, that) {
+  return {
+    fontWeight:
+      that.state.name.indexOf(name) === -1
+        ? that.props.theme.typography.fontWeightRegular
+        : that.props.theme.typography.fontWeightMedium
+  };
 }
 
 class BuildYearFilter extends React.Component {
@@ -106,7 +151,8 @@ class BuildYearFilter extends React.Component {
     const { numYearSelected } = this.state;
     // const { numSelected } = this.props;
 
-    const { classes } = this.state;
+    // const { classes } = this.state;
+    const { classes } = this.props;
 
     return (
       <Query
@@ -126,19 +172,20 @@ class BuildYearFilter extends React.Component {
           const rowYearCount = Object.keys(data.BuildYear).length;
 
           return (
-            <div>
-              <FormControl>
+            <div className={classes.root}>
+              <FormControl className={classes.formControl}>
                 <InputLabel>Build Years</InputLabel>
                 <Select
                   multiple
                   value={this.state.yearSelected}
                   renderValue={yearSelected => (
-                    <div>
+                    <div className={classes.chips}>
                       {this.state.yearSelected.map(value => (
                         <Chip key={value} label={value} />
                       ))}
                     </div>
                   )}
+                  // MenuProps={MenuProps}
                 >
                   <MenuItem>
                     <Checkbox
@@ -182,4 +229,9 @@ class BuildYearFilter extends React.Component {
   }
 }
 
-export default BuildYearFilter;
+BuildYearFilter.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+// export default BuildYearFilter;
+export default withStyles(styles, { withTheme: true })(BuildYearFilter);
