@@ -121,25 +121,58 @@ class MapLeaf extends React.Component {
     return (
       <Query
         query={gql`
-          query statesPaginateQuery($selected: [String!]) #$yearSelected: [Int!]
-          {
+          query statesPaginateQuery(
+            $selected: [String!]
+            $yearSelected: [Int!]
+          ) {
             State(filter: { name_in: $selected }) {
               id
               name
-              bridges {
-                id
-                name
-                latitude_decimal
-                longitude_decimal
-                yearbuilt
-                #buildYear(filter: { year_in: $yearSelected }) {
-                buildYear {
-                  year
+              county {
+                #id
+                place {
+                  #id
+                  #bridge(filter: { buildYear: {year_in: $yearSelected } }) {
+                  bridge(filter: { yearbuilt_in: $yearSelected }) {
+                    #bridge {
+                    id
+                    yearbuilt
+                    latitude_decimal
+                    longitude_decimal
+                    yearbuilt
+                    #buildYear(filter: { year_in: $yearSelected }) {
+                    #buildYear {
+                    #  year
+                    #}
+                  }
                 }
               }
             }
           }
         `}
+        // query={gql`
+        //   query statesPaginateQuery(
+        // $selected: [String!]
+        // #$yearSelected: [Int!]
+        // )
+        //   {
+        //     State(filter: { name_in: $selected }) {
+        //       id
+        //       name
+        //       bridges {
+        //         id
+        //         name
+        //         latitude_decimal
+        //         longitude_decimal
+        //         yearbuilt
+        //         #buildYear(filter: { year_in: $yearSelected }) {
+        //         #buildYear {
+        //         #  year
+        //         #}
+        //       }
+        //     }
+        //   }
+        // `}
         variables={{
           //name: this.state.name
           // name: this.props.name,
@@ -166,7 +199,53 @@ class MapLeaf extends React.Component {
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
                 <MarkerClusterGroup>
-                  {data.State.slice().map(b => {
+                  {data.State.slice().map(s => {
+                    return (
+                      //<div key={s.id}>
+                      <div>
+                        {s.county.slice().map(c => {
+                          return (
+                            // <div key={c.id}>
+                            <div>
+                              {c.place.slice().map(p => {
+                                return (
+                                  // <div key={p.id}>
+                                  <div>
+                                    {p.bridge.slice().map(b => {
+                                      return (
+                                        // <div key={m.id}>
+                                        <div key={b.id}>
+                                          {/*//{m.bridge.slice().map(n => {*/}
+                                          {/*return (*/}
+                                          <Marker
+                                            key={b.id}
+                                            position={[
+                                              b.latitude_decimal,
+                                              b.longitude_decimal
+                                            ]}
+                                            icon={myIcon}
+                                            onClick={this.toggleDrawer(
+                                              "right",
+                                              true,
+                                              b,
+                                              s.name
+                                            )}
+                                          />
+                                          {/*} );*/}
+                                          {/*//})}*/}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                  {/*{data.State.slice().map(b => {
                     return (
                       <div key={b.id}>
                         {b.bridges.slice().map(n => {
@@ -189,7 +268,7 @@ class MapLeaf extends React.Component {
                         })}
                       </div>
                     );
-                  })}
+                  })}*/}
                 </MarkerClusterGroup>
               </Map>
 
