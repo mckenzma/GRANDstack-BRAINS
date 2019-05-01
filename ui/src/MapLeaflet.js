@@ -54,10 +54,17 @@ class MapLeaf extends React.Component {
     };
   }
 
-  toggleDrawer = (side, open, bridge, stateName) => () => {
+  toggleDrawer = (
+    side,
+    open,
+    bridge,
+    stateName /*, countyName, placeName*/
+  ) => () => {
     this.setState({
       [side]: open,
       bridge_state: stateName,
+      // bridge_county: countyName,
+      // bridge_place: placeName,
       bridge_name: bridge.name,
       bridge_id: bridge.id,
       bridge_lat: bridge.latitude_decimal,
@@ -78,6 +85,12 @@ class MapLeaf extends React.Component {
           <ListItem>
             <ListItemText>State: {this.state.bridge_state}</ListItemText>
           </ListItem>
+          {/*<ListItem>
+            <ListItemText>County: {this.state.bridge_county}</ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText>Place: {this.state.bridge_place}</ListItemText>
+          </ListItem>*/}
           <Divider />
           <ListItem>
             <ListItemText>LAT: {this.state.bridge_lat}</ListItemText>
@@ -129,9 +142,9 @@ class MapLeaf extends React.Component {
               id
               name
               county {
-                #id
+                name
                 place {
-                  #id
+                  name
                   #bridge(filter: { buildYear: {year_in: $yearSelected } }) {
                   bridge(filter: { yearbuilt_in: $yearSelected }) {
                     #bridge {
@@ -228,7 +241,9 @@ class MapLeaf extends React.Component {
                                               "right",
                                               true,
                                               b,
-                                              s.name
+                                              s.name //,
+                                              // c.name,
+                                              // p.name
                                             )}
                                           />
                                           {/*} );*/}
