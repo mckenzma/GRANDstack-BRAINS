@@ -32,7 +32,7 @@ class StateListMenu extends React.Component {
     super(props);
 
     this.state = {
-      order: "asc",
+      order: "asc", // sets order of states to be named in list
       orderBy: "name",
       name: null,
       selectedStates: [],
@@ -147,7 +147,7 @@ class StateListMenu extends React.Component {
                 >
                   <MenuItem>
                     <Checkbox
-                      disabled
+                      // disabled
                       indeterminate={numSelected > 0 && numSelected < rowCount}
                       checked={numSelected === rowCount}
                       onChange={event =>

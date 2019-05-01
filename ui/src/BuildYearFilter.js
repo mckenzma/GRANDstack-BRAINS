@@ -29,7 +29,7 @@ class BuildYearFilter extends React.Component {
 
     this.state = {
       // order: "asc",
-      order: "desc",
+      order: "desc", // sets order of years to be listed in the menu
       orderBy: "year",
       // name: null,
       //selectedStates: [],
@@ -142,7 +142,7 @@ class BuildYearFilter extends React.Component {
                 >
                   <MenuItem>
                     <Checkbox
-                      disabled
+                      // disabled
                       indeterminate={
                         numYearSelected > 0 && numYearSelected < rowYearCount
                       }
