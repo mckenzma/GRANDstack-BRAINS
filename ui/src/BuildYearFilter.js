@@ -64,7 +64,7 @@ class BuildYearFilter extends React.Component {
       );
     }
 
-    this.setState({ yearSelected: newSelected });
+    this.setState({ yearSelected: newSelected.sort().reverse() });
     this.setState({ numYearSelected: newSelected.length });
     this.props.triggerParentUpdate("yearSelected", newSelected);
     this.props.triggerParentUpdate("numYearSelected", newSelected.length);

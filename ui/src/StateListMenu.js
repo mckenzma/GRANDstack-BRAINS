@@ -67,7 +67,7 @@ class StateListMenu extends React.Component {
       );
     }
 
-    this.setState({ selected: newSelected });
+    this.setState({ selected: newSelected.sort() });
     this.setState({ numSelected: newSelected.length });
     this.props.triggerParentUpdate("selected", newSelected);
     this.props.triggerParentUpdate("numSelected", newSelected.length);
