@@ -124,8 +124,8 @@ class BuildYearFilter extends React.Component {
 
     if (event.target.checked) {
       newSelected = data.map(n => n.year);
-      console.log("selected all: newSelected: " + newSelected);
-      this.setState({ yearSelected: newSelected });
+      // console.log("selected all: newSelected: " + newSelected);
+      this.setState({ yearSelected: newSelected.sort().reverse() });
       this.setState(state => ({ numYearSelected: state.yearSelected.length }));
       this.props.triggerParentUpdate(state => ({
         numYearSelected: state.yearSelected.length

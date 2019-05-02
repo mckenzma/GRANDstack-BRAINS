@@ -127,8 +127,8 @@ class StateListMenu extends React.Component {
 
     if (event.target.checked) {
       newSelected = data.map(n => n.name);
-      console.log("selecte all: newSelected: " + newSelected);
-      this.setState({ selected: newSelected });
+      // console.log("selecte all: newSelected: " + newSelected);
+      this.setState({ selected: newSelected.sort() });
       this.setState(state => ({ numSelected: state.selected.length }));
       this.props.triggerParentUpdate(state => ({
         numSelected: state.selected.length

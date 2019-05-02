@@ -203,20 +203,20 @@ class App extends Component {
 
   updateThisProperty(propertyName, value) {
     this.setState({ [propertyName]: value });
-    console.log("property updated at 'App.js': " + propertyName + ": " + value);
+    // console.log("property updated at 'App.js': " + propertyName + ": " + value);
   }
 
   handleFilters(state) {
     // this.setState({ [propertyName]: value });
     // this.setState({ selected: this.props.selected});
-    console.log("check me out: " + state.selected);
-    console.log(this.state.selected);
+    // console.log("check me out: " + state.selected);
+    // console.log(this.state.selected);
     this.setState({
       selected: state.selected,
       yearSelected: state.yearSelected
     });
 
-    console.log("filters have been handled!");
+    // console.log("filters have been handled!");
     // this.setState({
     //   selected: this.props.selected
     // })
@@ -317,7 +317,7 @@ class App extends Component {
               }
             )}
           >
-            {/*<div className={classes.drawerHeader} />*/}{" "}
+            {/*<div className={classes.drawerHeader} />
             {/*does this do anything?*/}
             <MapLeaf
               // name={this.state.name}
@@ -328,7 +328,7 @@ class App extends Component {
           {after}
         </div>
 
-        {/*<div className={classes.container} />*/}
+        {/*<div className={classes.container} />
         {/* does this do anything */}
       </div>
     );

@@ -79,8 +79,8 @@ class FiltersDialog extends React.Component {
     // this.updateThisProperty("selected", this.state.selected);
     // this.props.triggerParentUpdate("selected", this.props.selected);
     this.props.triggerFiltersUpdate(this.state);
-    console.log(this.state.selected);
-    console.log(this.state.yearSelected);
+    // console.log(this.state.selected);
+    // console.log(this.state.yearSelected);
     // console.log("trigger filters to update in parent...but how?");
   };
 
@@ -88,7 +88,7 @@ class FiltersDialog extends React.Component {
     // this.props.onClose(this.props.value);
     this.props = this.props;
     this.setState({ open: false });
-    console.log("filter changes canceled");
+    // console.log("filter changes canceled");
   };
 
   // handleChange = (event, value) => {
@@ -98,9 +98,7 @@ class FiltersDialog extends React.Component {
   updateThisProperty(propertyName, value) {
     this.setState({ [propertyName]: value });
     // this.props.triggerParentUpdate(propertyName, value); // move this to only happen when selecting "Apply"
-    console.log(
-      "property updated at 'Filters.js': " + propertyName + ": " + value
-    );
+    // console.log("property updated at 'Filters.js': " + propertyName + ": " + value);
   }
 
   render() {

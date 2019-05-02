@@ -128,8 +128,8 @@ class MapLeaf extends React.Component {
     //   console.log("load state then bridges");
     // }
 
-    console.log("map: selected: " + this.props.selected);
-    console.log("map: yearSelected: " + this.props.yearSelected);
+    // console.log("map: selected: " + this.props.selected);
+    // console.log("map: yearSelected: " + this.props.yearSelected);
 
     return (
       <Query
