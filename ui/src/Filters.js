@@ -13,14 +13,14 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import StateListMenu from "./StateListMenu";
 import BuildYearFilter from "./BuildYearFilter";
 
-const styles = theme => ({
-  button: {
-    margin: theme.spacing.unit
-  },
-  input: {
-    display: "none"
-  }
-});
+// const styles = theme => ({
+//   button: {
+//     margin: theme.spacing.unit
+//   },
+//   input: {
+//     display: "none"
+//   }
+// });
 
 // function FiltersButton(props) {
 //   const { classes } = props;
@@ -103,13 +103,14 @@ class FiltersDialog extends React.Component {
 
   render() {
     // const { selected } = this.state;
+    // const { classes, theme } = this.props;
 
     return (
       <div>
         <Button
           onClick={this.handleClickOpen("paper")}
           variant="contained"
-          /*className={classes.button}*/
+          // className={this.props.button}
 
           color="secondary"
         >
@@ -166,6 +167,8 @@ class FiltersDialog extends React.Component {
 
 FiltersDialog.propTypes = {
   onClose: PropTypes.func
+  // classes: PropTypes.object.isRequired,
+  // theme: PropTypes.object.isRequired
 };
 
 export default FiltersDialog;

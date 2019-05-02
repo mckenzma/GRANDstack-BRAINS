@@ -30,9 +30,10 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     flexGrow: 1
+    // display:"flex"
   },
   appFrame: {
-    height: 800,
+    // height: 800,
     // height: `calc(${window.screen.availHeight}px - 90px)`,// fix this to get map to fill the entire browser window and adjust as window size adjusts
     zIndex: 1,
     overflow: "hidden",
@@ -83,6 +84,8 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
+    height: "100vh",
+    overflow: "auto",
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
@@ -133,15 +136,16 @@ const styles = theme => ({
     alignItems: "center",
     justifyContent: "space-between"
   },
-  fabButton: {
-    position: "absolute",
-    top: -30,
-    left: 0,
-    right: 0,
-    margin: "0 auto"
-  },
+  // fabButton: {
+  //   position: "absolute",
+  //   top: -30,
+  //   left: 0,
+  //   right: 0,
+  //   margin: "0 auto"
+  // },
   button: {
     margin: theme.spacing.unit
+    // paddingRight: theme.spacing.unit
   }
 });
 
@@ -317,7 +321,7 @@ class App extends Component {
               }
             )}
           >
-            {/*<div className={classes.drawerHeader} />
+            <div className={classes.drawerHeader} />
             {/*does this do anything?*/}
             <MapLeaf
               // name={this.state.name}
