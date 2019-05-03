@@ -45,7 +45,8 @@ const server = new ApolloServer({
   context: { driver },
   schema: schema,
   introspection: true,
-  playground: true
+  playground: true,
+  timeout: 10*60*1000 // 10 * 60 seconds * 1000 msecs = 10 minutes
 });
 
 // Specify port and path for GraphQL endpoint
