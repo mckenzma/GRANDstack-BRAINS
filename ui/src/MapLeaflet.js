@@ -33,6 +33,9 @@ const styles = theme => ({
   },
   list: {
     width: 250
+  },
+  map: {
+    marginTop: theme.spacing.unit
   }
 });
 
@@ -82,6 +85,9 @@ class MapLeaf extends React.Component {
           {/*<ListItem >
             <ListItemText >NAME: {this.state.bridge_name}</ListItemText>
           </ListItem>*/}
+          <ListItem>
+            <ListItemText>ID: {this.state.bridge_id}</ListItemText>
+          </ListItem>
           <ListItem>
             <ListItemText>State: {this.state.bridge_state}</ListItemText>
           </ListItem>
@@ -198,6 +204,9 @@ class MapLeaf extends React.Component {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
+          // console.log(this.props.selected);
+          // console.log(this.props.yearSelected);
+
           return (
             <div>
               <Map
@@ -214,16 +223,13 @@ class MapLeaf extends React.Component {
                 <MarkerClusterGroup>
                   {data.State.slice().map(s => {
                     return (
-                      //<div key={s.id}>
-                      <div>
+                      <div key={s.id}>
                         {s.county.slice().map(c => {
                           return (
-                            // <div key={c.id}>
-                            <div>
+                            <div /*key={s.id + c.id}*/>
                               {c.place.slice().map(p => {
                                 return (
-                                  // <div key={p.id}>
-                                  <div>
+                                  <div /*key={s.id + c.id + p.id}*/>
                                     {p.bridge.slice().map(b => {
                                       return (
                                         // <div key={m.id}>

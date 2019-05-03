@@ -178,7 +178,9 @@ class App extends Component {
       openDialog: false,
 
       selected: [], //trying to pull selected array up to pass into bridge query
+      // numSelected: [], //trying to pull selected array up to pass into bridge query
       yearSelected: [] //needed?
+      // numYearSelected: [] //needed?
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
     this.handleFilters = this.handleFilters.bind(this);
@@ -217,7 +219,9 @@ class App extends Component {
     // console.log(this.state.selected);
     this.setState({
       selected: state.selected,
-      yearSelected: state.yearSelected
+      numSelected: state.numSelected,
+      yearSelected: state.yearSelected,
+      numYearSelected: state.numYearSelected
     });
 
     // console.log("filters have been handled!");
@@ -303,6 +307,7 @@ class App extends Component {
               <FiltersDialog
                 // triggerParentUpdate={this.updateThisProperty}
                 selected={this.state.selected}
+                numSelected={this.state.numSelected}
                 yearSelected={this.state.yearSelected}
                 // handleFilters={this.updateThisProperty}
                 // triggerParentUpdate={this.handleApply}
@@ -321,12 +326,14 @@ class App extends Component {
               }
             )}
           >
-            <div className={classes.drawerHeader} />
+            {/*<div className={classes.drawerHeader} />
             {/*does this do anything?*/}
             <MapLeaf
               // name={this.state.name}
               selected={this.state.selected}
+              // numSelected={this.state.numSelected}
               yearSelected={this.state.yearSelected}
+              // numYearSelected={this.state.numYearSelected}
             />
           </main>
           {after}

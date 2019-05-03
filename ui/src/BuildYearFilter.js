@@ -170,6 +170,8 @@ class BuildYearFilter extends React.Component {
           if (error) return <p>Error</p>;
 
           const rowYearCount = Object.keys(data.BuildYear).length;
+          // console.log("rowYearCount: " + rowYearCount);
+          // console.log("numYearSelected: " + numYearSelected);
 
           return (
             <div className={classes.root}>

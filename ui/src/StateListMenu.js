@@ -150,6 +150,7 @@ class StateListMenu extends React.Component {
     // const { onSelectAllClick, numSelected, rowCount } = this.state;
 
     const { numSelected } = this.state;
+    // console.log("numSelected: " + numSelected);
     // const { numSelected } = this.props;
 
     const { classes } = this.props;
@@ -170,6 +171,8 @@ class StateListMenu extends React.Component {
           if (error) return <p>Error</p>;
 
           const rowCount = Object.keys(data.State).length;
+          // console.log("rowCount: " + rowCount);
+          // console.log("numSelected: " + numSelected);
 
           return (
             <div className={classes.root}>

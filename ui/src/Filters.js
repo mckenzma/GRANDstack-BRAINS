@@ -110,7 +110,7 @@ class FiltersDialog extends React.Component {
         <Button
           onClick={this.handleClickOpen("paper")}
           variant="contained"
-          // className={this.props.button}
+          // className={classes.button}
 
           color="secondary"
         >
