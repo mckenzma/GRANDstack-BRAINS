@@ -148,8 +148,10 @@ class MapLeaf extends React.Component {
               id
               name
               county {
+                id
                 name
                 place {
+                  id
                   name
                   bridge(filter: { buildYear: { year_in: $yearSelected } }) {
                     #bridge(filter: { yearbuilt_in: $yearSelected }) {
@@ -221,20 +223,31 @@ class MapLeaf extends React.Component {
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
                 <MarkerClusterGroup>
-                  {data.State.slice().map(s => {
+                  {/*{
+                    data.State.map(s => (
+                      <React.Fragment key={s.id}>
+                        <County data={s} />
+                      </React.Fragment>
+                    ))
+                  }*/}
+                  {data.State.map(s => {
+                    //{data.State.slice().map(s => {
                     return (
                       <div key={s.id}>
-                        {s.county.slice().map(c => {
+                        {s.county.map(c => {
+                          // {s.county.slice().map(c => {
                           return (
-                            <div /*key={s.id + c.id}*/>
-                              {c.place.slice().map(p => {
+                            <div key={s.id + c.id}>
+                              {c.place.map(p => {
+                                // {c.place.slice().map(p => {
                                 return (
-                                  <div /*key={s.id + c.id + p.id}*/>
-                                    {p.bridge.slice().map(b => {
+                                  <div key={s.id + c.id + p.id}>
+                                    {p.bridge.map(b => {
+                                      // {p.bridge.slice().map(b => {
                                       return (
                                         // <div key={m.id}>
                                         <div key={b.id}>
-                                          {/*//{m.bridge.slice().map(n => {*/}
+                                          {/* //{m.bridge.slice().map(n => {*/}
                                           {/*return (*/}
                                           <Marker
                                             key={b.id}
@@ -253,7 +266,7 @@ class MapLeaf extends React.Component {
                                             )}
                                           />
                                           {/*} );*/}
-                                          {/*//})}*/}
+                                          {/* //})}*/}
                                         </div>
                                       );
                                     })}
@@ -338,6 +351,32 @@ class MapLeaf extends React.Component {
     );
   }
 }
+
+// const County = ({ data }) =>
+//   data.county.map(c => (
+//     <React.Fragment key={c.id}>
+//       <Place data={c} />
+//     </React.Fragment>
+//   ));
+
+// const Place = ({ data }) =>
+//   data.county.map(p => (
+//     <React.Fragment key={p.id}>
+//       <Bridge data={p} />
+//     </React.Fragment>
+//   ));
+
+// const Bridge = ({ data }) =>
+//   data.county.map(b => (
+//     <React.Fragment key={b.id}>
+//       <Marker
+//         key={b.id}
+//         position={[b.latitude_decimal, b.longitude_decimal]}
+//         // icon={myIcon}
+//         // onClick={this.toggleDrawer("right", true, b, s.name)}
+//       />
+//     </React.Fragment>
+//   ));
 
 MapLeaf.propTypes = {
   classes: PropTypes.object.isRequired
