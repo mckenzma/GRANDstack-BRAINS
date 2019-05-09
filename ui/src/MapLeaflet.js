@@ -24,6 +24,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import Card from "@material-ui/core/Card";
 
+import BridgeDrawer from "./BridgeDrawer.js";
+
 const styles = theme => ({
   root: {
     height: 400,
@@ -61,21 +63,17 @@ class MapLeaf extends React.Component {
   toggleDrawer = (
     side,
     open,
-    bridge //,
-    // stateName //,
-    // countyName,
-    // placeName
+    // bridge
+    bridge_id
   ) => () => {
     this.setState({
       [side]: open,
-      // bridge_state: stateName,
-      // bridge_county: countyName,
-      // bridge_place: placeName,
-      bridge_name: bridge.name,
-      bridge_id: bridge.id,
-      bridge_lat: bridge.latitude_decimal,
-      bridge_lng: bridge.longitude_decimal,
-      build_year: bridge.yearbuilt
+      // bridge_name: bridge.name,
+      // bridge_id: bridge.id,
+      bridge_id: bridge_id
+      // bridge_lat: bridge.latitude_decimal,
+      // bridge_lng: bridge.longitude_decimal,
+      // build_year: bridge.yearbuilt
     });
   };
 
@@ -85,21 +83,12 @@ class MapLeaf extends React.Component {
     const sideList = (
       <div className={classes.list}>
         <List>
-          {/*<ListItem >
-            <ListItemText >NAME: {this.state.bridge_name}</ListItemText>
-          </ListItem>*/}
           <ListItem>
             <ListItemText>ID: {this.state.bridge_id}</ListItemText>
           </ListItem>
           <ListItem>
             <ListItemText>State: {this.state.bridge_state}</ListItemText>
           </ListItem>
-          {/*<ListItem>
-            <ListItemText>County: {this.state.bridge_county}</ListItemText>
-          </ListItem>
-          <ListItem>
-            <ListItemText>Place: {this.state.bridge_place}</ListItemText>
-          </ListItem>*/}
           <Divider />
           <ListItem>
             <ListItemText>LAT: {this.state.bridge_lat}</ListItemText>
@@ -111,12 +100,6 @@ class MapLeaf extends React.Component {
           <ListItem>
             <ListItemText>Build Year: {this.state.build_year}</ListItemText>
           </ListItem>
-          {/*<ListItem >
-            <ListItemText >Owned By: </ListItemText>
-          </ListItem>
-          <ListItem >
-            <ListItemText >Maintained By: </ListItemText>
-          </ListItem>*/}
         </List>
       </div>
     );
@@ -127,18 +110,6 @@ class MapLeaf extends React.Component {
       iconUrl: icon,
       shadowUrl: iconShadow
     });
-
-    // if (this.props.selected.length === 52) {
-    //   // maybe use rowCount here?
-    //   // return {}
-    //   console.log("just load bridges");
-    // } else {
-    //   // return {name_in: this.props.selected};
-    //   console.log("load state then bridges");
-    // }
-
-    // console.log("map: selected: " + this.props.selected);
-    // console.log("map: yearSelected: " + this.props.yearSelected);
 
     return (
       <Query
@@ -251,10 +222,8 @@ class MapLeaf extends React.Component {
                         onClick={this.toggleDrawer(
                           "right",
                           true,
-                          b //,
-                          //   s.name //,
-                          //   // c.name,
-                          //   // p.name
+                          // b
+                          b.id
                         )}
                       />
                     );
@@ -375,7 +344,12 @@ class MapLeaf extends React.Component {
                       </ListItem>
                     </List>
                     <Divider />
-                    {sideList}
+                    <BridgeDrawer
+                      selectedBridge={this.state.bridge_id}
+                      // open={this.state.right}
+                      // onClose={this.toggleDrawer("right", false, "")}
+                    />
+                    {/* {sideList} */}
                   </div>
                 </div>
               </Drawer>

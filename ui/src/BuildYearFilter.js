@@ -3,8 +3,6 @@ import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-// import List from "@material-ui/core/List";
-// import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 

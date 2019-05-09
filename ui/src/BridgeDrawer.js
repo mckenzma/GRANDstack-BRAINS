@@ -1,4 +1,6 @@
 import React from "react";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -16,52 +18,78 @@ const styles = {
 };
 
 class BridgeDrawer extends React.Component {
-  state = {
-    // top: false,
-    // left: false,
-    // bottom: false,
-    right: false
-  };
+  constructor(props) {
+    super(props);
 
-  toggleDrawer = (side, open) => () => {
-    this.setState({
-      [side]: open
-    });
-  };
+    this.state = {
+      right: false
+
+      // bridge: this.props.bridge,
+      // bridge_id: this.props.selectedBridge,
+      // bridge_lat: null,
+      // bridge_lng: null,
+      // build_year: null,
+      // owned_by: null,
+      // maintained_by: null
+    };
+  }
 
   render() {
     const { classes } = this.props;
-    const { bridge } = this.props;
-    console.log(bridge);
 
-    const sideList = (
-      <div className={classes.list}>
-        <List>
-          <ListItem>
-            <ListItemText>Bridge Info</ListItemText>
-          </ListItem>
-        </List>
-      </div>
-    );
+    // console.log("selectedBridge: " + this.props.selectedBridge);
 
     return (
-      <div>
-        <Button onClick={this.toggleDrawer("right", true)}>Open Right</Button>
-        <Drawer
-          anchor="right"
-          open={this.state.right}
-          onClose={this.toggleDrawer("right", false)}
-        >
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={this.toggleDrawer("right", false)}
-            onKeyDown={this.toggleDrawer("right", false)}
-          >
-            {sideList}
-          </div>
-        </Drawer>
-      </div>
+      <Query
+        query={gql`
+          query bridgePaginateQuery($selectedBridge: ID!) {
+            Bridge(filter: { id: $selectedBridge }) {
+              id
+              latitude_decimal
+              longitude_decimal
+              yearbuilt
+              buildYear {
+                year
+              }
+            }
+          }
+        `}
+        variables={{
+          selectedBridge: this.props.selectedBridge
+        }}
+      >
+        {({ loading, error, data }) => {
+          if (loading) return <p>Loading...</p>;
+          if (error) return <p>Error</p>;
+
+          return (
+            <div className={classes.list}>
+              {data.Bridge.map(b => {
+                return (
+                  <List key={b.id}>
+                    <ListItem>
+                      <ListItemText>ID: {b.id}</ListItemText>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <ListItemText>LAT: {b.latitude_decimal}</ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>LONG: {b.longitude_decimal}</ListItemText>
+                    </ListItem>
+                    <Divider />
+                    <ListItem>
+                      <ListItemText>
+                        Build Year: {b.buildYear.year}
+                      </ListItemText>
+                    </ListItem>
+                  </List>
+                );
+              })}
+            </div>
+          );
+        }}
+      </Query>
     );
   }
 }
