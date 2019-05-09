@@ -22,20 +22,21 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
+import Card from "@material-ui/core/Card";
+
 const styles = theme => ({
   root: {
-    // width: 700,
     height: 400,
-    // maxWidth: 700,
-    // marginTop: theme.spacing.unit * 3,
     overflowX: "auto"
-    // margin: "auto"
   },
   list: {
     width: 250
   },
   map: {
     marginTop: theme.spacing.unit
+  },
+  card: {
+    minWidth: 275
   }
 });
 
@@ -60,12 +61,14 @@ class MapLeaf extends React.Component {
   toggleDrawer = (
     side,
     open,
-    bridge,
-    stateName /*, countyName, placeName*/
+    bridge //,
+    // stateName //,
+    // countyName,
+    // placeName
   ) => () => {
     this.setState({
       [side]: open,
-      bridge_state: stateName,
+      // bridge_state: stateName,
       // bridge_county: countyName,
       // bridge_place: placeName,
       bridge_name: bridge.name,
@@ -139,38 +142,59 @@ class MapLeaf extends React.Component {
 
     return (
       <Query
+        // Trying Filter Application starting at Bridge
         query={gql`
           query statesPaginateQuery(
             $selected: [String!]
             $yearSelected: [Int!]
           ) {
-            State(filter: { name_in: $selected }) {
-              id
-              name
-              county {
-                id
-                name
-                place {
-                  id
-                  name
-                  bridge(filter: { buildYear: { year_in: $yearSelected } }) {
-                    #bridge(filter: { yearbuilt_in: $yearSelected }) {
-                    #bridge {
-                    id
-                    yearbuilt
-                    latitude_decimal
-                    longitude_decimal
-                    yearbuilt
-                    #buildYear(filter: { year_in: $yearSelected }) {
-                    #buildYear {
-                    #  year
-                    #}
-                  }
-                }
+            Bridge(
+              filter: {
+                place: { county: { state: { name_in: $selected } } }
+                buildYear: { year_in: $yearSelected }
               }
+            ) {
+              id
+              latitude_decimal
+              longitude_decimal
             }
           }
         `}
+        // Updated State Filter
+        // query={gql`
+        //   query statesPaginateQuery(
+        //     $selected: [String!]
+        //     $yearSelected: [Int!]
+        //   ) {
+        //     State(filter: { name_in: $selected }) {
+        //       id
+        //       name
+        //       county {
+        //         id
+        //         name
+        //         place {
+        //           id
+        //           name
+        //           bridge(filter: { buildYear: { year_in: $yearSelected } }) {
+        //             #bridge(filter: { yearbuilt_in: $yearSelected }) {
+        //             #bridge {
+        //             id
+        //             yearbuilt
+        //             latitude_decimal
+        //             longitude_decimal
+        //             yearbuilt
+        //             #buildYear(filter: { year_in: $yearSelected }) {
+        //             #buildYear {
+        //             #  year
+        //             #}
+        //           }
+        //         }
+        //       }
+        //     }
+        //   }
+        // `}
+
+        // Original State Filter
         // query={gql`
         //   query statesPaginateQuery(
         // $selected: [String!]
@@ -195,19 +219,13 @@ class MapLeaf extends React.Component {
         //   }
         // `}
         variables={{
-          //name: this.state.name
-          // name: this.props.name,
           selected: this.props.selected,
           yearSelected: this.props.yearSelected
-          // selected: []
         }}
       >
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
-
-          // console.log(this.props.selected);
-          // console.log(this.props.yearSelected);
 
           return (
             <div>
@@ -223,6 +241,27 @@ class MapLeaf extends React.Component {
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
                 <MarkerClusterGroup>
+                  {/* Begin Revised Bridge Query */}
+                  {data.Bridge.map(b => {
+                    return (
+                      <Marker
+                        key={b.id}
+                        position={[b.latitude_decimal, b.longitude_decimal]}
+                        icon={myIcon}
+                        onClick={this.toggleDrawer(
+                          "right",
+                          true,
+                          b //,
+                          //   s.name //,
+                          //   // c.name,
+                          //   // p.name
+                        )}
+                      />
+                    );
+                  })}
+                  {/* End Revised Bridge Query */}
+
+                  {/* Begin React Fragment Implementatinon */}
                   {/*{
                     data.State.map(s => (
                       <React.Fragment key={s.id}>
@@ -230,25 +269,21 @@ class MapLeaf extends React.Component {
                       </React.Fragment>
                     ))
                   }*/}
-                  {data.State.map(s => {
-                    //{data.State.slice().map(s => {
+                  {/* End React Fragment Implementatinon */}
+
+                  {/* Begin original State query */}
+                  {/*{data.State.map(s => {
                     return (
                       <div key={s.id}>
                         {s.county.map(c => {
-                          // {s.county.slice().map(c => {
                           return (
                             <div key={s.id + c.id}>
                               {c.place.map(p => {
-                                // {c.place.slice().map(p => {
                                 return (
                                   <div key={s.id + c.id + p.id}>
                                     {p.bridge.map(b => {
-                                      // {p.bridge.slice().map(b => {
                                       return (
-                                        // <div key={m.id}>
                                         <div key={b.id}>
-                                          {/* //{m.bridge.slice().map(n => {*/}
-                                          {/*return (*/}
                                           <Marker
                                             key={b.id}
                                             position={[
@@ -265,8 +300,6 @@ class MapLeaf extends React.Component {
                                               // p.name
                                             )}
                                           />
-                                          {/*} );*/}
-                                          {/* //})}*/}
                                         </div>
                                       );
                                     })}
@@ -278,7 +311,9 @@ class MapLeaf extends React.Component {
                         })}
                       </div>
                     );
-                  })}
+                  })}*/}
+                  {/* Begin original State query */}
+
                   {/*{data.State.slice().map(b => {
                     return (
                       <div key={b.id}>
@@ -352,6 +387,7 @@ class MapLeaf extends React.Component {
   }
 }
 
+// Begin React Fragment Implementatinon
 // const County = ({ data }) =>
 //   data.county.map(c => (
 //     <React.Fragment key={c.id}>
@@ -377,6 +413,7 @@ class MapLeaf extends React.Component {
 //       />
 //     </React.Fragment>
 //   ));
+// End React Fragment Implementatinon
 
 MapLeaf.propTypes = {
   classes: PropTypes.object.isRequired

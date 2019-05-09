@@ -17,7 +17,6 @@ import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
 import PropTypes from "prop-types";
 
-// import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
@@ -28,7 +27,6 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
-    // maxWidth: 300
   },
   chips: {
     display: "flex",
@@ -42,57 +40,30 @@ const styles = theme => ({
   }
 });
 
-// const ITEM_HEIGHT = 48;
-// const ITEM_PADDING_TOP = 8;
-// const MenuProps = {
-//   PaperProps: {
-//     style: {
-//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-//       width: 250
-//     }
-//   }
-// };
-
 function getSorting(order, orderBy) {
   return order === "desc"
     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
 }
 
-// function getStyles(name, that) {
-//   return {
-//     fontWeight:
-//       that.state.name.indexOf(name) === -1
-//         ? that.props.theme.typography.fontWeightRegular
-//         : that.props.theme.typography.fontWeightMedium
-//   };
-// }
-
 class BuildYearFilter extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      // order: "asc",
       order: "desc", // sets order of years to be listed in the menu
       orderBy: "year",
-      // name: null,
-      //selectedStates: [],
-      // selected: []
       yearSelected: this.props.yearSelected,
       numYearSelected: this.props.numYearSelected
     };
   }
 
   handleChange = year => event => {
-    // this.props.triggerParentUpdate("yearSelected", year);
     this.setState({ selectedValue: event.target.value });
   };
 
   handleClick = (event, year) => {
-    //const { selected, numSelected } = this.state;
     const { yearSelected } = this.state;
-    // const { yearSelected } = this.props;
     const selectedIndex = yearSelected.indexOf(year);
     let newSelected = [];
 
@@ -113,18 +84,13 @@ class BuildYearFilter extends React.Component {
     this.setState({ numYearSelected: newSelected.length });
     this.props.triggerParentUpdate("yearSelected", newSelected);
     this.props.triggerParentUpdate("numYearSelected", newSelected.length);
-    // console.log("select: newSelected: " + newSelected);
-    // console.log("select: numSelected: " + newSelected.length);
   };
 
   handleSelectAllClick = (event, data) => {
-    // const { numSelected } = this.state;
-
     let newSelected = [];
 
     if (event.target.checked) {
       newSelected = data.map(n => n.year);
-      // console.log("selected all: newSelected: " + newSelected);
       this.setState({ yearSelected: newSelected.sort().reverse() });
       this.setState(state => ({ numYearSelected: state.yearSelected.length }));
       this.props.triggerParentUpdate(state => ({
@@ -145,13 +111,8 @@ class BuildYearFilter extends React.Component {
   render() {
     const { order, orderBy } = this.state;
 
-    // const { selected } = this.props;
-    // const { onSelectAllClick, numSelected, rowCount } = this.state;
-
     const { numYearSelected } = this.state;
-    // const { numSelected } = this.props;
 
-    // const { classes } = this.state;
     const { classes } = this.props;
 
     return (
@@ -170,8 +131,6 @@ class BuildYearFilter extends React.Component {
           if (error) return <p>Error</p>;
 
           const rowYearCount = Object.keys(data.BuildYear).length;
-          // console.log("rowYearCount: " + rowYearCount);
-          // console.log("numYearSelected: " + numYearSelected);
 
           return (
             <div className={classes.root}>
@@ -187,7 +146,6 @@ class BuildYearFilter extends React.Component {
                       ))}
                     </div>
                   )}
-                  // MenuProps={MenuProps}
                 >
                   <MenuItem>
                     <Checkbox
@@ -213,7 +171,6 @@ class BuildYearFilter extends React.Component {
                             checked={isYearSelected}
                             onChange={this.handleChange(n.year)}
                             value={toString(n.year)}
-                            //selected={isYearSelected} // is this actually needed? - test removal
                             selected={isYearSelected} // is this actually needed? - test removal
                             onClick={event => this.handleClick(event, n.year)}
                           />
@@ -235,5 +192,4 @@ BuildYearFilter.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-// export default BuildYearFilter;
 export default withStyles(styles, { withTheme: true })(BuildYearFilter);

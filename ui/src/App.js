@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-//import BridgeList from './BridgeList';
+
 import MapLeaf from "./MapLeaflet";
 
 import PropTypes from "prop-types";
@@ -12,29 +12,23 @@ import Toolbar from "@material-ui/core/Toolbar";
 
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-// import Button from "@material-ui/core/Button";
+
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-// import StateListMenu from "./StateListMenu";
 
 import CustomizedDialogDemo from "./About";
-// import FiltersButton from "./Filters";
-import FiltersDialog from "./Filters";
 
-// import BallotIcon from "@material-ui/icons/Ballot";
+import FiltersDialog from "./Filters";
 
 const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
     flexGrow: 1
-    // display:"flex"
   },
   appFrame: {
-    // height: 800,
-    // height: `calc(${window.screen.availHeight}px - 90px)`,// fix this to get map to fill the entire browser window and adjust as window size adjusts
     zIndex: 1,
     overflow: "hidden",
     position: "relative",
@@ -70,7 +64,6 @@ const styles = theme => ({
     display: "none"
   },
   drawerPaper: {
-    // position: "relative",
     width: drawerWidth
   },
   drawerHeader: {
@@ -112,7 +105,6 @@ const styles = theme => ({
 
   container: {
     position: "relative",
-    // maxWidth: 500,
     width: "100%"
   },
   text: {
@@ -121,10 +113,7 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit * 2
   },
   main: {
-    // height: 400,
     overflowY: "auto"
-    // position: 'relative',
-    // position: "relative"
   },
   list: {
     marginBottom: theme.spacing.unit * 2
@@ -136,16 +125,8 @@ const styles = theme => ({
     alignItems: "center",
     justifyContent: "space-between"
   },
-  // fabButton: {
-  //   position: "absolute",
-  //   top: -30,
-  //   left: 0,
-  //   right: 0,
-  //   margin: "0 auto"
-  // },
   button: {
     margin: theme.spacing.unit
-    // paddingRight: theme.spacing.unit
   }
 });
 
@@ -169,7 +150,6 @@ class App extends Component {
       owned_by: null,
       maintained_by: null,
 
-      //name: "AZ",
       name: "",
 
       // from here
@@ -178,9 +158,7 @@ class App extends Component {
       openDialog: false,
 
       selected: [], //trying to pull selected array up to pass into bridge query
-      // numSelected: [], //trying to pull selected array up to pass into bridge query
       yearSelected: [] //needed?
-      // numYearSelected: [] //needed?
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
     this.handleFilters = this.handleFilters.bind(this);
@@ -209,25 +187,15 @@ class App extends Component {
 
   updateThisProperty(propertyName, value) {
     this.setState({ [propertyName]: value });
-    // console.log("property updated at 'App.js': " + propertyName + ": " + value);
   }
 
   handleFilters(state) {
-    // this.setState({ [propertyName]: value });
-    // this.setState({ selected: this.props.selected});
-    // console.log("check me out: " + state.selected);
-    // console.log(this.state.selected);
     this.setState({
       selected: state.selected,
       numSelected: state.numSelected,
       yearSelected: state.yearSelected,
       numYearSelected: state.numYearSelected
     });
-
-    // console.log("filters have been handled!");
-    // this.setState({
-    //   selected: this.props.selected
-    // })
   }
 
   render() {
@@ -255,8 +223,6 @@ class App extends Component {
         <Divider />
 
         <CustomizedDialogDemo />
-        {/*<Divider />*/}
-        {/*<StateListMenu triggerParentUpdate={this.updateThisProperty} />*/}
       </Drawer>
     );
 
@@ -295,22 +261,10 @@ class App extends Component {
               >
                 National Bridge Index
               </Typography>
-              {/*<Button
-                color="secondary"
-                className={classes.button}
-                variant="contained"
-              >
-                <BallotIcon />
-                Filters
-              </Button>
-              {/*<FiltersButton />*/}
               <FiltersDialog
-                // triggerParentUpdate={this.updateThisProperty}
                 selected={this.state.selected}
                 numSelected={this.state.numSelected}
                 yearSelected={this.state.yearSelected}
-                // handleFilters={this.updateThisProperty}
-                // triggerParentUpdate={this.handleApply}
                 triggerFiltersUpdate={this.handleFilters}
               />
             </Toolbar>
@@ -329,11 +283,8 @@ class App extends Component {
             {/*<div className={classes.drawerHeader} />
             {/*does this do anything?*/}
             <MapLeaf
-              // name={this.state.name}
               selected={this.state.selected}
-              // numSelected={this.state.numSelected}
               yearSelected={this.state.yearSelected}
-              // numYearSelected={this.state.numYearSelected}
             />
           </main>
           {after}

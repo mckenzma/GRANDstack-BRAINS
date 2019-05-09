@@ -3,14 +3,8 @@ import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-// import List from "@material-ui/core/List";
-// import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
-
-// import Radio from "@material-ui/core/Radio";
-//import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-//import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
 import Divider from "@material-ui/core/Divider";
 
@@ -21,7 +15,6 @@ import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
 import PropTypes from "prop-types";
 
-// import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = theme => ({
@@ -32,7 +25,6 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
-    // maxWidth: 300
   },
   chips: {
     display: "flex",
@@ -46,31 +38,11 @@ const styles = theme => ({
   }
 });
 
-// const ITEM_HEIGHT = 48;
-// const ITEM_PADDING_TOP = 8;
-// const MenuProps = {
-//   PaperProps: {
-//     style: {
-//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-//       width: 250
-//     }
-//   }
-// };
-
 function getSorting(order, orderBy) {
   return order === "desc"
     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
 }
-
-// function getStyles(name, that) {
-//   return {
-//     fontWeight:
-//       that.state.name.indexOf(name) === -1
-//         ? that.props.theme.typography.fontWeightRegular
-//         : that.props.theme.typography.fontWeightMedium
-//   };
-// }
 
 class StateListMenu extends React.Component {
   constructor(props) {
@@ -81,7 +53,6 @@ class StateListMenu extends React.Component {
       orderBy: "name",
       name: null,
       selectedStates: [],
-      // selected: []
       selected: this.props.selected,
       numSelected: this.props.numSelected
     };
@@ -93,9 +64,7 @@ class StateListMenu extends React.Component {
   };
 
   handleClick = (event, name) => {
-    //const { selected, numSelected } = this.state;
     const { selected } = this.state;
-    // const { selected } = this.props;
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -116,18 +85,13 @@ class StateListMenu extends React.Component {
     this.setState({ numSelected: newSelected.length });
     this.props.triggerParentUpdate("selected", newSelected);
     this.props.triggerParentUpdate("numSelected", newSelected.length);
-    // console.log("select: newSelected: " + newSelected);
-    // console.log("select: numSelected: " + newSelected.length);
   };
 
   handleSelectAllClick = (event, data) => {
-    // const { numSelected } = this.state;
-
     let newSelected = [];
 
     if (event.target.checked) {
       newSelected = data.map(n => n.name);
-      // console.log("selecte all: newSelected: " + newSelected);
       this.setState({ selected: newSelected.sort() });
       this.setState(state => ({ numSelected: state.selected.length }));
       this.props.triggerParentUpdate(state => ({
@@ -146,12 +110,7 @@ class StateListMenu extends React.Component {
   render() {
     const { order, orderBy } = this.state;
 
-    // const { selected } = this.props;
-    // const { onSelectAllClick, numSelected, rowCount } = this.state;
-
     const { numSelected } = this.state;
-    // console.log("numSelected: " + numSelected);
-    // const { numSelected } = this.props;
 
     const { classes } = this.props;
 
@@ -171,8 +130,6 @@ class StateListMenu extends React.Component {
           if (error) return <p>Error</p>;
 
           const rowCount = Object.keys(data.State).length;
-          // console.log("rowCount: " + rowCount);
-          // console.log("numSelected: " + numSelected);
 
           return (
             <div className={classes.root}>
@@ -191,7 +148,6 @@ class StateListMenu extends React.Component {
                       ))}
                     </div>
                   )}
-                  // MenuProps={MenuProps}
                 >
                   <MenuItem>
                     <Checkbox
@@ -224,58 +180,6 @@ class StateListMenu extends React.Component {
                     })}
                 </Select>
               </FormControl>
-              {/*}              <List>
-                <ListItem>
-                  <ListItemText>States</ListItemText>
-                </ListItem>
-                <ListItem>
-                  <Checkbox
-                    disabled // disable to prevent app from crashing by letting them select all
-                    // need to update query/load so that don't need to reload/requery all according to filters
-                    indeterminate={numSelected > 0 && numSelected < rowCount}
-                    checked={numSelected === rowCount}
-                    //selected={numSelected === rowCount}
-                    //onChange={onSelectAllClick}
-                    //  onChange={this.handleSelectAllClick}
-                    onChange={event =>
-                      this.handleSelectAllClick(event, Object(data.State))
-                    }
-                    //onSelectAllClick={this.handleSelectAllClick}
-                  />
-                  <ListItemText>Select All</ListItemText>
-                </ListItem>
-                <Divider />
-                {data.State.slice()
-                  .sort(getSorting(order, orderBy))
-                  .map(n => {
-                    // const isSelected = this.isSelected(n.id);
-                    const isSelected = this.isSelected(n.name);
-                    return (
-                      //{/*<ListItem key={n.id}>*/}
-              {/*}                      <ListItem key={n.name}>
-                        <Checkbox
-                          // checked={this.state.checked}
-                          //    checked={this.state[n.name]}
-                          checked={isSelected}
-                          //checked={this.props[n.name]}
-                          // onChange={this.handleChange('checked')}
-                          onChange={this.handleChange(n.name)}
-                          // value="checked"
-                          value={n.name}
-                          selected={isSelected} // is this actually needed? - test removal
-                          // onClick={event => this.handleClick(event, n.id)}
-                          onClick={event => this.handleClick(event, n.name)}
-                        />
-                        {/*<Radio
-                          checked={this.state.selectedValue === n.name}
-                          onChange={this.handleChange(n.name)}
-                          value={n.name}
-                        />*/}
-              {/*}                        <ListItemText>{n.name}</ListItemText>
-                      </ListItem>
-                    );
-                  })}
-              </List>*/}
             </div>
           );
         }}
@@ -284,20 +188,8 @@ class StateListMenu extends React.Component {
   }
 }
 
-// const ITEM_HEIGHT = 48;
-// const ITEM_PADDING_TOP = 8;
-// const MenuProps = {
-//   PaperProps: {
-//     style: {
-//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-//       width: 250,
-//     },
-//   },
-// };
-
 StateListMenu.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-// export default StateListMenu;
 export default withStyles(styles, { withTheme: true })(StateListMenu);
