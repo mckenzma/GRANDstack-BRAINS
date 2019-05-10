@@ -1,3 +1,8 @@
+/////////////////////////////////////////////////////////////////////////////////
+// This file represets all of the import queries to construct the graph database
+// To build a copy of this, these should be completed in order
+/////////////////////////////////////////////////////////////////////////////////
+
 // creating Indexes for mass import
 CREATE INDEX ON :Bridge(id);
 CREATE INDEX ON :Place(id);
@@ -20,8 +25,6 @@ MERGE (file:File {url: fileURL})
 ON CREATE SET file.url = fileURL
 
 
-
-// Load and connect :State, :County, :Place, and :Bridge
 
 
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
@@ -86,6 +89,37 @@ ON CREATE SET owner.name = row.OWNER_022,
 ',
 {batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
+
+
+
+
+// Load and create (:Owner) nodes
+MATCH (file:File)
+WITH collect(file.url) AS fileURLs
+UNWIND fileURLs AS fileURL
+CALL apoc.periodic.commit("
+LOAD CSV WITH HEADERS FROM fileURL AS row
+WITH row
+WHERE NOT row.OWNER_022 IS NULL
+MERGE (owner:Owner {id: row.OWNER_022})
+WITH owner limit {limit}
+ON CREATE SET owner.id = row.OWNER_022
+",
+{limit:1000}) YIELD batches
+RETURN batches
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Convert Latitude and Longitude from initial import to point (spatial)
 CALL apoc.periodic.iterate('
