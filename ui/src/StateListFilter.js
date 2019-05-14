@@ -44,7 +44,7 @@ function getSorting(order, orderBy) {
     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
 }
 
-class StateListMenu extends React.Component {
+class StateListFilter extends React.Component {
   constructor(props) {
     super(props);
 
@@ -188,8 +188,8 @@ class StateListMenu extends React.Component {
   }
 }
 
-StateListMenu.propTypes = {
+StateListFilter.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(StateListMenu);
+export default withStyles(styles, { withTheme: true })(StateListFilter);

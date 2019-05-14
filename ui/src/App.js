@@ -158,7 +158,8 @@ class App extends Component {
       openDialog: false,
 
       selected: [], //trying to pull selected array up to pass into bridge query
-      yearSelected: [] //needed?
+      yearSelected: [], //needed?
+      maintRespSelected: []
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
     this.handleFilters = this.handleFilters.bind(this);
@@ -194,7 +195,8 @@ class App extends Component {
       selected: state.selected,
       numSelected: state.numSelected,
       yearSelected: state.yearSelected,
-      numYearSelected: state.numYearSelected
+      numYearSelected: state.numYearSelected,
+      maintRespSelected: state.maintRespSelected
     });
   }
 
@@ -265,6 +267,7 @@ class App extends Component {
                 selected={this.state.selected}
                 numSelected={this.state.numSelected}
                 yearSelected={this.state.yearSelected}
+                maintRespSelected={this.state.maintRespSelected}
                 triggerFiltersUpdate={this.handleFilters}
               />
             </Toolbar>
@@ -285,6 +288,7 @@ class App extends Component {
             <MapLeaf
               selected={this.state.selected}
               yearSelected={this.state.yearSelected}
+              maintRespSelected={this.state.maintRespSelected}
             />
           </main>
           {after}

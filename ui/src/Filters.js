@@ -10,8 +10,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import StateListMenu from "./StateListMenu";
+import StateListFilter from "./StateListFilter";
 import BuildYearFilter from "./BuildYearFilter";
+import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
 
 class FiltersDialog extends React.Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class FiltersDialog extends React.Component {
       maxWidth: "xl",
 
       selected: this.props.selected,
-      yearSelected: this.props.yearSelected
+      yearSelected: this.props.yearSelected,
+      maintRespSelected: this.props.maintRespSelected
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
     this.handleApply = this.handleApply.bind(this);
@@ -44,6 +46,7 @@ class FiltersDialog extends React.Component {
     this.setState({ open: false });
     this.setState({ selected: this.state.selected });
     this.setState({ yearSelected: this.state.yearSelected });
+    this.setState({ maintRespSelected: this.state.maintRespSelected });
     this.props.triggerFiltersUpdate(this.state);
   };
 
@@ -79,13 +82,17 @@ class FiltersDialog extends React.Component {
         >
           <DialogTitle id="scroll-dialog-title">Filters</DialogTitle>
           <DialogContent>
-            <StateListMenu
+            <StateListFilter
               triggerParentUpdate={this.updateThisProperty}
               selected={this.props.selected}
             />
             <BuildYearFilter
               triggerParentUpdate={this.updateThisProperty}
               yearSelected={this.props.yearSelected}
+            />
+            <MaintenanceResponsibilityFilter
+              triggerParentUpdate={this.updateThisProperty}
+              maintRespSelected={this.props.maintRespSelected}
             />
           </DialogContent>
           <DialogActions>

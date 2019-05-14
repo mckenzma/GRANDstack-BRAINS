@@ -118,11 +118,13 @@ class MapLeaf extends React.Component {
           query statesPaginateQuery(
             $selected: [String!]
             $yearSelected: [Int!]
+            $maintRespSelected: [String!]
           ) {
             Bridge(
               filter: {
                 place: { county: { state: { name_in: $selected } } }
                 buildYear: { year_in: $yearSelected }
+                maintenanceResp: { description_in: $maintRespSelected }
               }
             ) {
               id
@@ -191,7 +193,8 @@ class MapLeaf extends React.Component {
         // `}
         variables={{
           selected: this.props.selected,
-          yearSelected: this.props.yearSelected
+          yearSelected: this.props.yearSelected,
+          maintRespSelected: this.props.maintRespSelected
         }}
       >
         {({ loading, error, data }) => {

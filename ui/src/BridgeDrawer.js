@@ -23,21 +23,11 @@ class BridgeDrawer extends React.Component {
 
     this.state = {
       right: false
-
-      // bridge: this.props.bridge,
-      // bridge_id: this.props.selectedBridge,
-      // bridge_lat: null,
-      // bridge_lng: null,
-      // build_year: null,
-      // owned_by: null,
-      // maintained_by: null
     };
   }
 
   render() {
     const { classes } = this.props;
-
-    // console.log("selectedBridge: " + this.props.selectedBridge);
 
     return (
       <Query
@@ -45,11 +35,20 @@ class BridgeDrawer extends React.Component {
           query bridgePaginateQuery($selectedBridge: ID!) {
             Bridge(filter: { id: $selectedBridge }) {
               id
+              name
               latitude_decimal
               longitude_decimal
-              yearbuilt
               buildYear {
                 year
+              }
+              place {
+                name
+                county {
+                  name
+                  state {
+                    name
+                  }
+                }
               }
             }
           }
@@ -68,21 +67,37 @@ class BridgeDrawer extends React.Component {
                 return (
                   <List key={b.id}>
                     <ListItem>
-                      <ListItemText>ID: {b.id}</ListItemText>
+                      <ListItemText>
+                        State: {b.place.county.state.name}
+                      </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>County: {b.place.county.name}</ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>Place: {b.place.name}</ListItemText>
                     </ListItem>
                     <Divider />
+                    <ListItem>
+                      <ListItemText>Name: {b.id}</ListItemText>
+                    </ListItem>
                     <ListItem>
                       <ListItemText>LAT: {b.latitude_decimal}</ListItemText>
                     </ListItem>
                     <ListItem>
                       <ListItemText>LONG: {b.longitude_decimal}</ListItemText>
                     </ListItem>
-                    <Divider />
                     <ListItem>
                       <ListItemText>
                         Build Year: {b.buildYear.year}
                       </ListItemText>
                     </ListItem>
+                    <Divider />
+                    {/*<ListItem>
+                      <ListItemText> 
+                        Maintaned By: {b.maintenanceResp.name}
+                      </ListItemText>
+                    </ListItem>*/}
                   </List>
                 );
               })}
