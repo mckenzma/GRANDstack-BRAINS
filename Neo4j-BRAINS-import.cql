@@ -61,6 +61,13 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 {batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
 
+
+
+
+
+
+
+
 // Load and connect :Owner and :MaintenanceResp to :Bridge
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
@@ -93,24 +100,238 @@ RETURN batches, total
 
 
 
-// Load and create (:Owner) nodes
+
+
+
+
+// Create (:Owner) node
 MATCH (file:File)
 WITH collect(file.url) AS fileURLs
 UNWIND fileURLs AS fileURL
-CALL apoc.periodic.commit("
-LOAD CSV WITH HEADERS FROM fileURL AS row
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row 
 WITH row
 WHERE NOT row.OWNER_022 IS NULL
+RETURN row
+','
 MERGE (owner:Owner {id: row.OWNER_022})
-WITH owner limit {limit}
 ON CREATE SET owner.id = row.OWNER_022
-",
-{limit:1000}) YIELD batches
-RETURN batches
+',
+{batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
+
+//query to add OWner Code Description
+MATCH (owner:Owner)
+SET owner.description = 
+CASE owner.id
+    WHEN "01" THEN "State Highway Agency"
+    WHEN "02" THEN "County Highway Agency"
+    WHEN "03" THEN "Town or Township Highway Agency"
+    WHEN "04" THEN "City or Municipal Highway Agency"
+    WHEN "11" THEN "State Park, Forest, or Reservation Agency"
+    WHEN "12" THEN "Local Park, Forest, or Reservation Agency"
+    WHEN "21" THEN "Other State Agencies"
+    WHEN "25" THEN "Othe Local Agencies"
+    WHEN "26" THEN "Private (other than railroad)"
+    WHEN "27" THEN "Railroad"
+    WHEN "31" THEN "State Toll Authority"
+    WHEN "32" THEN "Local Toll Authority"
+    WHEN "60" THEN "Other Federal Agencies"// (not listed below)"
+    WHEN "61" THEN "Indian Tribal Government"
+    WHEN "62" THEN "Bureau of Indian Affairs"
+    WHEN "63" THEN "Bureau of Fish and Wildlife"
+    WHEN "64" THEN "U.S. Forest Service"
+    WHEN "66" THEN "National Park Service"
+    WHEN "67" THEN "Tennessee Valley Authority"
+    WHEN "68" THEN "Bureau of Land Management"
+    WHEN "69" THEN "Bureau of Reclamation"
+    WHEN "70" THEN "Corps of Engineers (Civil)"
+    WHEN "71" THEN "Corps of Engineers (Military)"
+    WHEN "72" THEN "Air Force"
+    WHEN "73" THEN "Navy/Marines"
+    WHEN "74" THEN "Army"
+    WHEN "75" THEN "NASA"
+    WHEN "76" THEN "Metropolitan Washington Airports Service"
+    WHEN "80" THEN "Unkown"
+END
+
+// Merge relationship between (:Owner) and (:Bridge) nodes
+MATCH (file:File)
+WITH collect(file.url) AS fileURLs
+UNWIND fileURLs AS fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row 
+WITH row
+WHERE NOT row.OWNER_022 IS NULL
+MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+                          row.COUNTY_CODE_003 + "_" + 
+                          row.PLACE_CODE_004 + "_" + 
+                          row.STRUCTURE_NUMBER_008 + 
+                          "_LAT_" + row.LAT_016 + 
+                          "_LONG_" +row.LONG_017})
+MATCH (owner:Owner {id: row.OWNER_022})
+RETURN bridge, owner
+','
+MERGE (bridge)-[:OWNED_BY]->(owner)
+',
+{batchSize:10000, parallel:true, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
+
+// this doesn't work.....it fails to pass "fileURL" into the apoc procedure
+// Load and create (:Owner) nodes
+//MATCH (file:File)
+//WITH collect(file.url) AS fileURLs
+//UNWIND fileURLs AS fileURL
+//CALL apoc.periodic.commit("
+//LOAD CSV WITH HEADERS FROM fileURL AS row
+//WITH row
+//WHERE NOT row.OWNER_022 IS NULL
+//MERGE (owner:Owner {id: row.OWNER_022})
+//WITH owner limit {limit}
+//ON CREATE SET owner.id = row.OWNER_022
+//",
+//{limit:1000}) YIELD batches
+//RETURN batches
+
+// Merge relationship between (:Owner) and (:Bridge) nodes
+//MATCH (file:File)
+//WITH collect(file.url) AS fileURLs
+//UNWIND fileURLs AS fileURL
+//CALL apoc.periodic.commit('
+//LOAD CSV WITH HEADERS FROM fileURL AS row
+//WITH row limit {limit}
+//WHERE NOT row.OWNER_022 IS NULL
+//MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+//                          row.COUNTY_CODE_003 + "_" + 
+//                          row.PLACE_CODE_004 + "_" + 
+//                          row.STRUCTURE_NUMBER_008 + 
+//                          "_LAT_" + row.LAT_016 + 
+//                          "_LONG_" +row.LONG_017})
+//WITH bridge limit {limit}                          
+//MATCH (owner:Owner {id: row.OWNER_022})
+//MERGE (bridge)-[:OWNED_BY]->(owner)
+//',
+//{limit:1000}) YIELD batches
+//RETURN batches
+
+// this query tends to crash
+// Merge relationship between (:Owner) and (:Bridge) nodes
+//MATCH (file:File)
+//WITH collect(file.url) AS fileURLs
+//UNWIND fileURLs AS fileURL
+//CALL apoc.periodic.iterate(
+//'
+//LOAD CSV WITH HEADERS FROM $url AS row 
+//WITH row
+//WHERE NOT row.OWNER_022 IS NULL
+//RETURN row
+//','
+//MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+//                          row.COUNTY_CODE_003 + "_" + 
+//                          row.PLACE_CODE_004 + "_" + 
+//                          row.STRUCTURE_NUMBER_008 + 
+//                          "_LAT_" + row.LAT_016 + 
+//                          "_LONG_" +row.LONG_017})
+//MATCH (owner:Owner {id: row.OWNER_022})
+//MERGE (bridge)-[:OWNED_BY]->(owner)
+//',
+//{batchSize:500, parallel:false, params:{url:fileURL}}) YIELD batches, total
+//RETURN batches, total
 
 
 
 
+// Create (:MaintenanceResp) node
+MATCH (file:File)
+WITH collect(file.url) AS fileURLs
+UNWIND fileURLs AS fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row 
+WITH row
+WHERE NOT row.MAINTENANCE_021 IS NULL
+RETURN row
+','
+MERGE (maintResp:MaintenanceResp {id: row.MAINTENANCE_021})
+ON CREATE SET maintResp.id = row.MAINTENANCE_021
+',
+{batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
+
+// Load and create (:MaintenanceResp) nodes
+//MATCH (file:File)
+//WITH collect(file.url) AS fileURLs
+//UNWIND fileURLs AS fileURL
+//CALL apoc.periodic.commit("
+//LOAD CSV WITH HEADERS FROM fileURL AS row
+////WITH row
+////WHERE NOT row.MAINTENANCE_021 IS NULL
+//MERGE (maintResp:MaintenanceResp {id: row.MAINTENANCE_021})
+//WITH maintResp limit {limit}
+//ON CREATE SET maintResp.id = row.MAINTENANCE_021
+//",
+//{limit:1000}) YIELD batches
+//RETURN batches
+
+//query to add Maintenance Responsibility Code Description
+MATCH (maintResp:MaintenanceResp)
+SET maintResp.description = 
+CASE maintResp.name
+    WHEN "01" THEN "State Highway Agency"
+    WHEN "02" THEN "County Highway Agency"
+    WHEN "03" THEN "Town or Township Highway Agency"
+    WHEN "04" THEN "City or Municipal Highway Agency"
+    WHEN "11" THEN "State Park, Forest, or Reservation Agency"
+    WHEN "12" THEN "Local Park, Forest, or Reservation Agency"
+    WHEN "21" THEN "Other State Agencies"
+    WHEN "25" THEN "Othe Local Agencies"
+    WHEN "26" THEN "Private (other than railroad)"
+    WHEN "27" THEN "Railroad"
+    WHEN "31" THEN "State Toll Authority"
+    WHEN "32" THEN "Local Toll Authority"
+    WHEN "60" THEN "Other Federal Agencies"// (not listed below)"
+    WHEN "61" THEN "Indian Tribal Government"
+    WHEN "62" THEN "Bureau of Indian Affairs"
+    WHEN "63" THEN "Bureau of Fish and Wildlife"
+    WHEN "64" THEN "U.S. Forest Service"
+    WHEN "66" THEN "National Park Service"
+    WHEN "67" THEN "Tennessee Valley Authority"
+    WHEN "68" THEN "Bureau of Land Management"
+    WHEN "69" THEN "Bureau of Reclamation"
+    WHEN "70" THEN "Corps of Engineers (Civil)"
+    WHEN "71" THEN "Corps of Engineers (Military)"
+    WHEN "72" THEN "Air Force"
+    WHEN "73" THEN "Navy/Marines"
+    WHEN "74" THEN "Army"
+    WHEN "75" THEN "NASA"
+    WHEN "76" THEN "Metropolitan Washington Airports Service"
+    WHEN "80" THEN "Unkown"
+END
+
+// Merge relationship between (:MaintenanceResp) and (:Bridge) nodes
+MATCH (file:File)
+WITH collect(file.url) AS fileURLs
+UNWIND fileURLs AS fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row 
+WITH row
+WHERE NOT row.MAINTENANCE_021 IS NULL
+MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+                          row.COUNTY_CODE_003 + "_" + 
+                          row.PLACE_CODE_004 + "_" + 
+                          row.STRUCTURE_NUMBER_008 + 
+                          "_LAT_" + row.LAT_016 + 
+                          "_LONG_" +row.LONG_017})
+MATCH (maintResp:MaintenanceResp {id: row.MAINTENANCE_021})
+RETURN bridge, maintResp
+','
+MERGE (bridge)-[:OWNED_BY]->(maintResp)
+',
+{batchSize:10000, parallel:true, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
 
 
 
@@ -609,40 +830,7 @@ SET place.name = row.`Area Name (including legal/statistical area description)`
 {batchSize:10000, parallel:false}) YIELD batches, total
 RETURN batches, total
 
-//query to add Maintenance Responsibility Code Description
-MATCH (maintResp:MaintenanceResp)
-SET maintResp.description = 
-CASE maintResp.name
-    WHEN "01" THEN "State Highway Agency"
-    WHEN "02" THEN "County Highway Agency"
-    WHEN "03" THEN "Town or Township Highway Agency"
-    WHEN "04" THEN "City or Municipal Highway Agency"
-    WHEN "11" THEN "State Park, Forest, or Reservation Agency"
-    WHEN "12" THEN "Local Park, Forest, or Reservation Agency"
-    WHEN "21" THEN "Other State Agencies"
-    WHEN "25" THEN "Othe Local Agencies"
-    WHEN "26" THEN "Private (other than railroad)"
-    WHEN "27" THEN "Railroad"
-    WHEN "31" THEN "State Toll Authority"
-    WHEN "32" THEN "Local Toll Authority"
-    WHEN "60" THEN "Other Federal Agencies"// (not listed below)"
-    WHEN "61" THEN "Indian Tribal Government"
-    WHEN "62" THEN "Bureau of Indian Affairs"
-    WHEN "63" THEN "Bureau of Fish and Wildlife"
-    WHEN "64" THEN "U.S. Forest Service"
-    WHEN "66" THEN "National Park Service"
-    WHEN "67" THEN "Tennessee Valley Authority"
-    WHEN "68" THEN "Bureau of Land Management"
-    WHEN "69" THEN "Bureau of Reclamation"
-    WHEN "70" THEN "Corps of Engineers (Civil)"
-    WHEN "71" THEN "Corps of Engineers (Military)"
-    WHEN "72" THEN "Air Force"
-    WHEN "73" THEN "Navy/Marines"
-    WHEN "74" THEN "Army"
-    WHEN "75" THEN "NASA"
-    WHEN "76" THEN "Metropolitan Washington Airports Service"
-    WHEN "80" THEN "Unkown"
-END
+
 
 
 
