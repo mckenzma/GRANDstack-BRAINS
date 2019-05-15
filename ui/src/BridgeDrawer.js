@@ -3,8 +3,8 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import Button from "@material-ui/core/Button";
+// import Drawer from "@material-ui/core/Drawer";
+// import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
@@ -53,6 +53,9 @@ class BridgeDrawer extends React.Component {
               maintenanceResp {
                 description
               }
+              owner {
+                description
+              }
             }
           }
         `}
@@ -96,6 +99,11 @@ class BridgeDrawer extends React.Component {
                       </ListItemText>
                     </ListItem>
                     <Divider />
+                    <ListItem>
+                      <ListItemText>
+                        Owned By: {b.owner.description}
+                      </ListItemText>
+                    </ListItem>
                     <ListItem>
                       <ListItemText>
                         Maintaned By: {b.maintenanceResp.description}

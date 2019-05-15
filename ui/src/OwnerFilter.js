@@ -44,15 +44,15 @@ function getSorting(order, orderBy) {
     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
 }
 
-class MaintenanceResponsibilityFilter extends React.Component {
+class OwnerFilter extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       order: "asc", // sets order of descriptions to be listed in the menu
       orderBy: "description",
-      maintRespSelected: this.props.maintRespSelected,
-      numMaintRespSelected: this.props.numMaintRespSelected
+      ownerSelected: this.props.ownerSelected,
+      numOwnerSelected: this.props.numOwnerSelected
     };
   }
 
@@ -61,27 +61,27 @@ class MaintenanceResponsibilityFilter extends React.Component {
   };
 
   handleClick = (event, description) => {
-    const { maintRespSelected } = this.state;
-    const selectedIndex = maintRespSelected.indexOf(description);
+    const { ownerSelected } = this.state;
+    const selectedIndex = ownerSelected.indexOf(description);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(maintRespSelected, description);
+      newSelected = newSelected.concat(ownerSelected, description);
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(maintRespSelected.slice(1));
-    } else if (selectedIndex === maintRespSelected.length - 1) {
-      newSelected = newSelected.concat(maintRespSelected.slice(0, -1));
+      newSelected = newSelected.concat(ownerSelected.slice(1));
+    } else if (selectedIndex === ownerSelected.length - 1) {
+      newSelected = newSelected.concat(ownerSelected.slice(0, -1));
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
-        maintRespSelected.slice(0, selectedIndex),
-        maintRespSelected.slice(selectedIndex + 1)
+        ownerSelected.slice(0, selectedIndex),
+        ownerSelected.slice(selectedIndex + 1)
       );
     }
 
-    this.setState({ maintRespSelected: newSelected.sort() });
-    this.setState({ numMaintRespSelected: newSelected.length });
-    this.props.triggerParentUpdate("maintRespSelected", newSelected);
-    this.props.triggerParentUpdate("numMaintRespSelected", newSelected.length);
+    this.setState({ ownerSelected: newSelected.sort() });
+    this.setState({ numOwnerSelected: newSelected.length });
+    this.props.triggerParentUpdate("ownerSelected", newSelected);
+    this.props.triggerParentUpdate("numOwnerSelected", newSelected.length);
   };
 
   handleSelectAllClick = (event, data) => {
@@ -89,32 +89,32 @@ class MaintenanceResponsibilityFilter extends React.Component {
 
     if (event.target.checked) {
       newSelected = data.map(n => n.description);
-      this.setState({ maintRespSelected: newSelected.sort() });
+      this.setState({ ownerSelected: newSelected.sort() });
       this.setState(state => ({
-        numMaintRespSelected: state.maintRespSelected.length
+        numOwnerSelected: state.ownerSelected.length
       }));
       this.props.triggerParentUpdate(state => ({
-        numMaintRespSelected: state.maintRespSelected.length
+        numOwnerSelected: state.ownerSelected.length
       }));
-      this.props.triggerParentUpdate("maintRespSelected", newSelected);
+      this.props.triggerParentUpdate("ownerSelected", newSelected);
       return;
     }
-    this.setState({ maintRespSelected: [] });
+    this.setState({ ownerSelected: [] });
     this.setState(state => ({
-      numMaintRespSelected: state.maintRespSelected.length
+      numOwnerSelected: state.ownerSelected.length
     }));
     this.props.triggerParentUpdate(state => ({
-      maintRespSelected: state.maintRespSelected
+      ownerSelected: state.ownerSelected
     }));
   };
 
-  isMaintRespSelected = description =>
-    this.state.maintRespSelected.indexOf(description) !== -1;
+  isOwnerSelected = description =>
+    this.state.ownerSelected.indexOf(description) !== -1;
 
   render() {
     const { order, orderBy } = this.state;
 
-    const { numMaintRespSelected } = this.state;
+    const { numOwnerSelected } = this.state;
 
     const { classes } = this.props;
 
@@ -122,7 +122,7 @@ class MaintenanceResponsibilityFilter extends React.Component {
       <Query
         query={gql`
           {
-            MaintenanceResp {
+            Owner {
               id
               description
             }
@@ -133,18 +133,18 @@ class MaintenanceResponsibilityFilter extends React.Component {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
-          const rowMaintRespCount = Object.keys(data.MaintenanceResp).length;
+          const rowOwnerCount = Object.keys(data.Owner).length;
 
           return (
             <div className={classes.root}>
               <FormControl className={classes.formControl}>
-                <InputLabel>Maintenance Responsibility</InputLabel>
+                <InputLabel>Owner</InputLabel>
                 <Select
                   multiple
-                  value={this.state.maintRespSelected}
-                  renderValue={maintRespSelected => (
+                  value={this.state.ownerSelected}
+                  renderValue={ownerSelected => (
                     <div className={classes.chips}>
-                      {this.state.maintRespSelected.map(value => (
+                      {this.state.ownerSelected.map(value => (
                         <Chip key={value} label={value} />
                       ))}
                     </div>
@@ -154,33 +154,29 @@ class MaintenanceResponsibilityFilter extends React.Component {
                     <Checkbox
                       // disabled
                       indeterminate={
-                        numMaintRespSelected > 0 &&
-                        numMaintRespSelected < rowMaintRespCount
+                        numOwnerSelected > 0 && numOwnerSelected < rowOwnerCount
                       }
-                      checked={numMaintRespSelected === rowMaintRespCount}
+                      checked={numOwnerSelected === rowOwnerCount}
                       onChange={event =>
-                        this.handleSelectAllClick(
-                          event,
-                          Object(data.MaintenanceResp)
-                        )
+                        this.handleSelectAllClick(event, Object(data.Owner))
                       }
                     />
                     <ListItemText>Select All</ListItemText>
                   </MenuItem>
                   <Divider />
-                  {data.MaintenanceResp.slice()
+                  {data.Owner.slice()
                     .sort(getSorting(order, orderBy))
                     .map(n => {
-                      const isMaintRespSelected = this.isMaintRespSelected(
+                      const isOwnerSelected = this.isOwnerSelected(
                         n.description
                       );
                       return (
                         <MenuItem key={n.description}>
                           <Checkbox
-                            checked={isMaintRespSelected}
+                            checked={isOwnerSelected}
                             onChange={this.handleChange(n.description)}
                             value={n.description}
-                            selected={isMaintRespSelected} // is this actually needed? - test removal
+                            selected={isOwnerSelected} // is this actually needed? - test removal
                             onClick={event =>
                               this.handleClick(event, n.description)
                             }
@@ -199,10 +195,8 @@ class MaintenanceResponsibilityFilter extends React.Component {
   }
 }
 
-MaintenanceResponsibilityFilter.propTypes = {
+OwnerFilter.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(
-  MaintenanceResponsibilityFilter
-);
+export default withStyles(styles, { withTheme: true })(OwnerFilter);

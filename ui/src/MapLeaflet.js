@@ -22,7 +22,7 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
-import Card from "@material-ui/core/Card";
+// import Card from "@material-ui/core/Card";
 
 import BridgeDrawer from "./BridgeDrawer.js";
 
@@ -80,29 +80,29 @@ class MapLeaf extends React.Component {
   render() {
     const { classes } = this.props;
 
-    const sideList = (
-      <div className={classes.list}>
-        <List>
-          <ListItem>
-            <ListItemText>ID: {this.state.bridge_id}</ListItemText>
-          </ListItem>
-          <ListItem>
-            <ListItemText>State: {this.state.bridge_state}</ListItemText>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText>LAT: {this.state.bridge_lat}</ListItemText>
-          </ListItem>
-          <ListItem>
-            <ListItemText>LONG: {this.state.bridge_lng}</ListItemText>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText>Build Year: {this.state.build_year}</ListItemText>
-          </ListItem>
-        </List>
-      </div>
-    );
+    // const sideList = (
+    //   <div className={classes.list}>
+    //     <List>
+    //       <ListItem>
+    //         <ListItemText>ID: {this.state.bridge_id}</ListItemText>
+    //       </ListItem>
+    //       <ListItem>
+    //         <ListItemText>State: {this.state.bridge_state}</ListItemText>
+    //       </ListItem>
+    //       <Divider />
+    //       <ListItem>
+    //         <ListItemText>LAT: {this.state.bridge_lat}</ListItemText>
+    //       </ListItem>
+    //       <ListItem>
+    //         <ListItemText>LONG: {this.state.bridge_lng}</ListItemText>
+    //       </ListItem>
+    //       <Divider />
+    //       <ListItem>
+    //         <ListItemText>Build Year: {this.state.build_year}</ListItemText>
+    //       </ListItem>
+    //     </List>
+    //   </div>
+    // );
 
     const position = [this.state.lat, this.state.lng];
 
@@ -119,12 +119,14 @@ class MapLeaf extends React.Component {
             $selected: [String!]
             $yearSelected: [Int!]
             $maintRespSelected: [String!]
+            $ownerSelected: [String!]
           ) {
             Bridge(
               filter: {
                 place: { county: { state: { name_in: $selected } } }
                 buildYear: { year_in: $yearSelected }
                 maintenanceResp: { description_in: $maintRespSelected }
+                owner: { description_in: $ownerSelected }
               }
             ) {
               id
@@ -194,7 +196,8 @@ class MapLeaf extends React.Component {
         variables={{
           selected: this.props.selected,
           yearSelected: this.props.yearSelected,
-          maintRespSelected: this.props.maintRespSelected
+          maintRespSelected: this.props.maintRespSelected,
+          ownerSelected: this.props.ownerSelected
         }}
       >
         {({ loading, error, data }) => {

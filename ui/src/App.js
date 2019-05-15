@@ -159,7 +159,8 @@ class App extends Component {
 
       selected: [], //trying to pull selected array up to pass into bridge query
       yearSelected: [], //needed?
-      maintRespSelected: []
+      maintRespSelected: [],
+      ownerSelected: []
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
     this.handleFilters = this.handleFilters.bind(this);
@@ -196,7 +197,8 @@ class App extends Component {
       numSelected: state.numSelected,
       yearSelected: state.yearSelected,
       numYearSelected: state.numYearSelected,
-      maintRespSelected: state.maintRespSelected
+      maintRespSelected: state.maintRespSelected,
+      ownerSelected: state.ownerSelected
     });
   }
 
@@ -268,6 +270,7 @@ class App extends Component {
                 numSelected={this.state.numSelected}
                 yearSelected={this.state.yearSelected}
                 maintRespSelected={this.state.maintRespSelected}
+                ownerSelected={this.state.ownerSelected}
                 triggerFiltersUpdate={this.handleFilters}
               />
             </Toolbar>
@@ -289,6 +292,7 @@ class App extends Component {
               selected={this.state.selected}
               yearSelected={this.state.yearSelected}
               maintRespSelected={this.state.maintRespSelected}
+              ownerSelected={this.state.ownerSelected}
             />
           </main>
           {after}

@@ -13,6 +13,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import StateListFilter from "./StateListFilter";
 import BuildYearFilter from "./BuildYearFilter";
 import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
+import OwnerFilter from "./OwnerFilter";
 
 class FiltersDialog extends React.Component {
   constructor(props) {
@@ -27,7 +28,8 @@ class FiltersDialog extends React.Component {
 
       selected: this.props.selected,
       yearSelected: this.props.yearSelected,
-      maintRespSelected: this.props.maintRespSelected
+      maintRespSelected: this.props.maintRespSelected,
+      ownerSelected: this.props.ownerSelected
     };
     this.updateThisProperty = this.updateThisProperty.bind(this);
     this.handleApply = this.handleApply.bind(this);
@@ -47,6 +49,7 @@ class FiltersDialog extends React.Component {
     this.setState({ selected: this.state.selected });
     this.setState({ yearSelected: this.state.yearSelected });
     this.setState({ maintRespSelected: this.state.maintRespSelected });
+    this.setState({ ownerSelected: this.state.ownerSelected });
     this.props.triggerFiltersUpdate(this.state);
   };
 
@@ -93,6 +96,10 @@ class FiltersDialog extends React.Component {
             <MaintenanceResponsibilityFilter
               triggerParentUpdate={this.updateThisProperty}
               maintRespSelected={this.props.maintRespSelected}
+            />
+            <OwnerFilter
+              triggerParentUpdate={this.updateThisProperty}
+              ownerSelected={this.props.ownerSelected}
             />
           </DialogContent>
           <DialogActions>
