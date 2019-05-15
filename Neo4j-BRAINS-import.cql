@@ -328,7 +328,7 @@ MATCH (bridge:Bridge {id: row.STATE_CODE_001 + "_" +
 MATCH (maintResp:MaintenanceResp {id: row.MAINTENANCE_021})
 RETURN bridge, maintResp
 ','
-MERGE (bridge)-[:OWNED_BY]->(maintResp)
+MERGE (bridge)-[:MAINTAINED_BY]->(maintResp)
 ',
 {batchSize:10000, parallel:true, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total

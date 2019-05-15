@@ -50,6 +50,9 @@ class BridgeDrawer extends React.Component {
                   }
                 }
               }
+              maintenanceResp {
+                description
+              }
             }
           }
         `}
@@ -93,11 +96,11 @@ class BridgeDrawer extends React.Component {
                       </ListItemText>
                     </ListItem>
                     <Divider />
-                    {/*<ListItem>
-                      <ListItemText> 
-                        Maintaned By: {b.maintenanceResp.name}
+                    <ListItem>
+                      <ListItemText>
+                        Maintaned By: {b.maintenanceResp.description}
                       </ListItemText>
-                    </ListItem>*/}
+                    </ListItem>
                   </List>
                 );
               })}
