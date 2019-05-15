@@ -120,13 +120,15 @@ class MapLeaf extends React.Component {
             $yearSelected: [Int!]
             $maintRespSelected: [String!]
             $ownerSelected: [String!]
-          ) {
+          ) #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+          {
             Bridge(
               filter: {
                 place: { county: { state: { name_in: $selected } } }
                 buildYear: { year_in: $yearSelected }
                 maintenanceResp: { description_in: $maintRespSelected }
                 owner: { description_in: $ownerSelected }
+                #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' */} this is a way to not pass every filter in unless selected
               }
             ) {
               id
