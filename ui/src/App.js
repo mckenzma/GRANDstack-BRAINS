@@ -276,9 +276,9 @@ class App extends Component {
               />
               <SummaryDialog
                 selected={this.state.selected}
-                yearSelected={this.state.yearSelected}
-                maintRespSelected={this.state.maintRespSelected}
-                ownerSelected={this.state.ownerSelected}
+                // yearSelected={this.state.yearSelected}
+                // maintRespSelected={this.state.maintRespSelected}
+                // ownerSelected={this.state.ownerSelected}
               />
             </Toolbar>
           </AppBar>

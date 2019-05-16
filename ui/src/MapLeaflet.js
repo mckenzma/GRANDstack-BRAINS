@@ -115,13 +115,12 @@ class MapLeaf extends React.Component {
       <Query
         // Trying Filter Application starting at Bridge
         query={gql`
-          query statesPaginateQuery(
+          query bridgesPaginateQuery(
             $selected: [String!]
             $yearSelected: [Int!]
             $maintRespSelected: [String!]
-            $ownerSelected: [String!]
-          ) #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
-          {
+            $ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+          ) {
             Bridge(
               filter: {
                 place: { county: { state: { name_in: $selected } } }

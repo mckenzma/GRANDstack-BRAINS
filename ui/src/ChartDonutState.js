@@ -36,13 +36,24 @@ class DonutChartState extends React.Component {
     return (
       <Query
         query={gql`
+          #query statesParginateQuery(
+          #  $selected: [String!]
+          #)
           {
+            #State(
+            #  filter: {
+            #    name_in: $selected
+            #  }
+            #) {
             State {
               name
               numBridges
             }
           }
         `}
+        variables={{
+          selected: this.props.selected
+        }}
       >
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;

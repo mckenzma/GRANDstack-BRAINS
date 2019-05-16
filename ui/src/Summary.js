@@ -43,9 +43,9 @@ class SummaryDialog extends React.Component {
       scroll: "paper",
       value: props.value,
       fullWidth: true,
-      maxWidth: "xl"
+      maxWidth: "xl",
 
-      // selected: this.props.selected,
+      selected: this.props.selected
       // yearSelected: this.props.yearSelected,
       // maintRespSelected: this.props.maintRespSelected,
       // ownerSelected: this.props.ownerSelected
@@ -113,10 +113,10 @@ class SummaryDialog extends React.Component {
                 <Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <DonutChartState
-                    // selected={this.state.selected}
-                    // yearSelected={this.state.yearSelected}
-                    // maintRespSelected={this.state.maintRespSelected}
-                    // ownerSelected={this.state.ownerSelected}
+                      selected={this.state.selected}
+                      // yearSelected={this.state.yearSelected}
+                      // maintRespSelected={this.state.maintRespSelected}
+                      // ownerSelected={this.state.ownerSelected}
                     />
                   </Paper>
                 </Grid>
