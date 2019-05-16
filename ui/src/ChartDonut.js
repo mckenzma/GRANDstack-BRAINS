@@ -6,9 +6,14 @@ class DonutChart extends React.Component {
     super(props);
 
     this.state = {
-      options: {},
-      series: [44, 55, 41, 17, 15],
-      labels: ["A", "B", "C", "D", "E"]
+      options: {
+        legend: {
+          show: true,
+          position: "bottom"
+        },
+        series: [44, 55, 41, 17, 15],
+        labels: ["A", "B", "C", "D", "E"]
+      }
     };
   }
 
@@ -17,7 +22,7 @@ class DonutChart extends React.Component {
       <div className="donut">
         <Chart
           options={this.state.options}
-          series={this.state.series}
+          series={this.state.options.series}
           type="donut"
           // width="380"
         />

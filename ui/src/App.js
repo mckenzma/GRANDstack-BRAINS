@@ -274,7 +274,12 @@ class App extends Component {
                 ownerSelected={this.state.ownerSelected}
                 triggerFiltersUpdate={this.handleFilters}
               />
-              <SummaryDialog />
+              <SummaryDialog
+                selected={this.state.selected}
+                yearSelected={this.state.yearSelected}
+                maintRespSelected={this.state.maintRespSelected}
+                ownerSelected={this.state.ownerSelected}
+              />
             </Toolbar>
           </AppBar>
           {before}

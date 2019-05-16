@@ -19,7 +19,9 @@ import Grid from "@material-ui/core/Grid";
 // import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
 // import OwnerFilter from "./OwnerFilter";
 
-import DonutChart from "./ChartDonut";
+// import DonutChart from "./ChartDonut";
+import DonutChartState from "./ChartDonutState";
+import BarChartState from "./ChartBarState";
 
 const styles = theme => ({
   root: {
@@ -43,10 +45,10 @@ class SummaryDialog extends React.Component {
       fullWidth: true,
       maxWidth: "xl"
 
-      //   selected: this.props.selected,
-      //   yearSelected: this.props.yearSelected,
-      //   maintRespSelected: this.props.maintRespSelected,
-      //   ownerSelected: this.props.ownerSelected
+      // selected: this.props.selected,
+      // yearSelected: this.props.yearSelected,
+      // maintRespSelected: this.props.maintRespSelected,
+      // ownerSelected: this.props.ownerSelected
     };
     // this.updateThisProperty = this.updateThisProperty.bind(this);
     // this.handleApply = this.handleApply.bind(this);
@@ -103,12 +105,32 @@ class SummaryDialog extends React.Component {
           <DialogContent>
             <div className={classes.root}>
               <Grid container spacing={24}>
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <DonutChart />
                   </Paper>
+                </Grid>*/}
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>
+                    <DonutChartState
+                    // selected={this.state.selected}
+                    // yearSelected={this.state.yearSelected}
+                    // maintRespSelected={this.state.maintRespSelected}
+                    // ownerSelected={this.state.ownerSelected}
+                    />
+                  </Paper>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>
+                    <BarChartState
+                    // selected={this.state.selected}
+                    // yearSelected={this.state.yearSelected}
+                    // maintRespSelected={this.state.maintRespSelected}
+                    // ownerSelected={this.state.ownerSelected}
+                    />
+                  </Paper>
+                </Grid>
+                {/*<Grid item xs={6} sm={3}>
                   <Paper className={classes.paper}>xs=6 sm=3</Paper>
                 </Grid>
                 <Grid item xs={6} sm={3}>
@@ -116,7 +138,7 @@ class SummaryDialog extends React.Component {
                 </Grid>
                 <Grid item xs={6} sm={3}>
                   <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                </Grid>
+                </Grid>*/}
               </Grid>
             </div>
 
