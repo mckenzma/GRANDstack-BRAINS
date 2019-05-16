@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "apexcharts": "^3.6.11",
     "apollo-boost": "^0.1.28",
     "graphql": "^14.2.1",
     "graphql-tag": "^2.10.1",
@@ -13,6 +14,7 @@
     "mapbox-gl": "^0.48.0",
     "prettier": "^1.17.0",
     "react": "^16.8.6",
+    "react-apexcharts": "^1.3.3",
     "react-apollo": "^2.5.4",
     "react-dom": "^16.8.6",
     "react-leaflet": "^2.2.1",

@@ -21,6 +21,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CustomizedDialogDemo from "./About";
 
 import FiltersDialog from "./Filters";
+import SummaryDialog from "./Summary";
 
 const drawerWidth = 240;
 
@@ -273,6 +274,7 @@ class App extends Component {
                 ownerSelected={this.state.ownerSelected}
                 triggerFiltersUpdate={this.handleFilters}
               />
+              <SummaryDialog />
             </Toolbar>
           </AppBar>
           {before}
