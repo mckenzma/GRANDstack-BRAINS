@@ -14,12 +14,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 
-// import StateListFilter from "./StateListFilter";
-// import BuildYearFilter from "./BuildYearFilter";
-// import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
-// import OwnerFilter from "./OwnerFilter";
-
-// import DonutChart from "./ChartDonut";
 import DonutChartState from "./ChartDonutState";
 import BarChartState from "./ChartBarState";
 
@@ -50,8 +44,6 @@ class SummaryDialog extends React.Component {
       // maintRespSelected: this.props.maintRespSelected,
       // ownerSelected: this.props.ownerSelected
     };
-    // this.updateThisProperty = this.updateThisProperty.bind(this);
-    // this.handleApply = this.handleApply.bind(this);
   }
 
   handleClickOpen = scroll => () => {
@@ -62,27 +54,8 @@ class SummaryDialog extends React.Component {
     this.setState({ open: false });
   };
 
-  // handleApply = () => {
-  //   this.setState({ open: false });
-  //   this.setState({ selected: this.state.selected });
-  //   this.setState({ yearSelected: this.state.yearSelected });
-  //   this.setState({ maintRespSelected: this.state.maintRespSelected });
-  //   this.setState({ ownerSelected: this.state.ownerSelected });
-  //   this.props.triggerFiltersUpdate(this.state);
-  // };
-
-  // handleCancel = () => {
-  //   this.props = this.props;
-  //   this.setState({ open: false });
-  // };
-
-  // updateThisProperty(propertyName, value) {
-  //   this.setState({ [propertyName]: value });
-  // }
-
   render() {
     const { classes } = this.props;
-    // const { classes } = this.state;
 
     return (
       <div>
@@ -105,12 +78,7 @@ class SummaryDialog extends React.Component {
           <DialogContent>
             <div className={classes.root}>
               <Grid container spacing={24}>
-                {/*<Grid item xs={12}>
-                  <Paper className={classes.paper}>
-                    <DonutChart />
-                  </Paper>
-                </Grid>*/}
-                <Grid item xs={12}>
+                <Grid item xs={12} md={6}>
                   <Paper className={classes.paper}>
                     <DonutChartState
                       selected={this.props.selected}
@@ -120,59 +88,19 @@ class SummaryDialog extends React.Component {
                     />
                   </Paper>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} md={6}>
                   <Paper className={classes.paper}>
                     <BarChartState
-                    // selected={this.state.selected}
-                    // yearSelected={this.state.yearSelected}
-                    // maintRespSelected={this.state.maintRespSelected}
-                    // ownerSelected={this.state.ownerSelected}
+                      selected={this.props.selected}
+                      // yearSelected={this.state.yearSelected}
+                      // maintRespSelected={this.state.maintRespSelected}
+                      // ownerSelected={this.state.ownerSelected}
                     />
                   </Paper>
                 </Grid>
-                {/*<Grid item xs={6} sm={3}>
-                  <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                  <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                  <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                </Grid>*/}
               </Grid>
             </div>
-
-            {/*<StateListFilter
-              triggerParentUpdate={this.updateThisProperty}
-              selected={this.props.selected}
-            />
-            <BuildYearFilter
-              triggerParentUpdate={this.updateThisProperty}
-              yearSelected={this.props.yearSelected}
-            />
-            <MaintenanceResponsibilityFilter
-              triggerParentUpdate={this.updateThisProperty}
-              maintRespSelected={this.props.maintRespSelected}
-            />
-            <OwnerFilter
-              triggerParentUpdate={this.updateThisProperty}
-              ownerSelected={this.props.ownerSelected}
-            />*/}
           </DialogContent>
-          {/*<DialogActions>
-            <Button
-              onClick={this.handleCancel}
-              color="primary"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={this.handleApply}
-              color="primary"
-            >
-              Apply
-            </Button>
-          </DialogActions>*/}
         </Dialog>
       </div>
     );
