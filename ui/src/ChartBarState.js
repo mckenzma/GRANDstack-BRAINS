@@ -51,13 +51,16 @@ class BarChartState extends React.Component {
     return (
       <Query
         query={gql`
-          {
-            State {
+          query statesPaginateQuery($selected: [String!]) {
+            State(filter: { name_in: $selected }) {
               name
               numBridges
             }
           }
         `}
+        variables={{
+          selected: this.props.selected
+        }}
       >
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
