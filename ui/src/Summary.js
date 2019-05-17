@@ -113,7 +113,7 @@ class SummaryDialog extends React.Component {
                 <Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <DonutChartState
-                      selected={this.state.selected}
+                      selected={this.props.selected}
                       // yearSelected={this.state.yearSelected}
                       // maintRespSelected={this.state.maintRespSelected}
                       // ownerSelected={this.state.ownerSelected}
