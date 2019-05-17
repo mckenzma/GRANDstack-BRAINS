@@ -22,7 +22,7 @@ class HeatMapState extends React.Component {
       options: {
         chart: {
           // id: "basic-bar",
-          type: "bar"
+          // type: "bar"
         },
         plotOptions: {
           heatmap: {
@@ -99,18 +99,17 @@ class HeatMapState extends React.Component {
                     y: n.numBridges
                   };
                 })
-              // {
-              //   x: data.State.slice()
-              //   .sort(getSorting(order, orderBy))
-              //   .map(n => {
-              //     return n.name;
-              //   }),
-              //   y: data.State.slice()
-              //   .sort(getSorting(order, orderBy))
-              //   .map(n => {
-              //     return n.numBridges;
-              //   })
-              // }
+            },
+            {
+              name: "Number of Bridges",
+              data: data.State.slice()
+                .sort(getSorting(order, orderBy))
+                .map(n => {
+                  return {
+                    x: n.name,
+                    y: n.numBridges
+                  };
+                })
             }
           ];
 

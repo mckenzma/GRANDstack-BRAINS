@@ -8,6 +8,13 @@ type State {
   numPlaces: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(p:Place) RETURN count(DISTINCT p)")
   numBridges: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(b:Bridge) RETURN count(DISTINCT b)")
 
+  chartHeatMapStateOwner(owner: [String]): Int @cypher(statement: """
+    MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+    WHERE owner.description in $owner
+    RETURN count(bridge)
+    """
+  )
+
   county: [County] @relation(name: "OF_STATE", direction: "IN")
 }
 
@@ -64,7 +71,26 @@ type Owner {
 
 type Query {
     
-  Bridge(id: ID, name: String, yearbuilt: Int): [Bridge]
+  bridge(state: String, owner: Int): [Bridge] @cypher(statement: """
+    MATCH (b:Bridge)-[*]->(state:State)
+    MATCH (b)-->(o:Owner)
+    WHERE state.name = $state
+    AND by.year = $year
+    RETURN b
+  """
+    )
+
+  # chartHeatMapStateOwner(state: [String], owner: [String]): State @cypher(statement: """
+  #   MATCH (state:State)
+  #   WHERE state.name in $state
+  #   WITH state
+  #   MATCH (state)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owner
+  #   // RETURN state.name, owner.description, count(bridge)
+  #   // RETURN count(bridge)
+  #   RETURN state
+  #   """
+  # )
 
   # usersBySubstring(substring: String, first: Int = 10, offset: Int = 0): [User] @cypher(statement: "MATCH (u:User) WHERE u.name CONTAINS $substring RETURN u")
  
