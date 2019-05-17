@@ -16,6 +16,7 @@ import Grid from "@material-ui/core/Grid";
 
 import DonutChartState from "./ChartDonutState";
 import BarChartState from "./ChartBarState";
+import HeatMapState from "./ChartHeatState";
 
 const styles = theme => ({
   root: {
@@ -91,6 +92,16 @@ class SummaryDialog extends React.Component {
                 <Grid item xs={12} md={6}>
                   <Paper className={classes.paper}>
                     <BarChartState
+                      selected={this.props.selected}
+                      // yearSelected={this.state.yearSelected}
+                      // maintRespSelected={this.state.maintRespSelected}
+                      // ownerSelected={this.state.ownerSelected}
+                    />
+                  </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>
+                    <HeatMapState
                       selected={this.props.selected}
                       // yearSelected={this.state.yearSelected}
                       // maintRespSelected={this.state.maintRespSelected}

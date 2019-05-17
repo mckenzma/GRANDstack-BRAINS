@@ -66,7 +66,7 @@ class BarChartState extends React.Component {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
-          window.data = data;
+          // window.data = data;
 
           const options = {
             ...this.state.options,
