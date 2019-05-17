@@ -88,63 +88,80 @@ class HeatMapState extends React.Component {
           //   }
           // };
 
-          // const series = [
-          //   {
-          //     name: "Number of Bridges",
-          //     data: data.State.slice()
-          //       .sort(getSorting(order, orderBy))
-          //       .map(n => {
-          //         return n.numBridges;
-          //       })
-          //   }
-          // ];
-
           const series = [
             {
-              name: "Series 1",
-              data: [
-                {
-                  x: "W1",
-                  y: 22
-                },
-                {
-                  x: "W2",
-                  y: 29
-                },
-                {
-                  x: "W3",
-                  y: 13
-                },
-                {
-                  x: "W4",
-                  y: 32
-                }
-              ]
-            },
-            {
-              name: "Series 2",
-              data: [
-                {
-                  x: "W1",
-                  y: 43
-                },
-                {
-                  x: "W2",
-                  y: 43
-                },
-                {
-                  x: "W3",
-                  y: 43
-                },
-                {
-                  x: "W4",
-                  y: 43
-                }
-              ]
+              name: "Number of Bridges",
+              data: data.State.slice()
+                .sort(getSorting(order, orderBy))
+                .map(n => {
+                  return {
+                    x: n.name,
+                    y: n.numBridges
+                  };
+                })
+              // {
+              //   x: data.State.slice()
+              //   .sort(getSorting(order, orderBy))
+              //   .map(n => {
+              //     return n.name;
+              //   }),
+              //   y: data.State.slice()
+              //   .sort(getSorting(order, orderBy))
+              //   .map(n => {
+              //     return n.numBridges;
+              //   })
+              // }
             }
           ];
 
           console.log(series);
+
+          // const series2 = [
+          //   {
+          //     name: "Series 1",
+          //     data: [
+          //       {
+          //         x: "W1",
+          //         y: 22
+          //       },
+          //       {
+          //         x: "W2",
+          //         y: 29
+          //       },
+          //       {
+          //         x: "W3",
+          //         y: 13
+          //       },
+          //       {
+          //         x: "W4",
+          //         y: 32
+          //       }
+          //     ]
+          //   },
+          //   {
+          //     name: "Series 2",
+          //     data: [
+          //       {
+          //         x: "W1",
+          //         y: 43
+          //       },
+          //       {
+          //         x: "W2",
+          //         y: 43
+          //       },
+          //       {
+          //         x: "W3",
+          //         y: 43
+          //       },
+          //       {
+          //         x: "W4",
+          //         y: 43
+          //       }
+          //     ]
+          //   }
+          // ];
+
+          // console.log(series2);
           // console.log(this.state.options.series);
 
           return (
