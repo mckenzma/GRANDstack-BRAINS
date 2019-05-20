@@ -88,30 +88,41 @@ class HeatMapState extends React.Component {
           //   }
           // };
 
-          const series = [
-            {
-              name: "Number of Bridges",
-              data: data.State.slice()
-                .sort(getSorting(order, orderBy))
-                .map(n => {
-                  return {
-                    x: n.name,
-                    y: n.numBridges
-                  };
-                })
-            },
-            {
-              name: "Number of Bridges",
-              data: data.State.slice()
-                .sort(getSorting(order, orderBy))
-                .map(n => {
-                  return {
-                    x: n.name,
-                    y: n.numBridges
-                  };
-                })
-            }
-          ];
+          console.log(data);
+
+          // const series = [
+          //   {
+          //     name: "Number of Bridges",
+          //     data: data.State.slice()
+          //       .sort(getSorting(order, orderBy))
+          //       .map(n => {
+          //         return {
+          //           x: n.name,
+          //           y: n.numBridges
+          //         };
+          //       })
+          //   },
+          //   {
+          //     name: "Number of Bridges",
+          //     data: data.State.slice()
+          //       .sort(getSorting(order, orderBy))
+          //       .map(n => {
+          //         return {
+          //           x: n.name,
+          //           y: n.numBridges
+          //         };
+          //       })
+          //   }
+          // ];
+
+          const series = data.State.slice()
+            .sort(getSorting(order, orderBy))
+            .map(n => {
+              return {
+                name: n.name,
+                data: [{ x: n.name, y: n.numBridges }]
+              };
+            });
 
           console.log(series);
 
