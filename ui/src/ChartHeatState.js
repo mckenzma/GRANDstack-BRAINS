@@ -60,15 +60,20 @@ class HeatMapState extends React.Component {
     return (
       <Query
         query={gql`
-          query statesPaginateQuery($selected: [String!]) {
+          query statesPaginateQuery(
+            $selected: [String!]
+            $ownerSelected: [String!]
+          ) {
             State(filter: { name_in: $selected }) {
               name
               numBridges
+              chartHeatMapStateOwner(owners: $ownerSelected)
             }
           }
         `}
         variables={{
-          selected: this.props.selected
+          selected: this.props.selected,
+          ownerSelected: this.props.ownerSelected
         }}
       >
         {({ loading, error, data }) => {
@@ -120,7 +125,8 @@ class HeatMapState extends React.Component {
             .map(n => {
               return {
                 name: n.name,
-                data: [{ x: n.name, y: n.numBridges }]
+                // data: [{ x: n.name, y: n.numBridges }]
+                data: [{ x: n.name, y: n.chartHeatMapStateOwner }]
               };
             });
 

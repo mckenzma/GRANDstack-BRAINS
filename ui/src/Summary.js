@@ -40,10 +40,10 @@ class SummaryDialog extends React.Component {
       fullWidth: true,
       maxWidth: "xl",
 
-      selected: this.props.selected
+      selected: this.props.selected,
       // yearSelected: this.props.yearSelected,
       // maintRespSelected: this.props.maintRespSelected,
-      // ownerSelected: this.props.ownerSelected
+      ownerSelected: this.props.ownerSelected
     };
   }
 
@@ -105,7 +105,7 @@ class SummaryDialog extends React.Component {
                       selected={this.props.selected}
                       // yearSelected={this.state.yearSelected}
                       // maintRespSelected={this.state.maintRespSelected}
-                      // ownerSelected={this.state.ownerSelected}
+                      ownerSelected={this.state.ownerSelected}
                     />
                   </Paper>
                 </Grid>
