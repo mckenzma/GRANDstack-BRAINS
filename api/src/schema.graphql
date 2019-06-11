@@ -8,10 +8,31 @@ type State {
   numPlaces: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(p:Place) RETURN count(DISTINCT p)")
   numBridges: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(b:Bridge) RETURN count(DISTINCT b)")
 
-  chartHeatMapStateOwner(owners: [String]): Int @cypher(statement: """
+  # chartHeatMapStateOwnerCount(owners: [String]): Int @cypher(statement: """
+  #   MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owners
+  #   RETURN count(bridge)
+  #   """
+  # )
+
+  # chartHeatMapStateOwnerCount(owner: String): Int @cypher(statement: """
+  chartHeatMapStateOwnerCount: Int @cypher(statement: """
     MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
-    WHERE owner.description in $owners
     RETURN count(bridge)
+    """
+  )
+
+  # chartHeatMapStateOwnerCount(owners: [String]): [String], [Int] @cypher(statement: """
+  #   MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owners
+  #   RETURN owner.description, count(bridge)
+  #   """
+  # )
+
+  chartHeatMapStateOwners(owners: [String]): String @cypher(statement: """
+    MATCH (this)<-[*]-(:Bridge)-[OWNED_BY]->(owner:Owner)
+    WHERE owner.description in $owners
+    RETURN owner.description
     """
   )
 
@@ -69,6 +90,12 @@ type Owner {
   bridge: [Bridge] @relation(name: "OWNED_BY", direction: "IN")
 }
 
+type HeatMapDataPoint {
+  stateName: String
+  ownerDescription: String
+  bridgeCount: Int
+}
+
 type Query {
     
   bridge(state: String, owner: String): [Bridge] @cypher(statement: """
@@ -80,17 +107,26 @@ type Query {
   """
     )
 
-  chartHeatMapStateOwner2(state: [String], owner: [String]): Int @cypher(statement: """
-    MATCH (state:State)
-    WHERE state.name in $state
-    WITH state
-    MATCH (state)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
-    WHERE owner.description in $owner
-    //RETURN state.name, owner.description, count(bridge)
-    RETURN count(bridge)
-    //RETURN state
+  heatmapData(states: [String], owners: [String]): [HeatMapDataPoint] @cypher(statement: """
+    MATCH (s:State)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner)
+    WHERE s.name IN $states
+    AND o.description IN $owners
+    WITH s.name AS stateName, o.description AS ownerDescription, count(b) AS bridgeCount
+    RETURN {stateName: stateName, ownerDescription: ownerDescription, bridgeCount: bridgeCount} AS datapoint
     """
   )
+
+  # chartHeatMapStateOwner2(state: [String], owner: [String]): Int @cypher(statement: """
+  #   MATCH (state:State)
+  #   WHERE state.name in $state
+  #   WITH state
+  #   MATCH (state)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owner
+  #   //RETURN state.name, owner.description, count(bridge)
+  #   RETURN count(bridge)
+  #   //RETURN state
+  #   """
+  # )
 
   # usersBySubstring(substring: String, first: Int = 10, offset: Int = 0): [User] @cypher(statement: "MATCH (u:User) WHERE u.name CONTAINS $substring RETURN u")
  

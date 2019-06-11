@@ -60,17 +60,35 @@ class HeatMapState extends React.Component {
     return (
       <Query
         query={gql`
-          query statesPaginateQuery(
+          query heatmapDataPaginateQuery(
             $selected: [String!]
             $ownerSelected: [String!]
           ) {
-            State(filter: { name_in: $selected }) {
-              name
-              numBridges
-              chartHeatMapStateOwner(owners: $ownerSelected)
+            heatmapData(states: $selected, owners: $ownerSelected) {
+              stateName
+              ownerDescription
+              bridgeCount
             }
           }
         `}
+        // query={gql`
+        //   query statesPaginateQuery(
+        //     $selected: [String!]
+        //     #$ownerSelected: [String!]
+        //   ) {
+        //     State(
+        //       filter: {
+        //         name_in: $selected
+        //         #county: { place: { bridge: {owner: { description_in: $ownerSelected } } } }
+        //       }
+        //     ) {
+        //       name
+        //       numBridges
+        //       #chartHeatMapStateOwnerCount(owners: $ownerSelected)
+        //       chartHeatMapStateOwnerCount
+        //     }
+        //   }
+        // `}
         variables={{
           selected: this.props.selected,
           ownerSelected: this.props.ownerSelected
@@ -81,17 +99,6 @@ class HeatMapState extends React.Component {
           if (error) return <p>Error</p>;
 
           // window.data = data;
-
-          // const options = {
-          //   ...this.state.options,
-          //   xaxis: {
-          //     categories: data.State.slice()
-          //       .sort(getSorting(order, orderBy))
-          //       .map(n => {
-          //         return n.name;
-          //       })
-          //   }
-          // };
 
           console.log(data);
 
@@ -120,13 +127,23 @@ class HeatMapState extends React.Component {
           //   }
           // ];
 
-          const series = data.State.slice()
+          // const series = data.State.slice()
+          //   .sort(getSorting(order, orderBy))
+          //   .map(n => {
+          //     return {
+          //       name: n.name,
+          //       // data: [{ x: n.name, y: n.numBridges }]
+          //       data: [{ x: n.name, y: n.chartHeatMapStateOwnerCount }]
+          //     };
+          //   });
+
+          const series = data.heatmapData
+            .slice()
             .sort(getSorting(order, orderBy))
             .map(n => {
               return {
-                name: n.name,
-                // data: [{ x: n.name, y: n.numBridges }]
-                data: [{ x: n.name, y: n.chartHeatMapStateOwner }]
+                name: n.stateName,
+                data: [{ x: n.ownerDescription, y: n.bridgeCount }]
               };
             });
 

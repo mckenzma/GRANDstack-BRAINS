@@ -79,7 +79,7 @@ class SummaryDialog extends React.Component {
           <DialogContent>
             <div className={classes.root}>
               <Grid container spacing={24}>
-                <Grid item xs={12} md={6}>
+                {/*<Grid item xs={12} md={6}>
                   <Paper className={classes.paper}>
                     <DonutChartState
                       selected={this.props.selected}
@@ -88,8 +88,8 @@ class SummaryDialog extends React.Component {
                       // ownerSelected={this.state.ownerSelected}
                     />
                   </Paper>
-                </Grid>
-                <Grid item xs={12} md={6}>
+                </Grid>*/}
+                {/*<Grid item xs={12} md={6}>
                   <Paper className={classes.paper}>
                     <BarChartState
                       selected={this.props.selected}
@@ -98,14 +98,14 @@ class SummaryDialog extends React.Component {
                       // ownerSelected={this.state.ownerSelected}
                     />
                   </Paper>
-                </Grid>
+                </Grid>*/}
                 <Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <HeatMapState
                       selected={this.props.selected}
                       // yearSelected={this.state.yearSelected}
                       // maintRespSelected={this.state.maintRespSelected}
-                      ownerSelected={this.state.ownerSelected}
+                      ownerSelected={this.props.ownerSelected}
                     />
                   </Paper>
                 </Grid>
