@@ -23,6 +23,11 @@ class HeatMapState extends React.Component {
         chart: {
           // id: "basic-bar",
           // type: "bar"
+          height: 350,
+          type: "heatmap"
+        },
+        title: {
+          text: "Bridge Count by State-OWner"
         },
         plotOptions: {
           heatmap: {
