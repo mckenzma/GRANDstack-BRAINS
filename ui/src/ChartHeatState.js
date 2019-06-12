@@ -26,25 +26,34 @@ class HeatMapState extends React.Component {
         },
         plotOptions: {
           heatmap: {
+            enableShades: false,
+            // shadeIntensity: 1.0,
+
             colorScale: {
               ranges: [
                 {
-                  from: -30,
-                  to: 5,
-                  color: "#00A100",
-                  name: "low"
+                  from: 0,
+                  to: 0,
+                  color: "#ffffff",
+                  name: "none"
                 },
                 {
-                  from: 6,
-                  to: 20,
-                  color: "#128FD9",
-                  name: "medium"
+                  from: 1,
+                  to: 10,
+                  color: "#00A100"
+                  // name: "low (1 to 10)"
                 },
                 {
-                  from: 21,
-                  to: 45,
-                  color: "#FFB200",
-                  name: "high"
+                  from: 11,
+                  to: 100,
+                  color: "#128FD9"
+                  // name: "medium (11 to 100)"
+                },
+                {
+                  from: 101,
+                  to: 100000,
+                  color: "#FFB200"
+                  // name: "high (101+)"
                 }
               ]
             }
@@ -60,17 +69,31 @@ class HeatMapState extends React.Component {
     return (
       <Query
         query={gql`
-          query heatmapDataPaginateQuery(
+          query statesPaginateQuery(
             $selected: [String!]
             $ownerSelected: [String!]
           ) {
-            heatmapData(states: $selected, owners: $ownerSelected) {
-              stateName
-              ownerDescription
-              bridgeCount
+            State(filter: { name_in: $selected }) {
+              name
+              chartHeatMapStateOwners(owners: $ownerSelected) {
+                ownerDescription
+                bridgeCount
+              }
             }
           }
         `}
+        // query={gql`
+        //   query heatmapDataPaginateQuery(
+        //     $selected: [String!]
+        //     $ownerSelected: [String!]
+        //   ) {
+        //     heatmapData(states: $selected, owners: $ownerSelected) {
+        //       stateName
+        //       ownerDescription
+        //       bridgeCount
+        //     }
+        //   }
+        // `}
         // query={gql`
         //   query statesPaginateQuery(
         //     $selected: [String!]
@@ -137,19 +160,25 @@ class HeatMapState extends React.Component {
           //     };
           //   });
 
-          const series = data.heatmapData
-            .slice()
+          const series = data.State.slice()
             .sort(getSorting(order, orderBy))
             .map(n => {
               return {
-                name: n.stateName,
-                data: [{ x: n.ownerDescription, y: n.bridgeCount }]
+                name: n.name,
+                //need additional map here
+                // data: [{ x: n.ownerDescription, y: n.bridgeCount }]
+                data: n.chartHeatMapStateOwners.map(s => {
+                  return {
+                    x: s.ownerDescription,
+                    y: s.bridgeCount
+                  };
+                })
               };
             });
 
           console.log(series);
 
-          // const series2 = [
+          // const series = [
           //   {
           //     name: "Series 1",
           //     data: [

@@ -16,11 +16,11 @@ type State {
   # )
 
   # chartHeatMapStateOwnerCount(owner: String): Int @cypher(statement: """
-  chartHeatMapStateOwnerCount: Int @cypher(statement: """
-    MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
-    RETURN count(bridge)
-    """
-  )
+  # chartHeatMapStateOwnerCount: Int @cypher(statement: """
+  #   MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   RETURN count(bridge)
+  #   """
+  # )
 
   # chartHeatMapStateOwnerCount(owners: [String]): [String], [Int] @cypher(statement: """
   #   MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
@@ -29,10 +29,19 @@ type State {
   #   """
   # )
 
-  chartHeatMapStateOwners(owners: [String]): String @cypher(statement: """
-    MATCH (this)<-[*]-(:Bridge)-[OWNED_BY]->(owner:Owner)
-    WHERE owner.description in $owners
-    RETURN owner.description
+  # chartHeatMapStateOwners(owners: [String]): String @cypher(statement: """
+  #   MATCH (this)<-[*]-(:Bridge)-[OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owners
+  #   RETURN owner.description
+  #   """
+  # )
+
+  chartHeatMapStateOwners(owners: [String]): [Pairs] @cypher(statement: """
+    MATCH (this)
+    UNWIND $owners AS owner
+    WITH [ (this)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner) WHERE o.description = owner | b ] AS bridges, owner
+    WITH owner AS ownerDescription, size(bridges) AS bridgeCount
+    RETURN {ownerDescription: ownerDescription, bridgeCount: bridgeCount} AS datapoint
     """
   )
 
@@ -96,6 +105,16 @@ type HeatMapDataPoint {
   bridgeCount: Int
 }
 
+type HeatMapDataPoint_1 {
+  stateName: String
+  pairs: [Pairs]
+}
+
+type Pairs {
+  ownerDescription: String
+  bridgeCount: Int
+}
+
 type Query {
     
   bridge(state: String, owner: String): [Bridge] @cypher(statement: """
@@ -115,6 +134,17 @@ type Query {
     RETURN {stateName: stateName, ownerDescription: ownerDescription, bridgeCount: bridgeCount} AS datapoint
     """
   )
+
+  heatmapData_1(states: [String], owners: [String]): [HeatMapDataPoint_1] @cypher(statement: """
+    MATCH (s:State)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner)
+    WHERE s.name IN $states
+    AND o.description IN $owners
+    WITH s.name AS stateName, o.description AS ownerDescription, count(b) AS bridgeCount
+    RETURN {stateName: stateName, pairs: collect({ownerDescription: ownerDescription, bridgeCount: bridgeCount})} AS datapoint
+    """
+  )
+
+  Pairs(ownerDescription: String, bridgeCount: Int): [Pairs]
 
   # chartHeatMapStateOwner2(state: [String], owner: [String]): Int @cypher(statement: """
   #   MATCH (state:State)
