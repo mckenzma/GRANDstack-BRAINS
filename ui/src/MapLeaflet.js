@@ -114,6 +114,9 @@ class MapLeaf extends React.Component {
     return (
       <Query
         // Trying Filter Application starting at Bridge
+        //${/*use this to only have filters selected affect query*/}
+        //${this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' }
+        //${this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' }
         query={gql`
           query bridgesPaginateQuery(
             $selected: [String!]
