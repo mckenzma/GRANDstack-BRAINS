@@ -23,7 +23,7 @@ class HeatMapState extends React.Component {
         chart: {
           // id: "basic-bar",
           // type: "bar"
-          height: 350,
+          // height: 200,
           type: "heatmap"
         },
         title: {

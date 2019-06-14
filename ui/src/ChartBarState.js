@@ -24,6 +24,9 @@ class BarChartState extends React.Component {
           // id: "basic-bar",
           type: "bar"
         },
+        title: {
+          text: "Total Bridge Count by State"
+        },
         plotOptions: {
           bar: {
             // barHeight: '100%',

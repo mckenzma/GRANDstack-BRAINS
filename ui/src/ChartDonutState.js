@@ -23,6 +23,9 @@ class DonutChartState extends React.Component {
         legend: {
           show: true,
           position: "bottom"
+        },
+        title: {
+          text: "Total Bridge Count by State"
         }
         //series: [44, 55, 41, 17, 15],
         //labels: ["A", "B", "C", "D", "E"]
