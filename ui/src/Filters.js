@@ -24,7 +24,7 @@ class FiltersDialog extends React.Component {
       scroll: "paper",
       value: props.value,
       fullWidth: true,
-      maxWidth: "xl",
+      maxWidth: "md",
 
       selected: this.props.selected,
       yearSelected: this.props.yearSelected,
