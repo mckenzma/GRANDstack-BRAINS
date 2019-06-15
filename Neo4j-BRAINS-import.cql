@@ -14,15 +14,33 @@ CREATE INDEX ON :InspectionDate(id);
 
 // Create nodes for each file URL
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
-LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row
 // Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
-LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row1
-WITH CASE
-  WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
-    END AS fileURLs
-UNWIND fileURLs as fileURL
-MERGE (file:File {url: fileURL})
-ON CREATE SET file.url = fileURL
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row
+WITH row
+WHERE NOT row.Year IS NULL
+WITH row, row.URL AS fileUrl
+MERGE (file:File {url: fileUrl})
+ON CREATE SET file.url = fileUrl,
+              file.folder = row.Folder,
+              file.name = row.File
+
+// Load CSVs from (:File) nodes and connect to (:Row) nodes
+// WIP
+MATCH (file:File)
+WITH file, collect(file.url) AS fileURLs
+UNWIND fileURLs AS fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row
+RETURN row
+','
+MERGE (rowRaw:Row {row})
+  ON CREATE SET rowRaw += row
+',
+{batchSize:1000,parallel:false,params:{url:fileURL}})
+
+
 
 
 
