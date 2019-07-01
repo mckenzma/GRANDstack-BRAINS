@@ -817,7 +817,69 @@ CASE state.name
     WHEN "55" THEN "WI"
     WHEN "56" THEN "WY"
     WHEN "72" THEN "PR"
-END
+END//
+//need to incorporate longer state names
+  WHEN "01" THEN "Alabama"
+    WHEN "02" THEN "Alaska"
+    //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
+    WHEN "04" THEN "Arizona"
+    WHEN "05" THEN "Arkansas"
+    WHEN "06" THEN "California"
+    //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
+    WHEN "08" THEN "Colorado"
+    WHEN "09" THEN "Connecticut"
+    WHEN "10" THEN "Deleware"
+    WHEN "11" THEN "District of Columbia"
+    WHEN "12" THEN "Florida"
+    WHEN "13" THEN "Georgia"
+    //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
+    WHEN "15" THEN "Hawaii"
+    WHEN "16" THEN "Idaho"
+    WHEN "17" THEN "Illinois"
+    WHEN "18" THEN "Indiana"
+    WHEN "19" THEN "Iowa"
+    WHEN "20" THEN "Kansas"
+    WHEN "21" THEN "Kentucky"
+    WHEN "22" THEN "Louisianna"
+    WHEN "23" THEN "Maine"
+    WHEN "24" THEN "Maryland"
+    WHEN "25" THEN "Massachusetts"
+    WHEN "26" THEN "Michigan"
+    WHEN "27" THEN "Minnesota"
+    WHEN "28" THEN "Mississippi"
+    WHEN "29" THEN "Missouri"
+    WHEN "30" THEN "Montana"
+    WHEN "31" THEN "Nebraska"
+    WHEN "32" THEN "Nevada"
+    WHEN "33" THEN "New Hampshire"
+    WHEN "34" THEN "New Jersey"
+    WHEN "35" THEN "New Mexico"
+    WHEN "36" THEN "New York"
+    WHEN "37" THEN "North Carolina"
+    WHEN "38" THEN "North Dakota"
+    WHEN "39" THEN "Ohio"
+    WHEN "40" THEN "Oklahoma"
+    WHEN "41" THEN "Oregon"
+    WHEN "42" THEN "Pennsylvania"
+    //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
+    WHEN "44" THEN "Rhode Island"
+    WHEN "45" THEN "South Carolina"
+    WHEN "46" THEN "South Dakota"
+    WHEN "47" THEN "Tennessee"
+    WHEN "48" THEN "Texas"
+    WHEN "49" THEN "Utah"
+    WHEN "50" THEN "Vermont"
+    WHEN "51" THEN "Virginia"
+    WHEN "53" THEN "Washington"
+    WHEN "54" THEN "West Virginia"
+    WHEN "55" THEN "Wisconsin"
+    WHEN "56" THEN "Wyoming"
+    WHEN "72" THEN "Puerto Rico"
+
+
+
+
+
 
 // Data loaded from https://www2.census.gov/programs-surveys/popest/geographies/2016/all-geocodes-v2016.xlsx converted to shared Google Sheet
 CALL apoc.periodic.iterate(
