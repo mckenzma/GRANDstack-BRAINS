@@ -877,7 +877,6 @@ END//
     WHEN "72" THEN "Puerto Rico"
 
 // Connect bordering states
-// need to prevent duplicate relationships
 WITH "https://docs.google.com/spreadsheets/d/14ZJLZKZSlfgfo_pjuWKB8UBvkcgBncaX0xziqFMLpE0/export?format=csv&id=14ZJLZKZSlfgfo_pjuWKB8UBvkcgBncaX0xziqFMLpE0&gid=502947187" AS fileURL
 LOAD CSV WITH HEADERS FROM fileURL AS row
 WITH DISTINCT size(keys(row)) AS rowSize, keys(row) AS headers, fileURL
@@ -892,6 +891,7 @@ WHERE s1.name = state
 UNWIND borderingStates AS borderingState
 MATCH (s2:State)
 WHERE s2.name = borderingState
+AND NOT (s1)<-[:BORDERS]-(s2)
 MERGE (s1)-[:BORDERS]->(s2)
 
 
