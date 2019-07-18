@@ -74,7 +74,7 @@ ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
 			  
 			  place.name = row.PLACE_CODE_004,
 			  county.name = row.COUNTY_CODE_003,
-			  state.name = row.STATE_CODE_001
+			  state.name = row.STATE_CODE_001 // maybe change this to state.code?
 ',
 {batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
 RETURN batches, total
@@ -760,7 +760,7 @@ SET bridge.location = point({ longitude: longitude_decimal, latitude: latitude_d
 // This changes the state "numeric" code to the 2-letter state abreviation
 MATCH (state:State)
 SET state.name = 
-CASE state.name
+CASE state.name // change to state.code?
 	WHEN "01" THEN "AL"
     WHEN "02" THEN "AK"
     //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
