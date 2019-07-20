@@ -16,7 +16,7 @@ class BarChartState extends React.Component {
 
     this.state = {
       order: "asc", // sets order of states to be named in list
-      orderBy: "name",
+      orderBy: "abbreviation",
 
       // this sets the state for the Apex Chart
       options: {
@@ -55,8 +55,8 @@ class BarChartState extends React.Component {
       <Query
         query={gql`
           query statesPaginateQuery($selected: [String!]) {
-            State(filter: { name_in: $selected }) {
-              name
+            State(filter: { abbreviation_in: $selected }) {
+              abbreviation
               numBridges
             }
           }
@@ -77,14 +77,14 @@ class BarChartState extends React.Component {
               categories: data.State.slice()
                 .sort(getSorting(order, orderBy))
                 .map(n => {
-                  return n.name;
+                  return n.abbreviation;
                 })
             }
           };
 
           const series = [
             {
-              name: "Number of Bridges",
+              abbreviation: "Number of Bridges",
               data: data.State.slice()
                 .sort(getSorting(order, orderBy))
                 .map(n => {

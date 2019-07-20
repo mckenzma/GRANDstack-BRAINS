@@ -16,7 +16,7 @@ class DonutChartState extends React.Component {
 
     this.state = {
       order: "asc", // sets order of states to be named in list
-      orderBy: "name",
+      orderBy: "abbreviation",
 
       // this sets the state for the Apex Chart
       options: {
@@ -40,9 +40,9 @@ class DonutChartState extends React.Component {
       <Query
         query={gql`
           query statesParginateQuery($selected: [String!]) {
-            State(filter: { name_in: $selected }) {
+            State(filter: { abbreviation_in: $selected }) {
               #State {
-              name
+              abbreviation
               numBridges
             }
           }
@@ -64,7 +64,7 @@ class DonutChartState extends React.Component {
             labels: data.State.slice()
               .sort(getSorting(order, orderBy))
               .map(n => {
-                return n.name;
+                return n.abbreviation;
               })
           };
 

@@ -16,7 +16,7 @@ class HeatMapState extends React.Component {
 
     this.state = {
       order: "asc", // sets order of states to be named in list
-      orderBy: "name",
+      orderBy: "abbreviation",
 
       // this sets the state for the Apex Chart
       options: {
@@ -27,7 +27,7 @@ class HeatMapState extends React.Component {
           type: "heatmap"
         },
         title: {
-          text: "Bridge Count by State-OWner"
+          text: "Bridge Count by State-Owner"
         },
         plotOptions: {
           heatmap: {
@@ -78,8 +78,8 @@ class HeatMapState extends React.Component {
             $selected: [String!]
             $ownerSelected: [String!]
           ) {
-            State(filter: { name_in: $selected }) {
-              name
+            State(filter: { abbreviation_in: $selected }) {
+              abbreviation
               chartHeatMapStateOwners(owners: $ownerSelected) {
                 ownerDescription
                 bridgeCount
@@ -169,7 +169,7 @@ class HeatMapState extends React.Component {
             .sort(getSorting(order, orderBy))
             .map(n => {
               return {
-                name: n.name,
+                abbreviation: n.abbreviation,
                 //need additional map here
                 // data: [{ x: n.ownerDescription, y: n.bridgeCount }]
                 data: n.chartHeatMapStateOwners.map(s => {

@@ -50,26 +50,26 @@ class StateListFilter extends React.Component {
 
     this.state = {
       order: "asc", // sets order of states to be named in list
-      orderBy: "name",
-      name: null,
+      orderBy: "abbreviation",
+      abbreviation: null,
       selectedStates: [],
       selected: this.props.selected,
       numSelected: this.props.numSelected
     };
   }
 
-  handleChange = name => event => {
-    this.props.triggerParentUpdate("name", name);
+  handleChange = abbreviation => event => {
+    this.props.triggerParentUpdate("abbreviation", abbreviation);
     this.setState({ selectedValue: event.target.value });
   };
 
-  handleClick = (event, name) => {
+  handleClick = (event, abbreviation) => {
     const { selected } = this.state;
-    const selectedIndex = selected.indexOf(name);
+    const selectedIndex = selected.indexOf(abbreviation);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, abbreviation);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -91,7 +91,7 @@ class StateListFilter extends React.Component {
     let newSelected = [];
 
     if (event.target.checked) {
-      newSelected = data.map(n => n.name);
+      newSelected = data.map(n => n.abbreviation);
       this.setState({ selected: newSelected.sort() });
       this.setState(state => ({ numSelected: state.selected.length }));
       this.props.triggerParentUpdate(state => ({
@@ -105,7 +105,7 @@ class StateListFilter extends React.Component {
     this.props.triggerParentUpdate(state => ({ selected: state.selected }));
   };
 
-  isSelected = name => this.state.selected.indexOf(name) !== -1;
+  isSelected = abbreviation => this.state.selected.indexOf(abbreviation) !== -1;
 
   render() {
     const { order, orderBy } = this.state;
@@ -121,6 +121,8 @@ class StateListFilter extends React.Component {
             State {
               id
               name
+              code
+              abbreviation
             }
           }
         `}
@@ -164,17 +166,19 @@ class StateListFilter extends React.Component {
                   {data.State.slice()
                     .sort(getSorting(order, orderBy))
                     .map(n => {
-                      const isSelected = this.isSelected(n.name);
+                      const isSelected = this.isSelected(n.abbreviation);
                       return (
-                        <MenuItem key={n.name}>
+                        <MenuItem key={n.abbreviation}>
                           <Checkbox
                             checked={isSelected}
-                            onChange={this.handleChange(n.name)}
-                            value={n.name}
+                            onChange={this.handleChange(n.abbreviation)}
+                            value={n.abbreviation}
                             selected={isSelected} // is this actually needed? - test removal
-                            onClick={event => this.handleClick(event, n.name)}
+                            onClick={event =>
+                              this.handleClick(event, n.abbreviation)
+                            }
                           />
-                          <ListItemText>{n.name}</ListItemText>
+                          <ListItemText>{n.abbreviation}</ListItemText>
                         </MenuItem>
                       );
                     })}

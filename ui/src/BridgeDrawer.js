@@ -93,7 +93,7 @@ class BridgeDrawer extends React.Component {
                     <ListItem>
                       <ListItemText>LONG: {b.longitude_decimal}</ListItemText>
                     </ListItem>
-                    <ListItem>
+                    {/*<ListItem>
                       <ListItemText>
                         Build Year: {b.buildYear.year}
                       </ListItemText>
@@ -108,7 +108,7 @@ class BridgeDrawer extends React.Component {
                       <ListItemText>
                         Maintaned By: {b.maintenanceResp.description}
                       </ListItemText>
-                    </ListItem>
+                    </ListItem>*/}
                   </List>
                 );
               })}

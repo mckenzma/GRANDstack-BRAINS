@@ -1,16 +1,18 @@
 /////////////////////////////////////////////////////////////////////////////////
 // This file represets all of the import queries to construct the graph database
-// To build a copy of this, these should be completed in order
+// To build a copy of this, these should be completed in order as listed below
 /////////////////////////////////////////////////////////////////////////////////
 
 // creating Indexes for mass import
-CREATE INDEX ON :Bridge(id);
-CREATE INDEX ON :Place(id);
-CREATE INDEX ON :County(id);
-CREATE INDEX ON :State(id);
-CREATE INDEX ON :Owner(id);
-CREATE INDEX ON :MaintenanceResp(id);
-CREATE INDEX ON :InspectionDate(id);
+//CREATE INDEX ON :Bridge(id);
+//CREATE INDEX ON :Place(id);
+//CREATE INDEX ON :County(id);
+//CREATE INDEX ON :State(id);
+//CREATE INDEX ON :Owner(id);
+//CREATE INDEX ON :MaintenanceResp(id);
+//CREATE INDEX ON :InspectionDate(id);
+
+//CREATE CONSTRAINT ON (file:File) ASSERT (file.url, file.folder, file.name) IS NODE KEY;
 
 // Create nodes for each file URL
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
@@ -23,11 +25,16 @@ WITH row, row.URL AS fileUrl
 MERGE (file:File {url: fileUrl})
 ON CREATE SET file.url = fileUrl,
               file.folder = row.Folder,
-              file.name = row.File
+              file.name = row.File,
+              file.createdOn = timestamp()
 
-// Load CSVs from (:File) nodes and connect to (:Row) nodes
-// WIP
+
+
+//CREATE CONSTRAINT ON (fileRow:Row) ASSERT (fileRow.fileURL, fileRow.STRUCTURE_NUMBER_008) IS NODE KEY;
+
+// Load CSVs from (:File) nodes and create (:Row) nodes
 MATCH (file:File)
+WHERE NOT (file)-[:CONTAINS]->(:Row)
 WITH file, collect(file.url) AS fileURLs
 UNWIND fileURLs AS fileURL
 CALL apoc.periodic.iterate(
@@ -35,12 +42,176 @@ CALL apoc.periodic.iterate(
 LOAD CSV WITH HEADERS FROM $url AS row
 RETURN row
 ','
-MERGE (rowRaw:Row {row})
-  ON CREATE SET rowRaw += row
+MERGE (fileRow:Row {fileURl: $url, STRUCTURE_NUMBER_008: row.STRUCTURE_NUMBER_008})
+ON CREATE SET fileRow.fileURL = $url,
+              fileRow.STRUCTURE_NUMBER_008 = row.STRUCTURE_NUMBER_008,
+              fileRow.createdOn = timestamp()
 ',
-{batchSize:1000,parallel:false,params:{url:fileURL}})
+{batchSize:10000,parellel:false,params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
+
+// Connect (:File)-[:CONTAINS]->(:Row)
 
 
+// Create States
+// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
+// Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row1
+WITH CASE
+  WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
+    END AS fileURLs
+UNWIND fileURLs as fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row RETURN row
+
+','
+MERGE (state:State {code: row.STATE_CODE_001})
+ON CREATE SET state.code = row.STATE_CODE_001 
+',
+{batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
+
+// Update State properties
+MATCH (state:State)
+SET state.abbreviation = 
+      CASE state.code
+        WHEN "01" THEN "AL"
+          WHEN "02" THEN "AK"
+          //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
+          WHEN "04" THEN "AZ"
+          WHEN "05" THEN "AR"
+          WHEN "06" THEN "CA"
+          //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
+          WHEN "08" THEN "CO"
+          WHEN "09" THEN "CT"
+          WHEN "10" THEN "DE"
+          WHEN "11" THEN "DC"
+          WHEN "12" THEN "FL"
+          WHEN "13" THEN "GA"
+          //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
+          WHEN "15" THEN "HI"
+          WHEN "16" THEN "ID"
+          WHEN "17" THEN "IL"
+          WHEN "18" THEN "IN"
+          WHEN "19" THEN "IA"
+          WHEN "20" THEN "KS"
+          WHEN "21" THEN "KY"
+          WHEN "22" THEN "LA"
+          WHEN "23" THEN "ME"
+          WHEN "24" THEN "MD"
+          WHEN "25" THEN "MA"
+          WHEN "26" THEN "MI"
+          WHEN "27" THEN "MN"
+          WHEN "28" THEN "MS"
+          WHEN "29" THEN "MO"
+          WHEN "30" THEN "MT"
+          WHEN "31" THEN "NE"
+          WHEN "32" THEN "NV"
+          WHEN "33" THEN "NH"
+          WHEN "34" THEN "NJ"
+          WHEN "35" THEN "NM"
+          WHEN "36" THEN "NY"
+          WHEN "37" THEN "NC"
+          WHEN "38" THEN "ND"
+          WHEN "39" THEN "OH"
+          WHEN "40" THEN "OK"
+          WHEN "41" THEN "OR"
+          WHEN "42" THEN "PA"
+          //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
+          WHEN "44" THEN "RI"
+          WHEN "45" THEN "SC"
+          WHEN "46" THEN "SD"
+          WHEN "47" THEN "TN"
+          WHEN "48" THEN "TX"
+          WHEN "49" THEN "UT"
+          WHEN "50" THEN "VT"
+          WHEN "51" THEN "VA"
+          WHEN "53" THEN "WA"
+          WHEN "54" THEN "WV"
+          WHEN "55" THEN "WI"
+          WHEN "56" THEN "WY"
+          WHEN "72" THEN "PR"
+      END,
+      state.name = 
+      CASE state.code
+      //need to incorporate longer state names
+        WHEN "01" THEN "Alabama"
+          WHEN "02" THEN "Alaska"
+          //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
+          WHEN "04" THEN "Arizona"
+          WHEN "05" THEN "Arkansas"
+          WHEN "06" THEN "California"
+          //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
+          WHEN "08" THEN "Colorado"
+          WHEN "09" THEN "Connecticut"
+          WHEN "10" THEN "Deleware"
+          WHEN "11" THEN "District of Columbia"
+          WHEN "12" THEN "Florida"
+          WHEN "13" THEN "Georgia"
+          //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
+          WHEN "15" THEN "Hawaii"
+          WHEN "16" THEN "Idaho"
+          WHEN "17" THEN "Illinois"
+          WHEN "18" THEN "Indiana"
+          WHEN "19" THEN "Iowa"
+          WHEN "20" THEN "Kansas"
+          WHEN "21" THEN "Kentucky"
+          WHEN "22" THEN "Louisianna"
+          WHEN "23" THEN "Maine"
+          WHEN "24" THEN "Maryland"
+          WHEN "25" THEN "Massachusetts"
+          WHEN "26" THEN "Michigan"
+          WHEN "27" THEN "Minnesota"
+          WHEN "28" THEN "Mississippi"
+          WHEN "29" THEN "Missouri"
+          WHEN "30" THEN "Montana"
+          WHEN "31" THEN "Nebraska"
+          WHEN "32" THEN "Nevada"
+          WHEN "33" THEN "New Hampshire"
+          WHEN "34" THEN "New Jersey"
+          WHEN "35" THEN "New Mexico"
+          WHEN "36" THEN "New York"
+          WHEN "37" THEN "North Carolina"
+          WHEN "38" THEN "North Dakota"
+          WHEN "39" THEN "Ohio"
+          WHEN "40" THEN "Oklahoma"
+          WHEN "41" THEN "Oregon"
+          WHEN "42" THEN "Pennsylvania"
+          //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
+          WHEN "44" THEN "Rhode Island"
+          WHEN "45" THEN "South Carolina"
+          WHEN "46" THEN "South Dakota"
+          WHEN "47" THEN "Tennessee"
+          WHEN "48" THEN "Texas"
+          WHEN "49" THEN "Utah"
+          WHEN "50" THEN "Vermont"
+          WHEN "51" THEN "Virginia"
+          WHEN "53" THEN "Washington"
+          WHEN "54" THEN "West Virginia"
+          WHEN "55" THEN "Wisconsin"
+          WHEN "56" THEN "Wyoming"
+          WHEN "72" THEN "Puerto Rico"
+        END
+
+// Connect bordering states
+WITH "https://docs.google.com/spreadsheets/d/14ZJLZKZSlfgfo_pjuWKB8UBvkcgBncaX0xziqFMLpE0/export?format=csv&id=14ZJLZKZSlfgfo_pjuWKB8UBvkcgBncaX0xziqFMLpE0&gid=502947187" AS fileURL
+LOAD CSV WITH HEADERS FROM fileURL AS row
+WITH DISTINCT size(keys(row)) AS rowSize, keys(row) AS headers, fileURL
+LOAD CSV WITH HEADERS FROM fileURL AS row
+//UNWIND range(0,rowSize-1) AS i
+UNWIND headers AS header
+WITH row, header
+WHERE row[header] = "Y"
+WITH row['State Name'] AS state, collect(header) AS borderingStates
+MATCH (s1:State)
+WHERE s1.abbreviation = state
+UNWIND borderingStates AS borderingState
+MATCH (s2:State)
+WHERE s2.abbreviation = borderingState
+AND NOT (s1)<-[:BORDERS]-(s2)
+MERGE (s1)-[:BORDERS]->(s2)
 
 
 
@@ -172,6 +343,7 @@ CASE owner.id
     WHEN "75" THEN "NASA"
     WHEN "76" THEN "Metropolitan Washington Airports Service"
     WHEN "80" THEN "Unkown"
+    ELSE "XXX - Need to review and update"
 END
 
 // Merge relationship between (:Owner) and (:Bridge) nodes
@@ -326,6 +498,7 @@ CASE maintResp.id
     WHEN "75" THEN "NASA"
     WHEN "76" THEN "Metropolitan Washington Airports Service"
     WHEN "80" THEN "Unkown"
+    ELSE "XXX - Need to review and update"
 END
 
 // Merge relationship between (:MaintenanceResp) and (:Bridge) nodes
@@ -876,23 +1049,7 @@ END//
     WHEN "56" THEN "Wyoming"
     WHEN "72" THEN "Puerto Rico"
 
-// Connect bordering states
-WITH "https://docs.google.com/spreadsheets/d/14ZJLZKZSlfgfo_pjuWKB8UBvkcgBncaX0xziqFMLpE0/export?format=csv&id=14ZJLZKZSlfgfo_pjuWKB8UBvkcgBncaX0xziqFMLpE0&gid=502947187" AS fileURL
-LOAD CSV WITH HEADERS FROM fileURL AS row
-WITH DISTINCT size(keys(row)) AS rowSize, keys(row) AS headers, fileURL
-LOAD CSV WITH HEADERS FROM fileURL AS row
-//UNWIND range(0,rowSize-1) AS i
-UNWIND headers AS header
-WITH row, header
-WHERE row[header] = "Y"
-WITH row['State Name'] AS state, collect(header) AS borderingStates
-MATCH (s1:State)
-WHERE s1.name = state
-UNWIND borderingStates AS borderingState
-MATCH (s2:State)
-WHERE s2.name = borderingState
-AND NOT (s1)<-[:BORDERS]-(s2)
-MERGE (s1)-[:BORDERS]->(s2)
+
 
 
 

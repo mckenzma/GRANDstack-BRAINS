@@ -1,6 +1,8 @@
 type State {
   id: ID!
+  code: String
   name: String
+  abbreviation: String
 
   bridges: [Bridge] @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(bridge:Bridge) RETURN bridge")
 
