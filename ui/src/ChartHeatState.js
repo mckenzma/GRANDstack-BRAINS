@@ -126,44 +126,7 @@ class HeatMapState extends React.Component {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
-          // window.data = data;
-
           console.log(data);
-
-          // const series = [
-          //   {
-          //     name: "Number of Bridges",
-          //     data: data.State.slice()
-          //       .sort(getSorting(order, orderBy))
-          //       .map(n => {
-          //         return {
-          //           x: n.name,
-          //           y: n.numBridges
-          //         };
-          //       })
-          //   },
-          //   {
-          //     name: "Number of Bridges",
-          //     data: data.State.slice()
-          //       .sort(getSorting(order, orderBy))
-          //       .map(n => {
-          //         return {
-          //           x: n.name,
-          //           y: n.numBridges
-          //         };
-          //       })
-          //   }
-          // ];
-
-          // const series = data.State.slice()
-          //   .sort(getSorting(order, orderBy))
-          //   .map(n => {
-          //     return {
-          //       name: n.name,
-          //       // data: [{ x: n.name, y: n.numBridges }]
-          //       data: [{ x: n.name, y: n.chartHeatMapStateOwnerCount }]
-          //     };
-          //   });
 
           const series = data.State.slice()
             .sort(getSorting(order, orderBy))
@@ -182,54 +145,6 @@ class HeatMapState extends React.Component {
             });
 
           console.log(series);
-
-          // const series = [
-          //   {
-          //     name: "Series 1",
-          //     data: [
-          //       {
-          //         x: "W1",
-          //         y: 22
-          //       },
-          //       {
-          //         x: "W2",
-          //         y: 29
-          //       },
-          //       {
-          //         x: "W3",
-          //         y: 13
-          //       },
-          //       {
-          //         x: "W4",
-          //         y: 32
-          //       }
-          //     ]
-          //   },
-          //   {
-          //     name: "Series 2",
-          //     data: [
-          //       {
-          //         x: "W1",
-          //         y: 43
-          //       },
-          //       {
-          //         x: "W2",
-          //         y: 43
-          //       },
-          //       {
-          //         x: "W3",
-          //         y: 43
-          //       },
-          //       {
-          //         x: "W4",
-          //         y: 43
-          //       }
-          //     ]
-          //   }
-          // ];
-
-          // console.log(series2);
-          // console.log(this.state.options.series);
 
           return (
             <div className="mixed-chart">

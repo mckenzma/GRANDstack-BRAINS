@@ -80,30 +80,6 @@ class MapLeaf extends React.Component {
   render() {
     const { classes } = this.props;
 
-    // const sideList = (
-    //   <div className={classes.list}>
-    //     <List>
-    //       <ListItem>
-    //         <ListItemText>ID: {this.state.bridge_id}</ListItemText>
-    //       </ListItem>
-    //       <ListItem>
-    //         <ListItemText>State: {this.state.bridge_state}</ListItemText>
-    //       </ListItem>
-    //       <Divider />
-    //       <ListItem>
-    //         <ListItemText>LAT: {this.state.bridge_lat}</ListItemText>
-    //       </ListItem>
-    //       <ListItem>
-    //         <ListItemText>LONG: {this.state.bridge_lng}</ListItemText>
-    //       </ListItem>
-    //       <Divider />
-    //       <ListItem>
-    //         <ListItemText>Build Year: {this.state.build_year}</ListItemText>
-    //       </ListItem>
-    //     </List>
-    //   </div>
-    // );
-
     const position = [this.state.lat, this.state.lng];
 
     const myIcon = L.icon({
@@ -119,9 +95,8 @@ class MapLeaf extends React.Component {
         //${this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' }
         query={gql`
           query bridgesPaginateQuery(
-            $selected: [String!]
-          ) #$yearSelected: [Int!]
-          #$maintRespSelected: [String!]
+            $selected: [String!] #$yearSelected: [Int!]
+          ) #$maintRespSelected: [String!]
           #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
           {
             Bridge(
@@ -239,84 +214,6 @@ class MapLeaf extends React.Component {
                     );
                   })}
                   {/* End Revised Bridge Query */}
-
-                  {/* Begin React Fragment Implementatinon */}
-                  {/*{
-                    data.State.map(s => (
-                      <React.Fragment key={s.id}>
-                        <County data={s} />
-                      </React.Fragment>
-                    ))
-                  }*/}
-                  {/* End React Fragment Implementatinon */}
-
-                  {/* Begin original State query */}
-                  {/*{data.State.map(s => {
-                    return (
-                      <div key={s.id}>
-                        {s.county.map(c => {
-                          return (
-                            <div key={s.id + c.id}>
-                              {c.place.map(p => {
-                                return (
-                                  <div key={s.id + c.id + p.id}>
-                                    {p.bridge.map(b => {
-                                      return (
-                                        <div key={b.id}>
-                                          <Marker
-                                            key={b.id}
-                                            position={[
-                                              b.latitude_decimal,
-                                              b.longitude_decimal
-                                            ]}
-                                            icon={myIcon}
-                                            onClick={this.toggleDrawer(
-                                              "right",
-                                              true,
-                                              b,
-                                              s.name //,
-                                              // c.name,
-                                              // p.name
-                                            )}
-                                          />
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  })}*/}
-                  {/* Begin original State query */}
-
-                  {/*{data.State.slice().map(b => {
-                    return (
-                      <div key={b.id}>
-                        {b.bridges.slice().map(n => {
-                          return (
-                            <Marker
-                              key={n.id}
-                              position={[
-                                n.latitude_decimal,
-                                n.longitude_decimal
-                              ]}
-                              icon={myIcon}
-                              onClick={this.toggleDrawer(
-                                "right",
-                                true,
-                                n,
-                                b.name
-                              )}
-                            />
-                          );
-                        })}
-                      </div>
-                    );
-                  })}*/}
                 </MarkerClusterGroup>
               </Map>
 
@@ -370,34 +267,6 @@ class MapLeaf extends React.Component {
     );
   }
 }
-
-// Begin React Fragment Implementatinon
-// const County = ({ data }) =>
-//   data.county.map(c => (
-//     <React.Fragment key={c.id}>
-//       <Place data={c} />
-//     </React.Fragment>
-//   ));
-
-// const Place = ({ data }) =>
-//   data.county.map(p => (
-//     <React.Fragment key={p.id}>
-//       <Bridge data={p} />
-//     </React.Fragment>
-//   ));
-
-// const Bridge = ({ data }) =>
-//   data.county.map(b => (
-//     <React.Fragment key={b.id}>
-//       <Marker
-//         key={b.id}
-//         position={[b.latitude_decimal, b.longitude_decimal]}
-//         // icon={myIcon}
-//         // onClick={this.toggleDrawer("right", true, b, s.name)}
-//       />
-//     </React.Fragment>
-//   ));
-// End React Fragment Implementatinon
 
 MapLeaf.propTypes = {
   classes: PropTypes.object.isRequired
