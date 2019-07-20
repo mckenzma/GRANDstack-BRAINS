@@ -117,6 +117,20 @@ type Pairs {
   bridgeCount: Int
 }
 
+type NodeCount {
+  label: String
+  count: Int
+}
+
+# type NodeSummary {
+
+# }
+
+type RelationshipCount {
+  type: String
+  count: Int
+}
+
 type Query {
     
   bridge(state: String, owner: String): [Bridge] @cypher(statement: """
@@ -127,6 +141,25 @@ type Query {
     RETURN b
   """
     )
+
+  nodeSummaryCount: [NodeCount] @cypher(statement: """
+    MATCH (n)
+    WITH DISTINCT labels(n) AS labels, count(n) AS labelCount
+    UNWIND labels AS label
+    RETURN { label: label, count: sum(labelCount) } AS nodeCount
+    """
+  )
+
+  NodeCount(label: String, count: Int): [NodeCount]
+
+  relationshipSummaryCount: [RelationshipCount] @cypher(statement: """
+    MATCH ()-[r]->()
+    WITH DISTINCT type(r) AS rel, count(r) AS relCount
+    RETURN {type: rel, count: relCount } AS relationshipCount
+    """
+  )
+
+  RelationshipCount(type: String, count: Int): [RelationshipCount]
 
   heatmapData(states: [String], owners: [String]): [HeatMapDataPoint] @cypher(statement: """
     MATCH (s:State)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner)

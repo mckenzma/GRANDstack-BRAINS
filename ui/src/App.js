@@ -19,6 +19,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 import CustomizedDialogDemo from "./About";
+import GraphSummaryDialog from "./GraphSummaryDialog";
 
 import FiltersDialog from "./Filters";
 import SummaryDialog from "./Summary";
@@ -228,6 +229,7 @@ class App extends Component {
         <Divider />
 
         <CustomizedDialogDemo />
+        <GraphSummaryDialog />
       </Drawer>
     );
 
