@@ -147,6 +147,7 @@ type Query {
     WITH DISTINCT labels(n) AS labels, count(n) AS labelCount
     UNWIND labels AS label
     RETURN { label: label, count: sum(labelCount) } AS nodeCount
+    ORDER BY nodeCount.count DESC, nodeCount.label ASC # maybe remove if want to allow sorting in app
     """
   )
 
@@ -156,6 +157,7 @@ type Query {
     MATCH ()-[r]->()
     WITH DISTINCT type(r) AS rel, count(r) AS relCount
     RETURN {type: rel, count: relCount } AS relationshipCount
+    ORDER BY relationshipCount.count DESC, relationshipCount.type ASC # maybe remove if want to allow sorting in app
     """
   )
 

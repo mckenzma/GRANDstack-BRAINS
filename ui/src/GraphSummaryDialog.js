@@ -56,7 +56,8 @@ class GraphSummaryDialog extends React.Component {
 
   handleClickOpen = () => {
     this.setState({
-      open: true
+      open: true,
+      maxWidth: "xl"
     });
   };
 
@@ -79,6 +80,10 @@ class GraphSummaryDialog extends React.Component {
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
+          fullWidth={true}
+          maxWidth={this.state.maxWidth}
+          scroll={this.state.scroll}
+          // aria-labelledby="scroll-dialog-title"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
             Graph Data Summary
