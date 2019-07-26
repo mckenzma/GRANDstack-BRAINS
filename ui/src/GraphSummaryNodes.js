@@ -19,7 +19,7 @@ const styles = theme => ({
     margin: "auto"
   },
   table: {
-    minWidth: 700
+    // minWidth: 700
   }
 });
 
@@ -84,7 +84,7 @@ class GraphSummaryNodes extends React.Component {
                         <TableSortLabel
                           active={orderBy === "label"}
                           direction={order}
-                          onClick={() => this.handleSortRequest("type")}
+                          onClick={() => this.handleSortRequest("label")}
                         >
                           Node Label
                         </TableSortLabel>

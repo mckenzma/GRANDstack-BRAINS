@@ -17,6 +17,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import GraphSummaryNodes from "./GraphSummaryNodes";
 import GraphSummaryRelationships from "./GraphSummaryRelationships";
 
+import Grid from "@material-ui/core/Grid";
+
 const DialogTitle = withStyles(theme => ({
   root: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -123,8 +125,14 @@ class GraphSummaryDialog extends React.Component {
                   Graph Data Summary
                 </DialogTitle>
                 <DialogContent>
-                  <GraphSummaryNodes />
-                  <GraphSummaryRelationships />
+                  <Grid container spacing={24}>
+                    <Grid item xs={12} md={6}>
+                      <GraphSummaryNodes />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <GraphSummaryRelationships />
+                    </Grid>
+                  </Grid>
                   {/*({data.relationshipSummaryCount.map(rsc => {
                       return(
                         <p key={rsc.type}>{rsc.type}: {rsc.count}</p>

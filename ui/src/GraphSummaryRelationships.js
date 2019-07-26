@@ -19,7 +19,7 @@ const styles = theme => ({
     margin: "auto"
   },
   table: {
-    minWidth: 700
+    // minWidth: 700
   }
 });
 
