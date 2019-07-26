@@ -26,10 +26,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import BridgeDrawer from "./BridgeDrawer.js";
 
+import StateMarker from "./MapStateMarker.js";
+
 const styles = theme => ({
   root: {
     height: 400,
-    overflowX: "auto"
+    overflowX: "auto",
+    paddingTop: theme.spacing.unit * 2
   },
   list: {
     width: 250
@@ -95,9 +98,8 @@ class MapLeaf extends React.Component {
         //${this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' }
         query={gql`
           query bridgesPaginateQuery(
-            $selected: [String!] #$yearSelected: [Int!]
-          ) #$maintRespSelected: [String!]
-          #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+            $selected: [String!] #$yearSelected: [Int!] #$maintRespSelected: [String!]
+          ) #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
           {
             Bridge(
               filter: {
@@ -114,64 +116,6 @@ class MapLeaf extends React.Component {
             }
           }
         `}
-        // Updated State Filter
-        // query={gql`
-        //   query statesPaginateQuery(
-        //     $selected: [String!]
-        //     $yearSelected: [Int!]
-        //   ) {
-        //     State(filter: { name_in: $selected }) {
-        //       id
-        //       name
-        //       county {
-        //         id
-        //         name
-        //         place {
-        //           id
-        //           name
-        //           bridge(filter: { buildYear: { year_in: $yearSelected } }) {
-        //             #bridge(filter: { yearbuilt_in: $yearSelected }) {
-        //             #bridge {
-        //             id
-        //             yearbuilt
-        //             latitude_decimal
-        //             longitude_decimal
-        //             yearbuilt
-        //             #buildYear(filter: { year_in: $yearSelected }) {
-        //             #buildYear {
-        //             #  year
-        //             #}
-        //           }
-        //         }
-        //       }
-        //     }
-        //   }
-        // `}
-
-        // Original State Filter
-        // query={gql`
-        //   query statesPaginateQuery(
-        // $selected: [String!]
-        // #$yearSelected: [Int!]
-        // )
-        //   {
-        //     State(filter: { name_in: $selected }) {
-        //       id
-        //       name
-        //       bridges {
-        //         id
-        //         name
-        //         latitude_decimal
-        //         longitude_decimal
-        //         yearbuilt
-        //         #buildYear(filter: { year_in: $yearSelected }) {
-        //         #buildYear {
-        //         #  year
-        //         #}
-        //       }
-        //     }
-        //   }
-        // `}
         variables={{
           selected: this.props.selected,
           yearSelected: this.props.yearSelected,
@@ -215,6 +159,7 @@ class MapLeaf extends React.Component {
                   })}
                   {/* End Revised Bridge Query */}
                 </MarkerClusterGroup>
+                <StateMarker />
               </Map>
 
               {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
