@@ -19,6 +19,23 @@ import IconButton from "@material-ui/core/IconButton";
 // import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+
+import PropTypes from "prop-types";
+
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: 8 * 3 }}>
+      {props.children}
+    </Typography>
+  );
+}
+
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
 const styles = theme => ({
   closeButton: {
     position: "absolute",
@@ -36,9 +53,22 @@ const DialogContent = withStyles(theme => ({
 }))(MuiDialogContent);
 
 class StateMarker extends React.Component {
-  state = {
-    open: false
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: 0,
+      open: false
+    };
+  }
+
+  handleChange = (event, value) => {
+    this.setState({ value: value });
   };
+
+  // state = {
+  //   open: false
+  // };
 
   handleClickOpen = () => {
     this.setState({
@@ -65,6 +95,8 @@ class StateMarker extends React.Component {
 
   render() {
     const { classes } = this.props;
+
+    const { value } = this.state;
 
     const stateIcon = L.icon({
       iconUrl: icon,
@@ -113,10 +145,24 @@ class StateMarker extends React.Component {
                   {this.state.state_name}
                 </DialogTitle>
                 <DialogContent>
-                  <Typography gutterBottom>
-                    This is where custom queries and recommendations will be
-                    added!
-                  </Typography>
+                  <Tabs value={this.state.value} onChange={this.handleChange}>
+                    <Tab label="Item One" />
+                    <Tab label="Item Two" />
+                    <Tab label="Item Three" />
+                  </Tabs>
+                  {this.state.value === 0 && (
+                    <TabContainer>Item One</TabContainer>
+                  )}
+                  {this.state.value === 1 && (
+                    <TabContainer>Item Two</TabContainer>
+                  )}
+                  {this.state.value === 2 && (
+                    <TabContainer>Item Three</TabContainer>
+                  )}
+                  {/*<Typography gutterBottom>
+                        This is where custom queries and recommendations will be
+                        added!
+                      </Typography>*/}
                 </DialogContent>
               </Dialog>
             </div>
@@ -126,5 +172,9 @@ class StateMarker extends React.Component {
     );
   }
 }
+
+StateMarker.propTypes = {
+  classes: PropTypes.object.isRequired
+};
 
 export default withStyles(styles)(StateMarker);
