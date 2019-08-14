@@ -369,7 +369,19 @@ RETURN batches, total
 
 
 
+// WIP
+// Create Entity node and assiging -[:MAINTAINS]->(:Bridge), -[:OWNS]->(:Bridge) relationships
+// previously had these rels as separate nodes, but the encoding is the same. Uniting to 1 node and using 2 rels to create context
+// Can possibly separate depending on additional information assertained from NBI data
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)<-[:DATA_FOR]-(row:Row)
+RETURN bridge, row.OWNER_022 AS owner, row.MAINTENANCE_021 AS maint
+','
 
+',
+{batchSize:10000,parallel:false}) YIELD batches, total
+RETURN batches, total
 
 
 
