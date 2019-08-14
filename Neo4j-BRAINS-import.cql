@@ -88,6 +88,21 @@ MERGE (file)-[:FILE_FOR]->(state)
 {batchSize:1, parallel:false}) YIELD batches, total
 RETURN batches, total
 
+// Connect rows per bridge in order by year
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)
+RETURN bridge
+','
+MATCH (bridge)<-[:DATA_FOR]-(row)<-[:CONTAINS]-(file)
+WITH bridge, row ORDER BY file.year ASC // ascending order
+WITH bridge, collect(row) AS orderedRows
+UNWIND range(0,size(orderedRows)-2) AS i
+WITH orderedRows[i] AS start, orderedRows[i+1] AS end
+MERGE (start)-[:NEXT_RECORD]->(end)
+',
+{batchSize:10000,parallel:false}) YIELD batches, total
+RETURN batches, total
 
 
 
@@ -369,16 +384,28 @@ RETURN batches, total
 
 
 
-// WIP
+
 // Create Entity node and assiging -[:MAINTAINS]->(:Bridge), -[:OWNS]->(:Bridge) relationships
 // previously had these rels as separate nodes, but the encoding is the same. Uniting to 1 node and using 2 rels to create context
 // Can possibly separate depending on additional information assertained from NBI data
 CALL apoc.periodic.iterate(
 '
-MATCH (bridge:Bridge)<-[:DATA_FOR]-(row:Row)
-RETURN bridge, row.OWNER_022 AS owner, row.MAINTENANCE_021 AS maint
+MATCH (bridge:Bridge)
+RETURN bridge
 ','
-
+MATCH (bridge)<-[:DATA_FOR]-(row:Row)
+WITH bridge, row.OWNER_022 AS ownerCode, row.MAINTENANCE_021 AS maintCode
+MERGE (entity:Entity {code: maintCode})
+ON CREATE SET entity.creadedOn = date()
+WITH bridge, ownerCode, maintCode
+MERGE (entity:Entity {code: ownerCode})
+ON CREATE SET entity.createdOn = date()
+WITH bridge, ownerCode, maintCode
+MATCH (owner:Entity {code: ownerCode})
+WITH bridge, owner, maintCode
+MATCH (maintainer:Entity {code: maintCode})
+MERGE (bridge)<-[:OWNS]-(owner)
+MERGE (bridge)<-[:MAINTAINS]-(maintainer)
 ',
 {batchSize:10000,parallel:false}) YIELD batches, total
 RETURN batches, total
