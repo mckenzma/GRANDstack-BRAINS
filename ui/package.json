@@ -20,6 +20,7 @@
     "react-leaflet": "^2.2.1",
     "react-leaflet-heatmap-layer": "^2.0.0",
     "react-leaflet-markercluster": "^2.0.0-rc3",
+    "react-map-gl": "^5.0.7",
     "react-mapbox-gl": "^3.9.2",
     "react-scripts": "^2.1.8",
     "serve": "^10.1.2",

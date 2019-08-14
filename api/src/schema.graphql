@@ -12,6 +12,14 @@ type State {
   numPlaces: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(p:Place) RETURN count(DISTINCT p)")
   numBridges: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(b:Bridge) RETURN count(DISTINCT b)")
 
+  chartBarBridgeByBuildYear: [BarChartPairs] @cypher(statement: """
+    MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(bridge:Bridge) 
+    WITH bridge.yearbuilt AS year, count(bridge) AS count
+    RETURN {year: year, count: count} AS datapoint
+    ORDER BY year ASC
+    """
+  )
+
   # chartHeatMapStateOwnerCount(owners: [String]): Int @cypher(statement: """
   #   MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
   #   WHERE owner.description in $owners
@@ -119,6 +127,12 @@ type Pairs {
   bridgeCount: Int
 }
 
+type BarChartPairs 
+{
+  year: Int
+  count: Int
+}
+
 type NodeCount {
   label: String
   count: Int
@@ -184,6 +198,8 @@ type Query {
   )
 
   Pairs(ownerDescription: String, bridgeCount: Int): [Pairs]
+
+  BarChartPairs(year: Int, count: Int): [BarChartPairs]
 
   # chartHeatMapStateOwner2(state: [String], owner: [String]): Int @cypher(statement: """
   #   MATCH (state:State)

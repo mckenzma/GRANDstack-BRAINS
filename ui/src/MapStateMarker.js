@@ -24,6 +24,8 @@ import Tab from "@material-ui/core/Tab";
 
 import PropTypes from "prop-types";
 
+import StateMarkerBarChart from "./StateMarkerBarChart";
+
 function TabContainer(props) {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -37,6 +39,9 @@ TabContainer.propTypes = {
 };
 
 const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
   closeButton: {
     position: "absolute",
     right: theme.spacing.unit,
@@ -83,8 +88,10 @@ class StateMarker extends React.Component {
   toggleDialog = (open, state_name) => () => {
     this.setState({
       open: open,
-      state_name: state_name
+      state_name: state_name //,
+      // selectedState: state_name
     });
+    console.log(state_name);
   };
 
   // constructor(props) {
@@ -134,6 +141,8 @@ class StateMarker extends React.Component {
               })}
 
               <Dialog
+                fullWidth={true}
+                scroll={this.state.scroll}
                 open={this.state.open}
                 onClose={this.toggleDialog(false, "")}
               >
@@ -145,24 +154,27 @@ class StateMarker extends React.Component {
                   {this.state.state_name}
                 </DialogTitle>
                 <DialogContent>
-                  <Tabs value={this.state.value} onChange={this.handleChange}>
-                    <Tab label="Item One" />
-                    <Tab label="Item Two" />
-                    <Tab label="Item Three" />
+                  <Tabs
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    variant="fullWidth"
+                  >
+                    <Tab label="Summary" />
+                    <Tab label="recommendations" /*disabled*/ />
                   </Tabs>
                   {this.state.value === 0 && (
-                    <TabContainer>Item One</TabContainer>
+                    <TabContainer>
+                      Enter summaries and queries here
+                      <StateMarkerBarChart
+                        selectedState={this.state.state_name}
+                      />
+                    </TabContainer>
                   )}
                   {this.state.value === 1 && (
-                    <TabContainer>Item Two</TabContainer>
+                    <TabContainer>
+                      Enter info about recommendations
+                    </TabContainer>
                   )}
-                  {this.state.value === 2 && (
-                    <TabContainer>Item Three</TabContainer>
-                  )}
-                  {/*<Typography gutterBottom>
-                        This is where custom queries and recommendations will be
-                        added!
-                      </Typography>*/}
                 </DialogContent>
               </Dialog>
             </div>
