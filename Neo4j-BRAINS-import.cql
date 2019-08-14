@@ -60,6 +60,17 @@ MERGE (file)-[:CONTAINS]->(row)
 {batchSize:10000,parallel:false}) YIELD batches, total
 RETURN batches, total
 
+// Connect files per state in order by year
+MATCH (state:State)
+WITH collect(state) AS states
+UNWIND states AS state
+MATCH (state)<-[:FILE_FOR]-(file)
+WITH state, file ORDER BY file.year ASC // ascending order
+WITH state, collect(file) AS orderedFiles
+UNWIND range(0,size(orderedFiles)-2) AS i
+WITH orderedFiles[i] AS start, orderedFiles[i+1] AS end
+MERGE (start)-[:NEXT_FILE]->(end)
+
 // Create state node and connect to file
 CALL apoc.periodic.iterate(
 '
@@ -324,14 +335,7 @@ WHERE state.abbreviation = row.state
 SET state.latitude_decimal = toFloat(row.latitude),
   state.longitude_decimal = toFloat(row.longitude)
 
-
-
-
-
-
-
-///////////////build state, county, place, bridge tree and connect to row
-// this is NEW ... keep!
+// Build (:State)<--(:County)<--(:Place)<--(:Bridge) tree
 CALL apoc.periodic.iterate(
 '
 MATCH (row:Row)
@@ -360,6 +364,9 @@ MERGE (row)-[:DATA_FOR]->(bridge)
 ',
 {batchSize:10000,parallel:false}) YIELD batches, total
 RETURN batches, total
+
+
+
 
 
 
