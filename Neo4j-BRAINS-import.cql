@@ -361,40 +361,7 @@ MERGE (row)-[:DATA_FOR]->(bridge)
 {batchSize:10000,parallel:false}) YIELD batches, total
 RETURN batches, total
 
-// this is old remove
-// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
-LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
-// Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
-LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row1
-WITH CASE
-	WHEN NOT row1.Year IS NULL THEN collect(row1.URL)
-    END AS fileURLs
-UNWIND fileURLs as fileURL
-CALL apoc.periodic.iterate(
-'
-LOAD CSV WITH HEADERS FROM $url AS row RETURN row
 
-','
-MERGE (state:State {id: row.STATE_CODE_001})
-MERGE (state)<-[:OF_STATE]-(county:County {id: row.COUNTY_CODE_003})
-MERGE (county)<-[:OF_COUNTY]-(place:Place {id: row.PLACE_CODE_004})
-MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
-                                               row.COUNTY_CODE_003 + "_" + 
-                                               row.PLACE_CODE_004 + "_" + 
-                                               row.STRUCTURE_NUMBER_008 + 
-                                               "_LAT_" + row.LAT_016 + 
-                                               "_LONG_" +row.LONG_017})
-ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
-			  bridge.latitude = row.LAT_016,
-			  bridge.longitude = row.LONG_017,
-			  bridge.yearbuilt = toInteger(row.YEAR_BUILT_027),
-			  
-			  place.name = row.PLACE_CODE_004,
-			  county.name = row.COUNTY_CODE_003,
-			  state.name = row.STATE_CODE_001 // maybe change this to state.code?
-',
-{batchSize:10000, parallel:false, params:{url:fileURL}}) YIELD batches, total
-RETURN batches, total
 
 
 
@@ -1267,6 +1234,11 @@ RETURN batches, total
 ///////////////////////////////////////////////
 // DEFINED QUERIES TO EXPLORE DATA
 ///////////////////////////////////////////////
+
+// Intify count of total bridges and distinct bridges per state to determine if duplicate bridges
+MATCH (state:State)<-[*]-(bridge:Bridge)
+WITH state.name AS stateName, count(bridge) AS totalBridges, count(DISTINCT bridge.name) AS distBridges
+RETURN stateName, totalBridges, distBridges, totalBridges - distBridges AS diff
 
 // Simple query to show number of counties, places, bridges per state
 MATCH (s:State)<--(c:County)
