@@ -12,22 +12,123 @@
 //CREATE INDEX ON :MaintenanceResp(id);
 //CREATE INDEX ON :InspectionDate(id);
 
-//CREATE CONSTRAINT ON (file:File) ASSERT (file.url, file.folder, file.name) IS NODE KEY;
-
 // Create nodes for each file URL
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row
 // Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
-LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row
+// LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row
 WITH row
 WHERE NOT row.Year IS NULL
+//AND row.Import = "Yes"
 WITH row, row.URL AS fileUrl
 MERGE (file:File {url: fileUrl})
 ON CREATE SET file.url = fileUrl,
               file.folder = row.Folder,
               file.name = row.File,
+              file.year = row.Year,
               file.createdOn = timestamp()
 
+// Iterate through files and import rows
+MATCH (file:File)
+WHERE NOT (file)-[:CONTAINS]->(:Row)
+WITH collect(file.url) AS fileURLs
+UNWIND fileURLs AS fileURL
+CALL apoc.periodic.iterate(
+'
+CALL apoc.load.csv($url,{header:true,quoteChar:"\u0000"}) YIELD map AS row
+RETURN row
+','
+CREATE (fileRow:RowRaw {createdOn: date()})
+SET fileRow += row,
+fileRow.url = $url,
+fileRow.createdOn = date()
+',
+{batchSize:10000,parallel:false,params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
+
+// Connect rows to files
+CALL apoc.periodic.iterate(
+'
+MATCH (row:Row)
+WHERE NOT (row)<-[:CONTAINS]-()
+RETURN row
+','
+MATCH (file:File)
+WHERE file.url = row.url
+MERGE (file)-[:CONTAINS]->(row)
+',
+{batchSize:10000,parallel:false}) YIELD batches, total
+RETURN batches, total
+
+// Create state node and connect to file
+CALL apoc.periodic.iterate(
+'
+MATCH (file:File)
+WHERE NOT (file)-[:FILE_FOR]->()
+RETURN file
+','
+MATCH (file)-[:CONTAINS]->(row)
+WITH file, row LIMIT 1
+MERGE (state:State {code: row.STATE_CODE_001})
+ON CREATE SET state.createdOn = date()
+WITH file, state
+MERGE (file)-[:FILE_FOR]->(state)
+',
+{batchSize:1, parallel:false}) YIELD batches, total
+RETURN batches, total
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Add row count for files
+// will use this for tracking failed row imports
+// maybe increase batchSize for faster run?
+CALL apoc.periodic.iterate(
+'
+MATCH (file:File)
+WHERE NOT exists(file.rowCount)
+RETURN file
+','
+LOAD CSV WITH HEADERS FROM file.url AS row
+WITH file, count(row) AS rowCount
+SET file.rowCount = rowCount
+',
+{batchSize:10,parallel:false}) YIELD batches, total
+RETURN batches, total
+
+// Add row sizes for files
+CALL apoc.periodic.iterate(
+'
+MATCH (file:File)
+WHERE NOT exists(file.rowSize)
+RETURN file
+','
+CALL apoc.load.csv(file.url,{header:true}) YIELD list AS list
+WITH file, size(list) AS rowSize
+WITH file, collect(DISTINCT rowSize) AS rowSizes
+SET file.rowSize = rowSizes
+',
+{batchSize:10,parallel:false}) YIELD batches, total
+RETURN batches, total
 
 
 //CREATE CONSTRAINT ON (fileRow:Row) ASSERT (fileRow.fileURL, fileRow.STRUCTURE_NUMBER_008) IS NODE KEY;
@@ -35,7 +136,7 @@ ON CREATE SET file.url = fileUrl,
 // Load CSVs from (:File) nodes and create (:Row) nodes
 MATCH (file:File)
 WHERE NOT (file)-[:CONTAINS]->(:Row)
-WITH file, collect(file.url) AS fileURLs
+WITH collect(file.url) AS fileURLs
 UNWIND fileURLs AS fileURL
 CALL apoc.periodic.iterate(
 '
@@ -51,6 +152,8 @@ ON CREATE SET fileRow.fileURL = $url,
 RETURN batches, total
 
 // Connect (:File)-[:CONTAINS]->(:Row)
+MATCH (file:File)
+WHERE NOT 
 
 
 // Create States
@@ -193,7 +296,7 @@ SET state.abbreviation =
           WHEN "55" THEN "Wisconsin"
           WHEN "56" THEN "Wyoming"
           WHEN "72" THEN "Puerto Rico"
-        END
+        END;
 
 // Connect bordering states
 WITH "https://docs.google.com/spreadsheets/d/14ZJLZKZSlfgfo_pjuWKB8UBvkcgBncaX0xziqFMLpE0/export?format=csv&id=14ZJLZKZSlfgfo_pjuWKB8UBvkcgBncaX0xziqFMLpE0&gid=502947187" AS fileURL
@@ -224,6 +327,41 @@ SET state.latitude_decimal = toFloat(row.latitude),
 
 
 
+
+
+
+///////////////build state, county, place, bridge tree and connect to row
+// this is NEW ... keep!
+CALL apoc.periodic.iterate(
+'
+MATCH (row:Row)
+WHERE NOT (row)-[:DATA_FOR]->()
+RETURN row
+','
+MATCH (state:State {code: row.STATE_CODE_001})
+MERGE (state)<-[:OF_STATE]-(county:County {code: row.COUNTY_CODE_003})
+MERGE (county)<-[:OF_COUNTY]-(place:Place {code: row.PLACE_CODE_004})
+MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+                                               row.COUNTY_CODE_003 + "_" + 
+                                               row.PLACE_CODE_004 + "_" + 
+                                               row.STRUCTURE_NUMBER_008 + 
+                                               "_LAT_" + row.LAT_016 + 
+                                               "_LONG_" +row.LONG_017})
+ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
+        bridge.latitude = row.LAT_016,
+        bridge.longitude = row.LONG_017,
+        bridge.yearbuilt = toInteger(row.YEAR_BUILT_027),
+        
+        place.code = row.PLACE_CODE_004,
+        county.code = row.COUNTY_CODE_003,
+        state.code = row.STATE_CODE_001
+WITH row, bridge
+MERGE (row)-[:DATA_FOR]->(bridge)
+',
+{batchSize:10000,parallel:false}) YIELD batches, total
+RETURN batches, total
+
+// this is old remove
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
 // Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
@@ -571,6 +709,35 @@ RETURN batches, total
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+// Load and create :Inspection
+// leads to websocket failure
+MATCH (file:File)
+WHERE NOT (file)-[:CONTAINS]->(:Row)
+WITH collect(file.url) AS fileURLs
+UNWIND fileURLs AS fileURL
+CALL apoc.periodic.iterate(
+'
+LOAD CSV WITH HEADERS FROM $url AS row
+RETURN row
+','
+CREATE (inspectionRaw:InspectionRaw {createdOn: date(),
+                     STATE_CODE_001: row.STATE_CODE_001,
+                        COUNTY_CODE_003: row.COUNTY_CODE_003,
+                        PLACE_CODE_004: row.PLACE_CODE_004,
+                        STRUCTURE_NUMBER_008: row.STRUCTURE_NUMBER_008,
+                        DECK_COND_058: row.DECK_COND_058,
+                        SUPERSTRUCTURE_COND_059: row.SUPERSTRUCTURE_COND_059,
+                        SUBSTRUCTURE_COND_060: row.SUBSTRUCTURE_COND_060,
+                        CHANNEL_COND_061: row.CHANNEL_COND_061,
+                        CULVERT_COND_062: row.CULVERT_COND_062,
+                        DATE_OF_INSPECT_090: row.DATE_OF_INSPECT_090})
+',
+{batchSize:5000,parallel:false,params:{url:fileURL}}) YIELD batches, total
+RETURN batches, total
+
+
+
+
 // Load and create :InspectionDate
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row1
