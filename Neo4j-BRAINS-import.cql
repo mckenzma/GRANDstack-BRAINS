@@ -467,24 +467,116 @@ MERGE (start)-[:NEXT_RECORD]->(end)
 RETURN batches, total
 
 
+////////////////////////////////////////
+// WIP for connecting shared bridges and a few things
+////////////////////////////////////////
+// detach delete bridges for not
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)
+RETURN bridge
+','
+DETACH DELETE bridge
+',
+{batchSize:10000,parallel:false})
 
+// Create constraint & node key
+//CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.bridge_code) IS NODE KEY
+//DROP CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.bridge_code) IS NODE KEY
+CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.bridge_code) IS NODE KEY
 
+// create/merge bridge & connect to row
+CALL apoc.periodic.iterate(
+'
+MATCH (row:Row)
+WHERE NOT (row)-[:DATA_FOR]->()
+RETURN row
+','
+MERGE (bridge:Bridge {state_code: row.STATE_CODE_001, 
+            //county_code: row.COUNTY_CODE_003, 
+                      //place_code: row.PLACE_CODE_004, 
+                      bridge_code: row.STRUCTURE_NUMBER_008})
+ON CREATE SET bridge.createdOn = datetime()
+//ON CREATE SET bridge.id = row.STATE_CODE_001 + "_" + 
+//                                               row.COUNTY_CODE_003 + "_" + 
+//                                               row.PLACE_CODE_004 + "_" + 
+//                                               row.STRUCTURE_NUMBER_008 + 
+//                                               "_LAT_" + row.LAT_016 + 
+//                                               "_LONG_" +row.LONG_017bridge.name = row.STRUCTURE_NUMBER_008,
+//        bridge.latitude = row.LAT_016,
+//        bridge.longitude = row.LONG_017,
+//        bridge.yearbuilt = toInteger(row.YEAR_BUILT_027)
+CREATE (row)-[:DATA_FOR]->(bridge)
+',
+{batchSize:10000,parallel:false})
 
+// connect bridge to existing (State)<--(County)<--(Place) tree
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)
+WHERE NOT (bridge)-[:OF_PLACE]->()
+RETURN bridge
+','
+MATCH (state:State {code: bridge.state_code})
+MERGE (state)<-[:OF_STATE]-(county:County {code: bridge.county_code})
+MERGE (county)<-[:OF_COUNTY]-(place:Place {code: bridge.place_code})
+ON CREATE SET place.code = bridge.place_code,
+        county.code = bridge.county_code,
+        state.code = bridge.state_code
+WITH place, bridge
+MERGE (bridge)-[:OF_PLACE]->(place)
+',
+{batchSize:10000,parallel:false}) YIELD batches, total
+RETURN batches, total
 
+// Connect bridges directly to state (temporary while we navigate the place/county/bridge "duplicates")
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)
+WHERE NOT (bridge)-[:LOCATED_IN]->()
+RETURN bridge
+','
+MATCH (state:State)
+WHERE state.code = bridge.state_code
+CREATE (bridge)-[:LOCATED_IN]->(state)
+',
+{batchSize:10000,parallel:false})
 
+// connect "shared" bridge
+// re-write to improve connection between bridges
+CALL apoc.periodic.iterate(
+'
+MATCH (row:Row)
+WHERE NOT row.OTHER_STATE_CODE_098A = ""
+AND NOT row.OTHR_STATE_STRUC_NO_099 = ""
+MATCH (row)-[:DATA_FOR]->(bridge)
+RETURN bridge, row
+','
+MATCH (adj_bridge:Bridge {state_code: left(row.OTHER_STATE_CODE_098A,2),
+              bridge_code: row.OTHR_STATE_STRUC_NO_099 })
+MERGE (bridge)-[:SHARED_BRIDGE]->(adj_bridge)
+',
+{batchSize:10000})
 
+// showing connected bridges
+MATCH p=(s1)<-[:LOCATED_IN]-(b1)-[r:SHARED_BRIDGE]->(b2)-[:LOCATED_IN]->(s2) RETURN p LIMIT 25
 
+// starting to look at percent responsibility for shared bridges
+MATCH (s1)<-[:LOCATED_IN]-(b1)-[:SHARED_BRIDGE]-(b2)-[:LOCATED_IN]->(s2),
+    (b1)<-[:DATA_FOR]-(row1), 
+      (b2)<-[:DATA_FOR]-(row2)
+RETURN s1.name AS S1,
+     b1.bridge_code AS B1,
+       row2.OTHER_STATE_PCNT_098B AS B1_PCNT,
+       labels(row2) AS labels2,
+       [collect(DISTINCT row2.OTHER_STATE_PCNT_098B), collect(DISTINCT row1.OTHER_STATE_PCNT_098B)] AS PCNT_Pairs,
+       s2.name AS S2,
+       b2.bridge_code AS B2,
+       row1.OTHER_STATE_PCNT_098B AS B2_PCNT,
+       labels(row1) AS labels1
 
-
-
-
-
-
-
-
-
-
-
+////////////////////////////////////////
+////////////////////////////////////////
 
 
 // Add row count for files
