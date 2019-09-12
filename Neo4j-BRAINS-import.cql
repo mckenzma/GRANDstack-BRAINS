@@ -710,8 +710,11 @@ WHERE s1.abbreviation = state
 UNWIND borderingStates AS borderingState
 MATCH (s2:State)
 WHERE s2.abbreviation = borderingState
-AND NOT (s1)<-[:BORDERS]-(s2)
-MERGE (s1)-[:BORDERS]->(s2)
+AND NOT (s1)<-[:BORDERS_STATE]-(s2)
+MERGE (s1)-[:BORDERS_STATE]->(s2)
+
+// Connect bordering counties
+// TODO
 
 // Add Lat & Long to States
 LOAD CSV WITH HEADERS FROM 'https://docs.google.com/spreadsheets/d/1jMFJpqqHgtkU4md4fub6nevmCH--rCKMh2Dxdrp4N30/export?format=csv&id=1jMFJpqqHgtkU4md4fub6nevmCH--rCKMh2Dxdrp4N30&gid=0' AS row
