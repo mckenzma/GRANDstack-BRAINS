@@ -2,6 +2,13 @@
 // DEFINED QUERIES TO EXPLORE DATA
 ///////////////////////////////////////////////
 
+// Query schema meta sub graph
+CALL apoc.meta.subGraph({
+	labels:["File","Row","State","County","Place","Bridge"],
+    rels:["DATA_FOR","CONTAINS","NEXT_FILE","NEXT_RECORD","OF_STATE","OF_COUNTY","BORDERS_STATE","SHARED_BRIDGE","LOCATED_IN","FILE_FOR"],
+    excludes:["DelimitedFile","NoDelimiterFile"]
+})
+
 // Intify count of total bridges and distinct bridges per state to determine if duplicate bridges
 MATCH (state:State)<-[*]-(bridge:Bridge)
 WITH state.name AS stateName, count(bridge) AS totalBridges, count(DISTINCT bridge.name) AS distBridges
