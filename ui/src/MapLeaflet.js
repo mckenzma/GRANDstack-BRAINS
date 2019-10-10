@@ -98,9 +98,8 @@ class MapLeaf extends React.Component {
         //${this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' }
         query={gql`
           query bridgesPaginateQuery(
-            $selected: [String!] #$yearSelected: [Int!] #$maintRespSelected: [String!]
-          ) #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
-          {
+            $selected: [String!] #$yearSelected: [Int!] #$maintRespSelected: [String!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+          ) {
             Bridge(
               filter: {
                 place: { county: { state: { abbreviation_in: $selected } } }
@@ -159,7 +158,7 @@ class MapLeaf extends React.Component {
                   })}
                   {/* End Revised Bridge Query */}
                 </MarkerClusterGroup>
-                <StateMarker />
+                {/*<StateMarker />*/}
               </Map>
 
               {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
