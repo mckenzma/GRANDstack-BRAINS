@@ -9,6 +9,14 @@ CALL apoc.meta.subGraph({
     excludes:["DelimitedFile","NoDelimiterFile"]
 })
 
+MATCH (s1:State)<-[r1:LOCATED_IN]-(b1:Bridge)-[r2:SHARED_BRIDGE]-(b2:Bridge)-[r3:LOCATED_IN]->(s2:State)
+WITH s1, s2, head(collect(distinct([b1, b2, r1, r2, r3]))) as bridgePairs
+RETURN s1, s2, bridgePairs
+
+MATCH (s1:State)<-[r1:LOCATED_IN]-(b1:Bridge)-[r2:SHARED_BRIDGE]-(b2:Bridge)-[r3:LOCATED_IN]->(s2:State)
+WITH s1, s2, head(collect(distinct([b1, b2, r1, r2, r3]))) as bridgePairs
+RETURN s1, s2, bridgePairs
+
 // Intify count of total bridges and distinct bridges per state to determine if duplicate bridges
 MATCH (state:State)<-[*]-(bridge:Bridge)
 WITH state.name AS stateName, count(bridge) AS totalBridges, count(DISTINCT bridge.name) AS distBridges
