@@ -18,6 +18,9 @@ import DonutChartState from "./ChartDonutState";
 import BarChartState from "./ChartBarState";
 import HeatMapState from "./ChartHeatState";
 
+import StackedBarChart1 from "./StackedBarChart1";
+import StackedBarChart2 from "./StackedBarChart2";
+
 const styles = theme => ({
   root: {
     flexGrow: 1
@@ -79,7 +82,7 @@ class SummaryDialog extends React.Component {
           <DialogContent>
             <div className={classes.root}>
               <Grid container spacing={24}>
-                <Grid item xs={12} md={6}>
+                {/*<Grid item xs={12} md={6}>
                   <Paper className={classes.paper}>
                     <DonutChartState
                       selected={this.props.selected}
@@ -88,8 +91,8 @@ class SummaryDialog extends React.Component {
                       // ownerSelected={this.state.ownerSelected}
                     />
                   </Paper>
-                </Grid>
-                <Grid item xs={12} md={6}>
+                </Grid>*/}
+                {/*<Grid item xs={12} md={6}>
                   <Paper className={classes.paper}>
                     <BarChartState
                       selected={this.props.selected}
@@ -98,8 +101,8 @@ class SummaryDialog extends React.Component {
                       // ownerSelected={this.state.ownerSelected}
                     />
                   </Paper>
-                </Grid>
-                <Grid item xs={12}>
+                </Grid>*/}
+                {/*<Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <HeatMapState
                       selected={this.props.selected}
@@ -107,6 +110,16 @@ class SummaryDialog extends React.Component {
                       // maintRespSelected={this.state.maintRespSelected}
                       ownerSelected={this.props.ownerSelected}
                     />
+                  </Paper>
+                </Grid>*/}
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>
+                    <StackedBarChart1 />
+                  </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                  <Paper className={classes.paper}>
+                    <StackedBarChart2 />
                   </Paper>
                 </Grid>
               </Grid>
