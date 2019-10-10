@@ -89,18 +89,18 @@ class FiltersDialog extends React.Component {
               triggerParentUpdate={this.updateThisProperty}
               selected={this.props.selected}
             />
-            <BuildYearFilter
+            {/*<BuildYearFilter
               triggerParentUpdate={this.updateThisProperty}
               yearSelected={this.props.yearSelected}
-            />
-            <MaintenanceResponsibilityFilter
+            />*/}
+            {/*<MaintenanceResponsibilityFilter
               triggerParentUpdate={this.updateThisProperty}
               maintRespSelected={this.props.maintRespSelected}
-            />
-            <OwnerFilter
+            />*/}
+            {/*<OwnerFilter
               triggerParentUpdate={this.updateThisProperty}
               ownerSelected={this.props.ownerSelected}
-            />
+            />*/}
           </DialogContent>
           <DialogActions>
             <Button
