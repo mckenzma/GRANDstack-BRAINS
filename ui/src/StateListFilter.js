@@ -119,7 +119,7 @@ class StateListFilter extends React.Component {
         query={gql`
           {
             State {
-              id
+              # id
               name
               code
               abbreviation
