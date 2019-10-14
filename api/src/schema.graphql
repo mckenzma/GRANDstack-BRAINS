@@ -201,6 +201,24 @@ type RowCountByState {
   count: Int
 }
 
+type stackedBarChart_Rows_Per_Year_Per_State_Data_Point {
+  state: String
+  data: [RowCountByYear] @cypher(statement: """
+    MATCH (s:State {abbreviation: this.state})<-[:FILE_FOR]-(ndf:NoDelimiterFile)
+    WITH s, ndf
+    ORDER BY ndf.year DESC
+    MATCH (ndf)-[r:CONTAINS]->()
+    WITH ndf.year AS year, count(r) AS count
+    RETURN {year: year, count: count}
+
+  """)
+}
+
+type RowCountByYear {
+  year: String
+  count: Int
+}
+
 type Query {
     
   bridge(state: String, owner: String): [Bridge] @cypher(statement: """
@@ -268,6 +286,19 @@ type Query {
     """
   )
 
+  stackedBarChart_Rows_Per_Year_Per_State__1: [stackedBarChart_Rows_Per_Year_Per_State_Data_Point] @cypher(statement: """
+      MATCH (s:State) 
+      WITH s
+      ORDER BY s.abbreviation ASC
+      MATCH (s)<-[:FILE_FOR]-(ndf:NoDelimiterFile)
+      WITH s, ndf, ndf.year AS year
+      ORDER BY year DESC
+      MATCH (ndf)-[r:CONTAINS]->()
+      WITH s.abbreviation AS state, year, count(r) AS count
+      RETURN {state: state, data: collect({year: year, count: count})}
+    """
+  )
+
   # stackedBarChart_Rows_Per_State_Per_Year__1: [stackedBarChart_Rows_Per_State_Per_Year_Data_Point] @cypher(statement: """
   #     MATCH (ndf:NoDelimiterFile)
   #     RETURN DISTINCT ndf.year AS year
@@ -278,6 +309,8 @@ type Query {
   # stackedBarChart_Rows_Per_State_Per_Year_Data_Point(year: String, data: [RowCountByState]): stackedBarChart_Rows_Per_State_Per_Year_Data_Point
 
   RowCountByState(state: String, count: Int): [RowCountByState]
+
+  RowCountByYear(year: String, count: Int): [RowCountByYear]
 
   # chartHeatMapStateOwner2(state: [String], owner: [String]): Int @cypher(statement: """
   #   MATCH (state:State)

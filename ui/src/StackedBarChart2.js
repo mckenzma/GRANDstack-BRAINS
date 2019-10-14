@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import Chart from "react-apexcharts";
 
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+
 class StackedBarChart2 extends React.Component {
   constructor(props) {
     super(props);
@@ -55,7 +58,7 @@ class StackedBarChart2 extends React.Component {
           }
         ],
         title: {
-          text: "Bridge Count Breakdown by Year (selected) and State"
+          text: "Bridge Count Breakdown by State (selected) and Year"
         },
         xaxis: {
           categories: ["AZ", "WA", "DC", "MT", "MN", "VA"],
@@ -92,14 +95,61 @@ class StackedBarChart2 extends React.Component {
 
   render() {
     return (
-      <div className="bar">
-        <Chart
-          options={this.state.options}
-          series={this.state.options.series}
-          type="bar"
-          // width="380"
-        />
-      </div>
+      <Query
+        query={gql`
+          {
+            stackedBarChart_Rows_Per_Year_Per_State__1 {
+              state
+              data {
+                year
+                count
+              }
+            }
+          }
+        `}
+      >
+        {({ loading, error, data }) => {
+          if (loading) return <p>Loading...</p>;
+          if (error) return <p>Error</p>;
+
+          const options = {
+            ...this.state.options,
+            xaxis: {
+              categories: data.stackedBarChart_Rows_Per_Year_Per_State__1
+                .slice(0, 1)
+                .map(n => {
+                  return n.data.slice().map(s => {
+                    return s.year;
+                  });
+                })[0]
+            }
+          };
+
+          const series = data.stackedBarChart_Rows_Per_Year_Per_State__1
+            .slice()
+            .map(n => {
+              return {
+                name: n.state,
+                data: n.data.slice().map(d => {
+                  return d.count;
+                })
+              };
+            });
+
+          return (
+            <div className="bar">
+              <Chart
+                // options={this.state.options}
+                options={options}
+                // series={this.state.options.series}
+                series={series}
+                type="bar"
+                // width="380"
+              />
+            </div>
+          );
+        }}
+      </Query>
     );
   }
 }
