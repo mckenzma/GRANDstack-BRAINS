@@ -73,81 +73,78 @@ class GraphSummaryDialog extends React.Component {
   };
 
   render() {
+    // return (
+    //   <Query
+    //     query={gql`
+    //       {
+    //         relationshipSummaryCount {
+    //           type
+    //           count
+    //         }
+    //       }
+    //     `}
+    //   >
+    //     {({ loading, error, data }) => {
+    //       if (loading) return <p>Loading...</p>;
+    //       if (error) return <p>Error</p>;
+
+    // console.log(data.relationshipSummaryCount);
+
     return (
-      <Query
-        query={gql`
-          {
-            relationshipSummaryCount {
-              type
-              count
-            }
-          }
-        `}
-      >
-        {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>;
-          if (error) return <p>Error</p>;
+      // <div>
+      //   {data.relationshipSummaryCount.map(rsc => {
+      //   // {data}
+      //     return(
+      //       <p>{rsc.type}: {rsc.count}</p>
+      //     );
+      //   })}
+      //   </div>
 
-          // console.log(data.relationshipSummaryCount);
-
-          return (
-            // <div>
-            //   {data.relationshipSummaryCount.map(rsc => {
-            //   // {data}
-            //     return(
-            //       <p>{rsc.type}: {rsc.count}</p>
-            //     );
-            //   })}
-            //   </div>
-
-            <div>
-              <ListItem
-                button
-                variant="outlined"
-                color="secondary"
-                onClick={this.handleClickOpen}
-              >
-                <ListItemText>Graph Summary</ListItemText>
-              </ListItem>
-              <Dialog
-                onClose={this.handleClose}
-                aria-labelledby="customized-dialog-title"
-                open={this.state.open}
-                fullWidth={true}
-                maxWidth={this.state.maxWidth}
-                scroll={this.state.scroll}
-                // aria-labelledby="scroll-dialog-title"
-              >
-                <DialogTitle
-                  id="customized-dialog-title"
-                  onClose={this.handleClose}
-                >
-                  Graph Data Summary
-                </DialogTitle>
-                <DialogContent>
-                  <Grid container spacing={24}>
-                    <Grid item xs={12} md={6}>
-                      <GraphSummaryNodes />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <GraphSummaryRelationships />
-                    </Grid>
-                  </Grid>
-                  {/*({data.relationshipSummaryCount.map(rsc => {
+      <div>
+        <ListItem
+          button
+          variant="outlined"
+          color="secondary"
+          onClick={this.handleClickOpen}
+        >
+          <ListItemText>Graph Summary</ListItemText>
+        </ListItem>
+        <Dialog
+          onClose={this.handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={this.state.open}
+          fullWidth={true}
+          maxWidth={this.state.maxWidth}
+          scroll={this.state.scroll}
+          // aria-labelledby="scroll-dialog-title"
+        >
+          <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+            Graph Data Summary
+          </DialogTitle>
+          <DialogContent>
+            <Grid container spacing={24}>
+              <Grid item xs={12} md={6}>
+                <GraphSummaryNodes />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <GraphSummaryRelationships />
+              </Grid>
+            </Grid>
+            {/*({data.relationshipSummaryCount.map(rsc => {
                       return(
                         <p key={rsc.type}>{rsc.type}: {rsc.count}</p>
                       );
                     })}*/}
-                  {/*<Typography gutterBottom>
+            {/*<Typography gutterBottom>
                     Enter information from query about graph strucutre
                   </Typography>*/}
-                </DialogContent>
-              </Dialog>
-            </div>
-          );
-        }}
-      </Query>
+          </DialogContent>
+        </Dialog>
+      </div>
     );
+    //     }}
+    //   </Query>
+    // );
   }
 }
 
