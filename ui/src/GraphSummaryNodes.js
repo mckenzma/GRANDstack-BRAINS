@@ -11,6 +11,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
 import { TableSortLabel } from "@material-ui/core";
 
+import Loading from "./Loading";
+
 const styles = theme => ({
   root: {
     maxWidth: 700,
@@ -64,7 +66,8 @@ class GraphSummaryNodes extends React.Component {
         `}
       >
         {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>;
+          // if (loading) return <p>Loading...</p>;
+          if (loading) return <Loading />;
           if (error) return <p>Error</p>;
 
           return (
