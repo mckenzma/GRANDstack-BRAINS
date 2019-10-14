@@ -35,33 +35,33 @@ class StackedBarChart2 extends React.Component {
           width: 1,
           colors: ["#fff"]
         },
-        series: [
-          {
-            name: "Rating 0",
-            data: [44, 55, 41, 37, 22, 43]
-          },
-          {
-            name: "Rating 1",
-            data: [53, 32, 33, 52, 13, 43]
-          },
-          {
-            name: "Rating 2",
-            data: [12, 17, 11, 9, 15, 11]
-          },
-          {
-            name: "Rating 3",
-            data: [9, 7, 5, 8, 6, 9]
-          },
-          {
-            name: "Rating 4",
-            data: [25, 12, 19, 32, 25, 24]
-          }
-        ],
+        // series: [
+        //   {
+        //     name: "Rating 0",
+        //     data: [44, 55, 41, 37, 22, 43]
+        //   },
+        //   {
+        //     name: "Rating 1",
+        //     data: [53, 32, 33, 52, 13, 43]
+        //   },
+        //   {
+        //     name: "Rating 2",
+        //     data: [12, 17, 11, 9, 15, 11]
+        //   },
+        //   {
+        //     name: "Rating 3",
+        //     data: [9, 7, 5, 8, 6, 9]
+        //   },
+        //   {
+        //     name: "Rating 4",
+        //     data: [25, 12, 19, 32, 25, 24]
+        //   }
+        // ],
         title: {
-          text: "Bridge Count Breakdown by State (selected) and Year"
+          text: "Rows per File Year per State"
         },
         xaxis: {
-          categories: ["AZ", "WA", "DC", "MT", "MN", "VA"],
+          // categories: ["AZ", "WA", "DC", "MT", "MN", "VA"],
           labels: {
             formatter: function(val) {
               return val /*+ "K"*/;
