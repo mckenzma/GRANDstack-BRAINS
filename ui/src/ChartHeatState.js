@@ -4,6 +4,8 @@ import Chart from "react-apexcharts";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
+import Loading from "./Loading";
+
 function getSorting(order, orderBy) {
   return order === "desc"
     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
@@ -123,7 +125,8 @@ class HeatMapState extends React.Component {
         }}
       >
         {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>;
+          // if (loading) return <p>Loading...</p>;
+          if (loading) return <Loading />;
           if (error) return <p>Error</p>;
 
           // console.log(data);
