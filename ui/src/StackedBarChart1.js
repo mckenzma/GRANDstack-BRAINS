@@ -59,7 +59,6 @@ class StackedBarChart1 extends React.Component {
         //   }
         // ],
         title: {
-          // text: "Bridge Count Breakdown by Year and Rating"
           text: "Rows per State per File Year"
         },
         xaxis: {
@@ -123,26 +122,15 @@ class StackedBarChart1 extends React.Component {
                   return n.data.slice().map(s => {
                     return s.state;
                   });
-                })
+                })[0]
             }
           };
 
-          // console.log(data);
-
-          console.log(options.xaxis.categories);
-
-          // const series = [
-          //   {
-          //     name: data.stackedBarChart_Rows_Per_State_Per_Year__1.slice()
-          //       .map(n => {
-          //         return n.year;
-          //       }),
-          //     // data: data.State.slice()
-          //     //   .map(n => {
-          //     //     return n.numRows;
-          //     //   })
-          //   }
-          // ];
+          ///////
+          // 1993 PR is missing from query! WHY?
+          // PR93.txt connect to Oregon for some weird reason...
+          ///////
+          console.log(data);
 
           const series = data.stackedBarChart_Rows_Per_State_Per_Year__1
             .slice()
@@ -155,21 +143,7 @@ class StackedBarChart1 extends React.Component {
               };
             });
 
-          // const series = [data.State.slice()
-          //   .map(n => {
-          //     return {
-          //       name: n.stackedBarChart_Rows_Per_State_Per_Year.map(c => {
-          //         return c.year;
-          //       }),
-          //       data: n.stackedBarChart_Rows_Per_State_Per_Year.map(c => {
-          //         return c.count;
-          //       })
-          //     }
-          //   })
-          // ];
-
-          // console.log(data);
-          // console.log(series);
+          console.log(series);
 
           return (
             <div className="bar">
