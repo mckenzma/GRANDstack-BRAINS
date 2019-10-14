@@ -117,11 +117,11 @@ class SummaryDialog extends React.Component {
                     <StackedBarChart1 />
                   </Paper>
                 </Grid>
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <StackedBarChart2 />
                   </Paper>
-                </Grid>
+                </Grid>*/}
               </Grid>
             </div>
           </DialogContent>

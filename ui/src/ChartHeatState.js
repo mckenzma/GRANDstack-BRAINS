@@ -126,7 +126,7 @@ class HeatMapState extends React.Component {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
-          console.log(data);
+          // console.log(data);
 
           const series = data.State.slice()
             .sort(getSorting(order, orderBy))
