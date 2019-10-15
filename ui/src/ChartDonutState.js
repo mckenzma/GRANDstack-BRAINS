@@ -80,7 +80,7 @@ class DonutChartState extends React.Component {
                 series={data.State.slice()
                   .sort(getSorting(order, orderBy))
                   .map(n => {
-                    return n.numBridges;
+                    return n.numBridges.toLocaleString();
                   })}
                 type="donut"
                 // width="380"

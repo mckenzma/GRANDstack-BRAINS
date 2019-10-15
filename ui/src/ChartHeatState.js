@@ -141,7 +141,7 @@ class HeatMapState extends React.Component {
                 data: n.chartHeatMapStateOwners.map(s => {
                   return {
                     x: s.ownerDescription,
-                    y: s.bridgeCount
+                    y: s.bridgeCount.toLocaleString()
                   };
                 })
               };

@@ -124,7 +124,7 @@ class GraphSummaryRelationships extends React.Component {
                             {n.type}
                           </TableCell>
                           {/*<TableCell numeric>{n.count.toInt()}</TableCell>*/}
-                          <TableCell>{n.count}</TableCell>
+                          <TableCell>{n.count.toLocaleString()}</TableCell>
                         </TableRow>
                       );
                     })}

@@ -124,7 +124,7 @@ class GraphSummaryNodes extends React.Component {
                             {n.label}
                           </TableCell>
                           {/*<TableCell numeric>{n.count.toInt()}</TableCell>*/}
-                          <TableCell>{n.count}</TableCell>
+                          <TableCell>{n.count.toLocaleString()}</TableCell>
                         </TableRow>
                       );
                     })}

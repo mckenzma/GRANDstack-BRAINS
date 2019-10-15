@@ -91,7 +91,7 @@ class BarChartState extends React.Component {
               data: data.State.slice()
                 .sort(getSorting(order, orderBy))
                 .map(n => {
-                  return n.numBridges;
+                  return n.numBridges.toLocaleString();
                 })
             }
           ];
