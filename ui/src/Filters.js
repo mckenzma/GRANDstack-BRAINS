@@ -12,8 +12,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 import StateListFilter from "./StateListFilter";
 import BuildYearFilter from "./BuildYearFilter";
-import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
-import OwnerFilter from "./OwnerFilter";
+// import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
+// import OwnerFilter from "./OwnerFilter";
 
 class FiltersDialog extends React.Component {
   constructor(props) {
@@ -89,10 +89,10 @@ class FiltersDialog extends React.Component {
               triggerParentUpdate={this.updateThisProperty}
               selected={this.props.selected}
             />
-            {/*<BuildYearFilter
+            <BuildYearFilter
               triggerParentUpdate={this.updateThisProperty}
               yearSelected={this.props.yearSelected}
-            />*/}
+            />
             {/*<MaintenanceResponsibilityFilter
               triggerParentUpdate={this.updateThisProperty}
               maintRespSelected={this.props.maintRespSelected}

@@ -147,7 +147,7 @@ class HeatMapState extends React.Component {
               };
             });
 
-          console.log(series);
+          // console.log(series);
 
           return (
             <div className="mixed-chart">

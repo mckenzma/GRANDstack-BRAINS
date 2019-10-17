@@ -59,8 +59,8 @@ class DonutChartState extends React.Component {
           if (error) return <p>Error</p>;
 
           // window.data = data;
-          console.log(data);
-          console.log(this.props.selected);
+          // console.log(data);
+          // console.log(this.props.selected);
 
           const options = {
             ...this.state.options,

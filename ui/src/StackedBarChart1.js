@@ -133,7 +133,7 @@ class StackedBarChart1 extends React.Component {
           // 1993 PR is missing from query! WHY?
           // PR93.txt connect to Oregon for some weird reason...
           ///////
-          console.log(data);
+          // console.log(data);
 
           const series = data.stackedBarChart_Rows_Per_State_Per_Year__1
             .slice()
@@ -146,7 +146,7 @@ class StackedBarChart1 extends React.Component {
               };
             });
 
-          console.log(series);
+          // console.log(series);
 
           return (
             <div className="bar">
