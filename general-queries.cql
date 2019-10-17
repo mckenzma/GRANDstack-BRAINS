@@ -18,8 +18,12 @@ WITH s1, s2, head(collect(distinct([b1, b2, r1, r2, r3]))) as bridgePairs
 RETURN s1, s2, bridgePairs
 
 // Intify count of total bridges and distinct bridges per state to determine if duplicate bridges
-MATCH (state:State)<-[*]-(bridge:Bridge)
-WITH state.name AS stateName, count(bridge) AS totalBridges, count(DISTINCT bridge.name) AS distBridges
+MATCH (state:State)<-[:LOCATED_IN]-(bridge:Bridge)
+WITH state.name AS stateName,
+	 bridge,
+	 bridge.bridge_code AS value
+WITH stateName, bridge, coalesce(toString(trim(value)),value) AS bName
+WITH stateName, count(bridge) AS totalBridges, count(DISTINCT bName) AS distBridges
 RETURN stateName, totalBridges, distBridges, totalBridges - distBridges AS diff
 
 // Simple query to show number of counties, places, bridges per state
