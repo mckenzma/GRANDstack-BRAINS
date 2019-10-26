@@ -94,6 +94,7 @@ fileRow.createdOn = date()
 CALL apoc.periodic.iterate(
 '
 MATCH (ndr:NoDelimiterRow)
+WHERE ndr.STATE_CODE_001 IS NULL
 RETURN ndr
 ','
 WITH ndr, ndr.data AS data
@@ -246,6 +247,7 @@ RETURN batches, total
 
 CALL apoc.periodic.commit('
 MATCH (ndr:NoDelimiterRow)
+WHERE ndr.STATE_CODE_001 IS NULL
 with ndr, ndr.data AS data LIMIT {limit}
 WITH ndr, {
   STATE_CODE_001: substring(data,0,2), // STATE_CODE_001
@@ -440,6 +442,8 @@ MERGE (file)-[:FILE_FOR]->(state)
 RETURN batches, total
 
 // Connect files per state in order by year
+// TO DO - Delimiter and NO Delimiter Files shoudl each have their own string
+// TO DO - Need to connect delimieter/no delimeter files of same year
 MATCH (state:State)
 WITH collect(state) AS states
 UNWIND states AS state

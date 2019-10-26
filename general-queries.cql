@@ -9,6 +9,14 @@ CALL apoc.meta.subGraph({
     excludes:["DelimitedFile","NoDelimiterFile"]
 })
 
+// WIP
+// counting diff of bridges
+MATCH (s:State)<-[:LOCATED_IN]-(b:Bridge)
+WITH s.name AS state, b.bridge_code AS value
+//WITH state, count(DISTINCT coalesce(toString(toInteger(trim(value))),value)) AS count
+WITH state, count(DISTINCT coalesce(toString(toInteger(value)),value)) AS count
+RETURN state, count
+
 MATCH (s1:State)<-[r1:LOCATED_IN]-(b1:Bridge)-[r2:SHARED_BRIDGE]-(b2:Bridge)-[r3:LOCATED_IN]->(s2:State)
 WITH s1, s2, head(collect(distinct([b1, b2, r1, r2, r3]))) as bridgePairs
 RETURN s1, s2, bridgePairs
@@ -25,6 +33,24 @@ WITH state.name AS stateName,
 WITH stateName, bridge, coalesce(toString(trim(value)),value) AS bName
 WITH stateName, count(bridge) AS totalBridges, count(DISTINCT bName) AS distBridges
 RETURN stateName, totalBridges, distBridges, totalBridges - distBridges AS diff
+
+// Return list of "duplicates"
+MATCH (state:State)<-[:LOCATED_IN]-(bridge:Bridge)
+WITH state,
+	 bridge,
+	 bridge.bridge_code AS value
+WITH state, bridge, coalesce(toString(trim(value)),value) AS bName
+WITH state, count(bridge) AS totalBridges, count(DISTINCT bName) AS distBridges
+WITH state, totalBridges, distBridges, totalBridges - distBridges AS diff
+WHERE diff > 0
+MATCH (state)<-[:LOCATED_IN]-(b:Bridge)
+WITH state, b.bridge_code AS value
+WITH state, coalesce(toString(trim(value)),value) AS bName
+WITH state, bName, count(bName) AS count
+WHERE count > 1
+WITH state, collect(DISTINCT bName) AS bNames
+RETURN state.name, size(bNames) AS count, bNames
+ORDER BY count DESC
 
 // Simple query to show number of counties, places, bridges per state
 MATCH (s:State)<--(c:County)
