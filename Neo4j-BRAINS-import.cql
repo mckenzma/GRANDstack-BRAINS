@@ -497,9 +497,10 @@ WHERE NOT (row)-[:DATA_FOR]->()
 RETURN row
 ','
 MERGE (bridge:Bridge {state_code: row.STATE_CODE_001, 
-            //county_code: row.COUNTY_CODE_003, 
-                      //place_code: row.PLACE_CODE_004, 
-                      bridge_code: row.STRUCTURE_NUMBER_008})
+            county_code: row.COUNTY_CODE_003, 
+                      place_code: row.PLACE_CODE_004, 
+                      //bridge_code: row.STRUCTURE_NUMBER_008})
+                      bridge_code: coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008)})
 ON CREATE SET bridge.createdOn = datetime()
 //ON CREATE SET bridge.id = row.STATE_CODE_001 + "_" + 
 //                                               row.COUNTY_CODE_003 + "_" + 
@@ -582,6 +583,24 @@ RETURN s1.name AS S1,
 ////////////////////////////////////////
 ////////////////////////////////////////
 
+// WIP
+// Creating Location Audit Log records
+MATCH (b:Bridge)
+//WHERE NOT (b)-[:LATEST_LOCATION_LOG]->()
+WITH b limit 1
+MATCH (b)<-[:DATA_FOR]-(ndr:NoDelimiterRow)<-[:CONTAINS]-(f:File)
+WITH b, [ndr.LAT_016,ndr.LONG_017] AS point, f.year AS year ORDER BY year ASC
+WITH b, collect([point,year]) AS records
+UNWIND records AS record
+OPTIONAL MATCH (b)-[r:LATEST_LOCATION_LOG]->(prev:AuditLog_Location)
+DELETE r
+WITH b, ndr, f, prev
+MERGE (b)-[:LATEST_LOCATION_LOG]->(new:AuditLog_Location)
+ON CREATE SET new.year = f.year,
+        new.pointRaw = [ndr.LAT_016, ndr.LONG_017]
+WITH new, prev
+WHERE NOT prev IS NULL
+MERGE (new)-[:PREVIOUS]->(prev)
 
 // Add row count for files
 // will use this for tracking failed row imports
