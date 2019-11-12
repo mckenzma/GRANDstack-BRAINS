@@ -6,8 +6,6 @@
 // Create nodes for each file URL (Delimited Files)
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row
-// Data loaded from files downloaded at https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm and stored in the "import" folder for the database instance
-// LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY/export?format=csv&id=1S2yMzP30KfjQx2TBE42VjVnH8ZODLVN1lDGwmsPpPJY&gid=749188439" AS row
 WITH row
 WHERE NOT row.Year IS NULL
 //AND row.Import = "Yes"
@@ -31,8 +29,6 @@ ON CREATE SET file.url = fileUrl,
               file.name = row.File,
               file.year = row.Year,
               file.createdOn = timestamp()
-
-// should i / can I add row number to row node for future reference? me thinks yes....
 
 // Iterate through files and import rows (Delimited)
 MATCH (file:DelimitedFile)
@@ -454,6 +450,91 @@ UNWIND range(0,size(orderedFiles)-2) AS i
 WITH orderedFiles[i] AS start, orderedFiles[i+1] AS end
 MERGE (start)-[:NEXT_FILE]->(end)
 
+// Create (:State)<--(:County)<--(:Place)
+CALL apoc.periodic.iterate(
+'
+MATCH (row:NoDelimiterRow)
+//WHERE NOT (row)-[:DATA_FOR]->()
+RETURN row
+','
+WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
+        row.COUNTY_CODE_003 AS countyCode,
+              row.PLACE_CODE_004 AS placeCode
+MATCH (state:State {code: stateCode})
+MERGE (state)<-[:OF_STATE]-(county:County {code: countyCode})
+MERGE (county)<-[:OF_COUNTY]-(place:Place {code: placeCode})
+ON CREATE SET county.createdOn = date(),
+        place.createdOn = date()
+',
+{batchSize:10000,parallel:false})
+
+// Create constraint & node key
+CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.code) IS NODE KEY
+
+// create/merge bridge
+CALL apoc.periodic.iterate(
+'
+MATCH (row:NoDelimiterRow)
+WHERE NOT (row)-[:DATA_FOR]->()
+RETURN row
+','
+WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
+     row.COUNTY_CODE_003 AS countyCode,
+     row.PLACE_CODE_004 AS placeCode,
+     coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+MERGE (bridge:Bridge {state_code: stateCode, 
+                      county_code: countyCode, 
+                      place_code: placeCode, 
+                      code: bridgeCode})
+ON CREATE SET bridge.createdOn = datetime()
+//CREATE (row)-[:DATA_FOR]->(bridge)
+',
+{batchSize:10000,parallel:false})
+
+// Connect bridge to row
+CALL apoc.periodic.iterate(
+'
+MATCH (row:NoDelimiterRow)
+WHERE NOT (row)-[:DATA_FOR]->()
+RETURN row
+','
+WITH row,
+row.STATE_CODE_001 AS stateCode, 
+     row.COUNTY_CODE_003 AS countyCode,
+     row.PLACE_CODE_004 AS placeCode,
+    coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+MATCH (bridge:Bridge {state_code: stateCode, 
+                      county_code: countyCode, 
+                      place_code: placeCode, 
+                      code: bridgeCode})
+CREATE (row)-[:DATA_FOR]->(bridge)
+',
+{batchSize:10000,parallel:false})
+
+// Connect bridge to place
+// connect bridge to existing (State)<--(County)<--(Place) tree
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)
+WHERE NOT (bridge)-[:OF_PLACE]->()
+RETURN bridge
+','
+MATCH (state:State {code: bridge.state_code})
+    <-[:OF_STATE]-(county:County {code: bridge.county_code})
+      <-[:OF_COUNTY]-(place:Place {code: bridge.place_code})
+WITH place, bridge
+CREATE (bridge)-[:OF_PLACE]->(place)
+',
+{batchSize:10000,parallel:false}) YIELD batches, total
+RETURN batches, total
+
+
+
+
+
+
+
+
 // Connect rows per bridge in order by year
 CALL apoc.periodic.iterate(
 '
@@ -484,68 +565,24 @@ DETACH DELETE bridge
 ',
 {batchSize:10000,parallel:false})
 
-// Create constraint & node key
-//CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.bridge_code) IS NODE KEY
-//DROP CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.bridge_code) IS NODE KEY
-CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.bridge_code) IS NODE KEY
 
-// create/merge bridge & connect to row
-CALL apoc.periodic.iterate(
-'
-MATCH (row:Row)
-WHERE NOT (row)-[:DATA_FOR]->()
-RETURN row
-','
-MERGE (bridge:Bridge {state_code: row.STATE_CODE_001, 
-            county_code: row.COUNTY_CODE_003, 
-                      place_code: row.PLACE_CODE_004, 
-                      //bridge_code: row.STRUCTURE_NUMBER_008})
-                      bridge_code: coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008)})
-ON CREATE SET bridge.createdOn = datetime()
-//ON CREATE SET bridge.id = row.STATE_CODE_001 + "_" + 
-//                                               row.COUNTY_CODE_003 + "_" + 
-//                                               row.PLACE_CODE_004 + "_" + 
-//                                               row.STRUCTURE_NUMBER_008 + 
-//                                               "_LAT_" + row.LAT_016 + 
-//                                               "_LONG_" +row.LONG_017bridge.name = row.STRUCTURE_NUMBER_008,
-//        bridge.latitude = row.LAT_016,
-//        bridge.longitude = row.LONG_017,
-//        bridge.yearbuilt = toInteger(row.YEAR_BUILT_027)
-CREATE (row)-[:DATA_FOR]->(bridge)
-',
-{batchSize:10000,parallel:false})
 
-// connect bridge to existing (State)<--(County)<--(Place) tree
-CALL apoc.periodic.iterate(
-'
-MATCH (bridge:Bridge)
-WHERE NOT (bridge)-[:OF_PLACE]->()
-RETURN bridge
-','
-MATCH (state:State {code: bridge.state_code})
-MERGE (state)<-[:OF_STATE]-(county:County {code: bridge.county_code})
-MERGE (county)<-[:OF_COUNTY]-(place:Place {code: bridge.place_code})
-ON CREATE SET place.code = bridge.place_code,
-        county.code = bridge.county_code,
-        state.code = bridge.state_code
-WITH place, bridge
-MERGE (bridge)-[:OF_PLACE]->(place)
-',
-{batchSize:10000,parallel:false}) YIELD batches, total
-RETURN batches, total
+
+
+
 
 // Connect bridges directly to state (temporary while we navigate the place/county/bridge "duplicates")
-CALL apoc.periodic.iterate(
-'
-MATCH (bridge:Bridge)
-WHERE NOT (bridge)-[:LOCATED_IN]->()
-RETURN bridge
-','
-MATCH (state:State)
-WHERE state.code = bridge.state_code
-CREATE (bridge)-[:LOCATED_IN]->(state)
-',
-{batchSize:10000,parallel:false})
+//CALL apoc.periodic.iterate(
+//'
+//MATCH (bridge:Bridge)
+//WHERE NOT (bridge)-[:LOCATED_IN]->()
+//RETURN bridge
+//','
+//MATCH (state:State)
+//WHERE state.code = bridge.state_code
+//CREATE (bridge)-[:LOCATED_IN]->(state)
+//',
+//{batchSize:10000,parallel:false})
 
 // connect "shared" bridge
 // re-write to improve connection between bridges
@@ -819,9 +856,6 @@ WHERE s2.abbreviation = borderingState
 AND NOT (s1)<-[:BORDERS_STATE]-(s2)
 MERGE (s1)-[:BORDERS_STATE]->(s2)
 
-// Connect bordering counties
-// TODO
-
 // Add Lat & Long to States
 LOAD CSV WITH HEADERS FROM 'https://docs.google.com/spreadsheets/d/1jMFJpqqHgtkU4md4fub6nevmCH--rCKMh2Dxdrp4N30/export?format=csv&id=1jMFJpqqHgtkU4md4fub6nevmCH--rCKMh2Dxdrp4N30&gid=0' AS row
 WITH row
@@ -859,6 +893,8 @@ MERGE (row)-[:DATA_FOR]->(bridge)
 ',
 {batchSize:10000,parallel:false}) YIELD batches, total
 RETURN batches, total
+
+
 
 // Add County Names
 CALL apoc.periodic.iterate(
@@ -1153,6 +1189,7 @@ RETURN batches, total
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+//WIP
 // Load and create :Inspection
 // leads to websocket failure
 MATCH (file:File)
