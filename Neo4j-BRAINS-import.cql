@@ -14,7 +14,7 @@ MERGE (file:File:DelimitedFile {url: fileUrl})
 ON CREATE SET file.url = fileUrl,
               file.folder = row.Folder,
               file.name = row.File,
-              file.year = row.Year,
+              file.year = toInteger(row.Year),
               file.createdOn = timestamp()
 
 // Create nodes for each file URL (No Delimiter)
@@ -27,7 +27,7 @@ MERGE (file:File:NoDelimiterFile {url: fileUrl})
 ON CREATE SET file.url = fileUrl,
               file.folder = row.Folder,
               file.name = row.File,
-              file.year = row.Year,
+              file.year = toInteger(row.Year),
               file.createdOn = timestamp()
 
 // Iterate through files and import rows (Delimited)
@@ -529,12 +529,6 @@ CREATE (bridge)-[:OF_PLACE]->(place)
 RETURN batches, total
 
 
-
-
-
-
-
-
 // Connect rows per bridge in order by year
 CALL apoc.periodic.iterate(
 '
@@ -550,6 +544,30 @@ MERGE (start)-[:NEXT_RECORD]->(end)
 ',
 {batchSize:10000,parallel:false}) YIELD batches, total
 RETURN batches, total
+
+
+// Create Location Audit Log
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)
+OPTIONAL MATCH (bridge)-[:LATEST_LOCATION_LOG]->(al)
+WITH bridge, coalesce(al.year,0) AS year
+MATCH (bridge)<-[:DATA_FOR]-(row:Row)<-[:CONTAINS]-(file:File)
+WHERE file.year > year
+RETURN bridge, row, file.year AS fYear
+ORDER BY fYear
+','
+CREATE (bridge)-[:LATEST_LOCATION_LOG]->(newAL:AuditLog:LocationLog)
+SET newAL.latRaw = row.LAT_016,
+    newAL.longRaw = row.LONG_017,
+    newAL.year = fYear
+WITH newAL, bridge
+MATCH (bridge)-[r:LATEST_LOCATION_LOG]->(prevAL)
+WHERE prevAL <> newAL
+DELETE r
+CREATE (newAL)-[:PREV_LOCATION_LOG]->(newAL)
+',
+{batchSize:10000,parallel:false})
 
 
 ////////////////////////////////////////
