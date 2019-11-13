@@ -182,6 +182,7 @@ WITH ndr, {
   OPERATING_RATING_064: substring(data,264,3), // OPERATING_RATING_064
   INV_RATING_METH_065: substring(data,267,1), // INV_RATING_METH_065
   INVENTORY_RATING_066: substring(data,268,3), // INVENTORY_RATING_066
+
   STRUCTURAL_EVAL_067: substring(data,271,1), // STRUCTURAL_EVAL_067
   DECK_GEOMETRY_EVAL_068: substring(data,272,1), // DECK_GEOMETRY_EVAL_068
   UNDCLRENCE_EVAL_069: substring(data,273,1), // UNDCLRENCE_EVAL_069
@@ -547,6 +548,7 @@ RETURN batches, total
 
 
 // Create Location Audit Log
+// This query will make more logs than rows....why?
 CALL apoc.periodic.iterate(
 '
 MATCH (bridge:Bridge)
@@ -565,9 +567,41 @@ WITH newAL, bridge
 MATCH (bridge)-[r:LATEST_LOCATION_LOG]->(prevAL)
 WHERE prevAL <> newAL
 DELETE r
-CREATE (newAL)-[:PREV_LOCATION_LOG]->(newAL)
+CREATE (newAL)-[:PREV_LOCATION_LOG]->(prevAL)
 ',
 {batchSize:10000,parallel:false})
+// TO DO - review and verify duplicates not present from query
+
+
+// Create Inspection Audit Log
+// This query will make more logs than rows....why?
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:Bridge)
+OPTIONAL MATCH (bridge)-[:LATEST_INSPECTION_LOG]->(al)
+WITH bridge, coalesce(al.year,0) AS year
+MATCH (bridge)<-[:DATA_FOR]-(row:Row)<-[:CONTAINS]-(file:File)
+WHERE file.year > year
+RETURN bridge, row, file.year AS fYear
+ORDER BY fYear
+','
+CREATE (bridge)-[:LATEST_INSPECTION_LOG]->(newAL:AuditLog:InspectionLog)
+SET newAL.STRUCTURAL_EVAL_067 = row.STRUCTURAL_EVAL_067,
+  newAL.DECK_GEOMETRY_EVAL_068 = row.DECK_GEOMETRY_EVAL_068,
+  newAL.UNDCLRENCE_EVAL_069 = row.UNDCLRENCE_EVAL_069,
+  newAL.POSTING_EVAL_070 = row.POSTING_EVAL_070,
+  newAL.WATERWAY_EVAL_071 = row.WATERWAY_EVAL_071,
+  newAL.APPR_ROAD_EVAL_072 = row.APPR_ROAD_EVAL_072
+WITH newAL, bridge
+MATCH (bridge)-[r:LATEST_INSPECTION_LOG]->(prevAL)
+WHERE prevAL <> newAL
+DELETE r
+CREATE (newAL)-[:PREV_INSPECTION_LOG]->(prevAL)
+',
+{batchSize:10000,parallel:false})
+// TO DO - review and verify duplicates not present from query
+
+
 
 
 ////////////////////////////////////////
