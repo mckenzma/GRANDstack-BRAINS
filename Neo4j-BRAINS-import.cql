@@ -548,7 +548,6 @@ RETURN batches, total
 
 
 // Create Location Audit Log
-// This query will make more logs than rows....why?
 CALL apoc.periodic.iterate(
 '
 MATCH (bridge:Bridge)
@@ -559,18 +558,63 @@ WHERE file.year > year
 RETURN bridge, row, file.year AS fYear
 ORDER BY fYear
 ','
-CREATE (bridge)-[:LATEST_LOCATION_LOG]->(newAL:AuditLog:LocationLog)
+CREATE (newAL:AuditLog:LocationLog)
 SET newAL.latRaw = row.LAT_016,
     newAL.longRaw = row.LONG_017,
     newAL.year = fYear
-WITH newAL, bridge
-MATCH (bridge)-[r:LATEST_LOCATION_LOG]->(prevAL)
-WHERE prevAL <> newAL
-DELETE r
-CREATE (newAL)-[:PREV_LOCATION_LOG]->(prevAL)
+// switched up bridge alias here because to lazy to change code
+WITH bridge AS b, collect(newAL) AS items
+WITH b, items, items[0] AS al
+// going to possibly need this rel and old one
+OPTIONAL MATCH (b)-[r:LATEST_LOCATION_LOG]->(ol) WHERE ol <> al
+// go ahead and create the new latest
+CREATE (b)-[:LATEST_LOCATION_LOG]->(al)
+// ugly foreach hack to find singleton items where there was an old one that needs deleting
+FOREACH (al IN CASE WHEN r IS NOT NULL AND size(items) = 1 THEN items ELSE [] END |
+DELETE r CREATE (al)-[:PREV_LOCATION_LOG]->(ol)
+)
+// now to handle bridges with more than one new log
+WITH r, ol, b, items
+WHERE size(items) > 1
+// create a chain (first entry linked to bridge already above)
+UNWIND range(0, size(items) - 2) AS idx
+WITH r, ol,b, items, items[idx] AS new, items[idx + 1] AS old
+CREATE (new)-[:PREV_LOCATION_LOG]->(old)
+// distinct back down and find the last
+WITH DISTINCT r, ol,b, items
+WITH r, ol,b, items[size(items) - 1] AS lastAL
+WHERE r IS NOT NULL
+DELETE r CREATE (lastAL)-[:PREV_LOCATION_LOG]->(ol)
 ',
-{batchSize:10000,parallel:false})
-// TO DO - review and verify duplicates not present from query
+{batchSize:5000,parallel:false})
+
+
+// Convert raw  latitude, longitude data to decimals
+// Convert Latitude and Longitude from initial import to point (spatial)
+CALL apoc.periodic.iterate('
+MATCH (locLog:LocationLog)
+WHERE locLog.latitude_decimal IS NULL 
+OR locLog.longitude_decimal IS NULL
+RETURN locLog
+','
+WITH locLog,
+     toFloat(left(locLog.latRaw, 2)) + toFloat(substring(locLog.latRaw,2,2))/60 + toFloat(right(locLog.latRaw,4))/100/3600 AS latitude_decimal,
+     size(locLog.rawLong) AS long_size
+WITH locLog,
+     latitude_decimal,
+     CASE long_size
+        WHEN 8 THEN -1 * ( toFloat(left(locLog.longRaw, 2)) + toFloat(substring(locLog.longRaw,2,2))/60 + toFloat(right(locLog.longRaw,4))/100/3600 )
+        WHEN 9 THEN -1 * ( toFloat(left(locLog.longRaw, 3)) + toFloat(substring(locLog.longRaw,3,2))/60 + toFloat(right(locLog.longRaw,4))/100/3600 )
+     END AS longitude_decimal
+SET locLog.location = point({ longitude: longitude_decimal, latitude: latitude_decimal }),
+    locLog.longitude_decimal = longitude_decimal,
+    locLog.latitude_decimal = latitude_decimal
+',
+{batchSize:10000, parallel:true})
+
+
+
+// Create point diff comparison for each log
 
 
 // Create Inspection Audit Log
