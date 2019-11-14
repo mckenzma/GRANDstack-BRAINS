@@ -614,7 +614,21 @@ SET locLog.location = point({ longitude: longitude_decimal, latitude: latitude_d
 {batchSize:10000, parallel:false})
 
 
-// Create point diff comparison for each log
+// Calculate distances between each LocationLog point
+// at some point possibly move distance value to relationship between logs
+CALL apoc.periodic.iterate(
+'
+MATCH (log:LocationLog)
+//WHERE log.distance IS NULL
+//AND (log)-[:PREV_LOCATION_LOG]->()
+WHERE (log)-[:PREV_LOCATION_LOG]->()
+RETURN log
+','
+MATCH (log)-[:PREV_LOCATION_LOG]->(prevLog)
+WITH log, distance(log.location,prevLog.location) AS dist
+SET log.distance = dist
+',
+{batchSize:5000,parallel:false})
 
 
 
