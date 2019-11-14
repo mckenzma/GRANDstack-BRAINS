@@ -600,7 +600,7 @@ RETURN locLog
 ','
 WITH locLog,
      toFloat(left(locLog.latRaw, 2)) + toFloat(substring(locLog.latRaw,2,2))/60 + toFloat(right(locLog.latRaw,4))/100/3600 AS latitude_decimal,
-     size(locLog.rawLong) AS long_size
+     size(locLog.longRaw) AS long_size
 WITH locLog,
      latitude_decimal,
      CASE long_size
@@ -611,11 +611,11 @@ SET locLog.location = point({ longitude: longitude_decimal, latitude: latitude_d
     locLog.longitude_decimal = longitude_decimal,
     locLog.latitude_decimal = latitude_decimal
 ',
-{batchSize:10000, parallel:true})
-
+{batchSize:10000, parallel:false})
 
 
 // Create point diff comparison for each log
+
 
 
 // Create Inspection Audit Log
