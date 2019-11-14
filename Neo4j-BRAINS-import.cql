@@ -584,11 +584,12 @@ CREATE (new)-[:PREV_LOCATION_LOG]->(old)
 WITH DISTINCT r, ol,b, items
 WITH r, ol,b, items[size(items) - 1] AS lastAL
 WHERE r IS NOT NULL
-DELETE r CREATE (lastAL)-[:PREV_LOCATION_LOG]->(ol)
+DELETE r 
+CREATE (lastAL)-[:PREV_LOCATION_LOG]->(ol)
 ',
 {batchSize:5000,parallel:false})
 
-
+// this is a temp query to allow GRANDstack app to function while figuring out additional ways to handle location logs
 // Convert raw  latitude, longitude data to decimals
 // Convert Latitude and Longitude from initial import to point (spatial)
 CALL apoc.periodic.iterate('
@@ -618,7 +619,6 @@ SET locLog.location = point({ longitude: longitude_decimal, latitude: latitude_d
 
 
 // Create Inspection Audit Log
-// This query will make more logs than rows....why?
 CALL apoc.periodic.iterate(
 '
 MATCH (bridge:Bridge)
@@ -629,21 +629,40 @@ WHERE file.year > year
 RETURN bridge, row, file.year AS fYear
 ORDER BY fYear
 ','
-CREATE (bridge)-[:LATEST_INSPECTION_LOG]->(newAL:AuditLog:InspectionLog)
+CREATE (newAL:AuditLog:InspectionLog)
 SET newAL.STRUCTURAL_EVAL_067 = row.STRUCTURAL_EVAL_067,
-  newAL.DECK_GEOMETRY_EVAL_068 = row.DECK_GEOMETRY_EVAL_068,
-  newAL.UNDCLRENCE_EVAL_069 = row.UNDCLRENCE_EVAL_069,
-  newAL.POSTING_EVAL_070 = row.POSTING_EVAL_070,
-  newAL.WATERWAY_EVAL_071 = row.WATERWAY_EVAL_071,
-  newAL.APPR_ROAD_EVAL_072 = row.APPR_ROAD_EVAL_072
-WITH newAL, bridge
-MATCH (bridge)-[r:LATEST_INSPECTION_LOG]->(prevAL)
-WHERE prevAL <> newAL
+    newAL.DECK_GEOMETRY_EVAL_068 = row.DECK_GEOMETRY_EVAL_068,
+    newAL.UNDCLRENCE_EVAL_069 = row.UNDCLRENCE_EVAL_069,
+    newAL.POSTING_EVAL_070 = row.POSTING_EVAL_070,
+    newAL.WATERWAY_EVAL_071 = row.WATERWAY_EVAL_071,
+    newAL.APPR_ROAD_EVAL_072 = row.APPR_ROAD_EVAL_072,
+    newAL.year = fYear
+// switched up bridge alias because too lazy to change code
+WITH bridge AS b, collect(newAL) AS items
+WITH b, items, items[0] AS al
+// going to possibly need this rel and old one
+OPTIONAL MATCH (b)-[r:LATEST_INSPECTION_LOG]->(ol) WHERE ol <> al
+// go ahead and create new LATEST_INSPECTION_LOG
+CREATE (b)-[:LATEST_INSPECTION_LOG]->(al)
+// ugly foreach hack to find singleton items where there was an old one that needs deleting
+FOREACH (al IN CASE WHEN r IS NOT NULL AND size(items) = 1 THEN items ELSE [] END |
+DELETE r CREATE (al)-[:PREV_INSPECTION_LOG]->(ol)
+)
+// now to handle bridges with more than one new log
+WITH r, ol, b, items
+WHERE size(items) > 1
+// Create a chain (first entry linked to bridge already above)
+UNWIND range(0, size(items) - 2) AS idx
+WITH r, ol, b, items, items[idx] AS new, items[idx + 1] AS old
+CREATE (new)-[:PREV_INSPECTION_LOG]->(old)
+// distinct back down and find the last
+WITH DISTINCT r, ol, b, items
+WITH r, ol, b, items[size(items) - 1] AS lastAL
+WHERE r IS NOT NULL
 DELETE r
-CREATE (newAL)-[:PREV_INSPECTION_LOG]->(prevAL)
+CREATE (lastAL)-[:PREV_INSPECTION_LOG]->(ol)
 ',
-{batchSize:10000,parallel:false})
-// TO DO - review and verify duplicates not present from query
+{batchSize:5000,parallel:false})
 
 
 
