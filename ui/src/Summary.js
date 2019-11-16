@@ -44,8 +44,8 @@ class SummaryDialog extends React.Component {
       maxWidth: "xl",
 
       selected: this.props.selected,
-      // yearSelected: this.props.yearSelected,
-      // maintRespSelected: this.props.maintRespSelected,
+      yearSelected: this.props.yearSelected,
+      maintRespSelected: this.props.maintRespSelected,
       ownerSelected: this.props.ownerSelected
     };
   }

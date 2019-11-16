@@ -755,6 +755,23 @@ SET log.distance = dist
 {batchSize:5000,parallel:false})
 
 
+// TEMPORARY
+// Set lat/long props on (:Bridge)
+// Done to let web app function correctly
+CALL apoc.periodic.iterate(
+'
+MATCH (b:Bridge)-[:LATEST_LOCATION_LOG]->(log)
+RETURN b, log.location AS location
+','
+WITH b,
+   CASE WHEN location.latitude IS NULL THEN 0.0 ELSE location.latitude END AS latitude,
+     CASE WHEN location.longitude IS NULL THEN 0.0 ELSE location.longitude END AS longitude  
+SET b.latitude_decimal = latitude,
+    b.longitude_decimal = longitude
+'
+,{batchSize:10000,parallel:false})
+
+
 // Create Inspection Audit Log
 CALL apoc.periodic.iterate(
 '

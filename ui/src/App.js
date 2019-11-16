@@ -278,9 +278,9 @@ class App extends Component {
               />
               <SummaryDialog
                 selected={this.state.selected}
-                // yearSelected={this.state.yearSelected}
+                yearSelected={this.state.yearSelected}
                 // maintRespSelected={this.state.maintRespSelected}
-                ownerSelected={this.state.ownerSelected}
+                // ownerSelected={this.state.ownerSelected}
               />
             </Toolbar>
           </AppBar>
@@ -300,8 +300,8 @@ class App extends Component {
             <MapLeaf
               selected={this.state.selected}
               yearSelected={this.state.yearSelected}
-              maintRespSelected={this.state.maintRespSelected}
-              ownerSelected={this.state.ownerSelected}
+              // maintRespSelected={this.state.maintRespSelected}
+              // ownerSelected={this.state.ownerSelected}
             />
           </main>
           {after}

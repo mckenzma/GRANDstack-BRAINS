@@ -98,18 +98,24 @@ class MapLeaf extends React.Component {
         //${this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' }
         query={gql`
           query bridgesPaginateQuery(
-            $selected: [String!] #$yearSelected: [Int!] #$maintRespSelected: [String!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
-          ) {
+            $selected: [String!]
+            $yearSelected: [Int!]
+          ) #$maintRespSelected: [String!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+          {
             Bridge(
               filter: {
                 place: { county: { state: { abbreviation_in: $selected } } }
-                #buildYear: { year_in: $yearSelected }
+                buildYear_in: $yearSelected
                 #maintenanceResp: { description_in: $maintRespSelected }
                 #owner: { description_in: $ownerSelected }
                 #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' */} this is a way to not pass every filter in unless selected
               }
             ) {
-              id
+              #id
+              state_code
+              county_code
+              place_code
+              code
               latitude_decimal
               longitude_decimal
             }
@@ -117,9 +123,9 @@ class MapLeaf extends React.Component {
         `}
         variables={{
           selected: this.props.selected,
-          yearSelected: this.props.yearSelected,
-          maintRespSelected: this.props.maintRespSelected,
-          ownerSelected: this.props.ownerSelected
+          yearSelected: this.props.yearSelected
+          // maintRespSelected: this.props.maintRespSelected,
+          // ownerSelected: this.props.ownerSelected
         }}
       >
         {({ loading, error, data }) => {
@@ -142,16 +148,19 @@ class MapLeaf extends React.Component {
                 <MarkerClusterGroup>
                   {/* Begin Revised Bridge Query */}
                   {data.Bridge.map(b => {
+                    const id = `${b.state_code}${b.county_code}${b.place_code}${
+                      b.code
+                    }`;
                     return (
                       <Marker
-                        key={b.id}
+                        key={id}
                         position={[b.latitude_decimal, b.longitude_decimal]}
                         icon={myIcon}
                         onClick={this.toggleDrawer(
                           "right",
                           true,
                           // b
-                          b.id
+                          id
                         )}
                       />
                     );
