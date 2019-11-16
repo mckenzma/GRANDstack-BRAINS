@@ -102,10 +102,11 @@ type Bridge {
   name: String
   latitude_decimal: Float
   longitude_decimal: Float
-  yearbuilt: Int
+  # yearbuilt: Int
+  buildYear: Int
 
   place: Place @relation(name: "OF_PLACE", direction: "OUT")
-  buildYear: BuildYear @relation(name: "BUILT_IN", direction: "OUT")
+  # buildYear: BuildYear @relation(name: "BUILT_IN", direction: "OUT")
   maintenanceResp: MaintenanceResp @relation(name: "MAINTAINED_BY", direction: "OUT")
   owner: Owner @relation(name: "OWNED_BY", direction: "OUT")
 
@@ -114,11 +115,12 @@ type Bridge {
 }
 
 type BuildYear {
-  id: ID!
+  # id: ID!
   year: Int
 
-  bridge: [Bridge] @relation(name: "BUILT_IN", direction: "IN")
+  # bridge: [Bridge] @relation(name: "BUILT_IN", direction: "IN")
 }
+
 
 type MaintenanceResp {
   id: ID!
@@ -250,6 +252,17 @@ type Query {
   )
 
   RelationshipCount(type: String, count: Int): [RelationshipCount]
+
+  queryBuildYear: [BuildYear] @cypher(statement: """
+    MATCH (b:Bridge) 
+    WHERE NOT b.buildYear IS NULL
+    WITH DISTINCT b.buildYear AS year
+    RETURN { year: year } AS buildYear
+    ORDER BY buildYear.year DESC
+    """
+  )
+
+  BuildYear(year: Int): [BuildYear]
 
   heatmapData(states: [String], owners: [String]): [HeatMapDataPoint] @cypher(statement: """
     MATCH (s:State)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner)

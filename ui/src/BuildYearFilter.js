@@ -117,18 +117,24 @@ class BuildYearFilter extends React.Component {
       <Query
         query={gql`
           {
-            BuildYear {
-              #id
+            queryBuildYear {
               year
             }
           }
+          #{
+          #  BuildYear {
+          #    #id
+          #    year
+          #  }
+          #}
         `}
       >
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
-          const rowYearCount = Object.keys(data.BuildYear).length;
+          // const rowYearCount = Object.keys(data.BuildYear).length;
+          const rowYearCount = Object.keys(data.queryBuildYear).length;
 
           return (
             <div className={classes.root}>
@@ -153,13 +159,19 @@ class BuildYearFilter extends React.Component {
                       }
                       checked={numYearSelected === rowYearCount}
                       onChange={event =>
-                        this.handleSelectAllClick(event, Object(data.BuildYear))
+                        // this.handleSelectAllClick(event, Object(data.BuildYear))
+                        this.handleSelectAllClick(
+                          event,
+                          Object(data.queryBuildYear)
+                        )
                       }
                     />
                     <ListItemText>Select All</ListItemText>
                   </MenuItem>
                   <Divider />
-                  {data.BuildYear.slice()
+                  {/*{data.BuildYear.slice()*/}
+                  {data.queryBuildYear
+                    .slice()
                     .sort(getSorting(order, orderBy))
                     .map(n => {
                       const isYearSelected = this.isYearSelected(n.year);

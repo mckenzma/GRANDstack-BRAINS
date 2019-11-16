@@ -843,6 +843,18 @@ CREATE (lastAL)-[:PREV_BUILD_YEAR_LOG]->(ol)
 ',
 {batchSize:5000,parallel:false})
 
+// TEMPORARY
+// Set buildYear prop on (:Bridge)
+// Done to let web app function correctly
+CALL apoc.periodic.iterate(
+'
+MATCH (b:Bridge)-[:LATEST_BUILD_YEAR_LOG]->(log)
+RETURN b, log.YEAR_BUILT_027 AS year
+','
+SET b.buildYear = year
+'
+,{batchSize:10000,parallel:false})
+
 
 
 ////////////////////////////////////////

@@ -9,13 +9,14 @@ CALL apoc.meta.subGraph({
     excludes:["DelimitedFile","NoDelimiterFile"]
 })
 
-// WIP
 // counting diff of bridges
 MATCH (s:State)<-[:LOCATED_IN]-(b:Bridge)
 WITH s.name AS state, b.bridge_code AS value
-//WITH state, count(DISTINCT coalesce(toString(toInteger(trim(value))),value)) AS count
-WITH state, count(DISTINCT coalesce(toString(toInteger(value)),value)) AS count
-RETURN state, count
+WITH state, 
+     count(value) AS count,
+	 count(DISTINCT coalesce(apoc.text.replace(trim(value), '^0*', ''),value)) AS parsedCount
+RETURN state, count, parsedCount, count - parsedCount AS diff
+ORDER BY state
 
 MATCH (s1:State)<-[r1:LOCATED_IN]-(b1:Bridge)-[r2:SHARED_BRIDGE]-(b2:Bridge)-[r3:LOCATED_IN]->(s2:State)
 WITH s1, s2, head(collect(distinct([b1, b2, r1, r2, r3]))) as bridgePairs
