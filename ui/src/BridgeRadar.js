@@ -26,19 +26,44 @@ class BridgeChart extends React.Component {
         },
         yaxis: {
           min: 0,
-          max: 10
+          max: 9
         }
       },
       series: [
         {
-          name: "Series 1",
+          name: "Inspection Log",
           data: [
-            parseInt(this.props.STRUCTURAL_EVAL_067),
-            parseInt(this.props.DECK_GEOMETRY_EVAL_068),
-            parseInt(this.props.UNDCLRENCE_EVAL_069),
-            parseInt(this.props.POSTING_EVAL_070),
-            parseInt(this.props.WATERWAY_EVAL_071),
-            parseInt(this.props.APPR_ROAD_EVAL_072)
+            // TODO: Clean this logic up. 0 is not an accurate way to handle this...
+            parseInt(
+              this.props.STRUCTURAL_EVAL_067 == "N"
+                ? "0"
+                : this.props.STRUCTURAL_EVAL_067
+            ),
+            parseInt(
+              this.props.DECK_GEOMETRY_EVAL_068 == "N"
+                ? "0"
+                : this.props.DECK_GEOMETRY_EVAL_068
+            ),
+            parseInt(
+              this.props.UNDCLRENCE_EVAL_069 == "N"
+                ? "0"
+                : this.props.UNDCLRENCE_EVAL_069
+            ),
+            parseInt(
+              this.props.POSTING_EVAL_070 == "N"
+                ? "0"
+                : this.props.POSTING_EVAL_070
+            ),
+            parseInt(
+              this.props.WATERWAY_EVAL_071 == "N"
+                ? "0"
+                : this.props.WATERWAY_EVAL_071
+            ),
+            parseInt(
+              this.props.APPR_ROAD_EVAL_072 == "N"
+                ? "0"
+                : this.props.APPR_ROAD_EVAL_072
+            )
           ]
         }
       ]
@@ -46,12 +71,6 @@ class BridgeChart extends React.Component {
   }
 
   render() {
-    console.log(parseInt(this.props.STRUCTURAL_EVAL_067));
-    console.log(parseInt(this.props.DECK_GEOMETRY_EVAL_068));
-    console.log(parseInt(this.props.UNDCLRENCE_EVAL_069));
-    console.log(parseInt(this.props.POSTING_EVAL_070));
-    console.log(parseInt(this.props.WATERWAY_EVAL_071));
-    console.log(parseInt(this.props.APPR_ROAD_EVAL_072));
     return (
       <div id="chart">
         <Chart

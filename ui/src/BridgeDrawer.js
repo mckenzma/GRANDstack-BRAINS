@@ -31,12 +31,7 @@ class BridgeDrawer extends React.Component {
   render() {
     const { classes } = this.props;
 
-    console.log(this.state.STRUCTURAL_EVAL_067);
-    console.log(this.state.DECK_GEOMETRY_EVAL_068);
-    console.log(this.state.UNDCLRENCE_EVAL_069);
-    console.log(this.state.POSTING_EVAL_070);
-    console.log(this.state.WATERWAY_EVAL_071);
-    console.log(this.state.APPR_ROAD_EVAL_072);
+    // TODO: fix query error when clicking back on map from open drawer. Getting GrpahQL query error
 
     // Is it better to qurey bridge on code, state_code, couny_code, place_code on Bridge node
     // or to query based on the state, county, place, bridge tree?
