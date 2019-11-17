@@ -237,10 +237,9 @@ type Query {
     )
 
   nodeSummaryCount: [NodeCount] @cypher(statement: """
-    MATCH (n)
-    WITH DISTINCT labels(n) AS labels, count(n) AS labelCount
-    UNWIND labels AS label
-    RETURN { label: label, count: sum(labelCount) } AS nodeCount
+    CALL db.labels() YIELD label
+    CALL apoc.cypher.run('MATCH (:`'+label+'`) RETURN count(*) as count',{}) YIELD value
+    RETURN { label: label, count: value.count } AS nodeCount
     ORDER BY nodeCount.count DESC, nodeCount.label ASC
     """
   )
@@ -248,9 +247,9 @@ type Query {
   NodeCount(label: String, count: Int): [NodeCount]
 
   relationshipSummaryCount: [RelationshipCount] @cypher(statement: """
-    MATCH ()-[r]->()
-    WITH DISTINCT type(r) AS rel, count(r) AS relCount
-    RETURN {type: rel, count: relCount } AS relationshipCount
+    CALL db.relationshipTypes() YIELD relationshipType as type
+    CALL apoc.cypher.run('MATCH ()-[:`'+type+'`]->() RETURN count(*) as count',{}) YIELD value
+    RETURN {type: type, count: value.count } AS relationshipCount
     ORDER BY relationshipCount.count DESC, relationshipCount.type ASC
     """
   )
