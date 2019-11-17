@@ -106,6 +106,13 @@ class CustomizedDialogDemo extends React.Component {
               The purpose of this web application is to provide an interactive
               experience for you to explore the National Bridge Index data.
             </Typography>
+            <Typography gutterBottom>
+              This application and database was designed abd built by{" "}
+              <a href="https://www.mckenzma.com/">
+                <u>Michael McKenzie</u>
+              </a>{" "}
+              .
+            </Typography>
           </DialogContent>
         </Dialog>
       </div>
