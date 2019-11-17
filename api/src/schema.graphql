@@ -119,6 +119,30 @@ type Bridge {
 
   rows: [Row] @relation(name: "DATA_FOR", direction: "IN")
   numRows: Int @cypher(statement: "MATCH (this)<-[:DATA_FOR]-(r:Row) RETURN count(r)")
+
+  latestInspectionLog: InspectionLog @relation(name: "LATEST_INSPECTION_LOG", direction: "OUT")
+
+  # inspectionLogs: [InspectionLog] @cypher(statement: """
+  #   OPTIONAL MATCH (this)-[:LATEST_INSPECTION_LOG]->(latestLog)
+  #   OPTIONAL MATCH path = (latestLog)-[:PREV_INSPECTION_LOG*]->(log)
+  #   RETURN nodes(path)
+  #   """
+  # )
+}
+
+type InspectionLog {
+  id: ID!
+  year: Int
+  STRUCTURAL_EVAL_067: String
+  DECK_GEOMETRY_EVAL_068: String
+  UNDCLRENCE_EVAL_069: String
+  POSTING_EVAL_070: String
+  WATERWAY_EVAL_071: String
+  APPR_ROAD_EVAL_072: String
+
+  bridge: Bridge @relation(name: "LATEST_INSPECTION_LOG", direction: "IN")
+  # prevInspectionLogIn: InspectionLog @relation(name: "PREV_INSPECTION_LOG", direction: "IN")
+  # prevInspectionLogOut: InspectionLog @relation(name: "PREV_INSPECTION_LOG", direction: "OUT")
 }
 
 type BuildYear {

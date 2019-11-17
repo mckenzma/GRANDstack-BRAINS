@@ -31,6 +31,13 @@ class BridgeDrawer extends React.Component {
   render() {
     const { classes } = this.props;
 
+    console.log(this.state.STRUCTURAL_EVAL_067);
+    console.log(this.state.DECK_GEOMETRY_EVAL_068);
+    console.log(this.state.UNDCLRENCE_EVAL_069);
+    console.log(this.state.POSTING_EVAL_070);
+    console.log(this.state.WATERWAY_EVAL_071);
+    console.log(this.state.APPR_ROAD_EVAL_072);
+
     // Is it better to qurey bridge on code, state_code, couny_code, place_code on Bridge node
     // or to query based on the state, county, place, bridge tree?
     return (
@@ -89,6 +96,15 @@ class BridgeDrawer extends React.Component {
               #owner {
               #  description
               #}
+              latestInspectionLog {
+                year
+                STRUCTURAL_EVAL_067
+                DECK_GEOMETRY_EVAL_068
+                UNDCLRENCE_EVAL_069
+                POSTING_EVAL_070
+                WATERWAY_EVAL_071
+                APPR_ROAD_EVAL_072
+              }
             }
           }
         `}
@@ -103,10 +119,10 @@ class BridgeDrawer extends React.Component {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
 
-          console.log(this.props.selectedBridge);
-          console.log(this.props.selectedPlace);
-          console.log(this.props.selectedCounty);
-          console.log(this.props.selectedState);
+          // console.log(this.props.selectedBridge);
+          // console.log(this.props.selectedPlace);
+          // console.log(this.props.selectedCounty);
+          // console.log(this.props.selectedState);
 
           return (
             <div className={classes.list}>
@@ -116,10 +132,24 @@ class BridgeDrawer extends React.Component {
                   b.code
                 }`;
 
-                // console.log(b.code);
-                // console.log(b.place_code);
-                // console.log(b.county);
-                // console.log(b.state_code);
+                this.state.STRUCTURAL_EVAL_067 = `${
+                  b.latestInspectionLog.STRUCTURAL_EVAL_067
+                }`;
+                this.state.DECK_GEOMETRY_EVAL_068 = `${
+                  b.latestInspectionLog.DECK_GEOMETRY_EVAL_068
+                }`;
+                this.state.UNDCLRENCE_EVAL_069 = `${
+                  b.latestInspectionLog.UNDCLRENCE_EVAL_069
+                }`;
+                this.state.POSTING_EVAL_070 = `${
+                  b.latestInspectionLog.POSTING_EVAL_070
+                }`;
+                this.state.WATERWAY_EVAL_071 = `${
+                  b.latestInspectionLog.WATERWAY_EVAL_071
+                }`;
+                this.state.APPR_ROAD_EVAL_072 = `${
+                  b.latestInspectionLog.APPR_ROAD_EVAL_072
+                }`;
 
                 return (
                   <List key={id}>
@@ -147,12 +177,13 @@ class BridgeDrawer extends React.Component {
                     <ListItem>
                       <ListItemText>LONG: {b.longitude_decimal}</ListItemText>
                     </ListItem>
-                    {/*<ListItem>
+                    <ListItem>
                       <ListItemText>
-                        Build Year: {b.buildYear.year}
+                        {/*Build Year: {b.buildYear.year}*/}
+                        Build Year: {b.buildYear}
                       </ListItemText>
                     </ListItem>
-                    <Divider />
+                    {/*<Divider />
                     <ListItem>
                       <ListItemText>
                         Owned By: {b.owner.description}
@@ -166,7 +197,14 @@ class BridgeDrawer extends React.Component {
                   </List>
                 );
               })}
-              <BridgeRadar />
+              <BridgeRadar
+                STRUCTURAL_EVAL_067={this.state.STRUCTURAL_EVAL_067}
+                DECK_GEOMETRY_EVAL_068={this.state.DECK_GEOMETRY_EVAL_068}
+                UNDCLRENCE_EVAL_069={this.state.UNDCLRENCE_EVAL_069}
+                POSTING_EVAL_070={this.state.POSTING_EVAL_070}
+                WATERWAY_EVAL_071={this.state.WATERWAY_EVAL_071}
+                APPR_ROAD_EVAL_072={this.state.APPR_ROAD_EVAL_072}
+              />
             </div>
           );
         }}
