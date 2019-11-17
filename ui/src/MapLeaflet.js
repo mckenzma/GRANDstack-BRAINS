@@ -59,7 +59,14 @@ class MapLeaf extends React.Component {
       bridge_lng: null,
       build_year: null,
       owned_by: null,
-      maintained_by: null
+      maintained_by: null,
+
+      bridge_code: null,
+      place_code: null,
+      county_code: null,
+      state_code: null,
+      latitude: null,
+      longitude: null
     };
   }
 
@@ -67,13 +74,25 @@ class MapLeaf extends React.Component {
     side,
     open,
     // bridge
-    bridge_id
+    // bridge_id
+    bridgeCode,
+    placeCode,
+    countyCode,
+    stateCode
   ) => () => {
     this.setState({
       [side]: open,
       // bridge_name: bridge.name,
       // bridge_id: bridge.id,
-      bridge_id: bridge_id
+      // bridge_id: bridge_id,
+
+      bridgeCode: bridgeCode,
+      placeCode: placeCode,
+      countyCode: countyCode,
+      stateCode: stateCode
+      // latitude: latitude,
+      // longitude: longitude
+
       // bridge_lat: bridge.latitude_decimal,
       // bridge_lng: bridge.longitude_decimal,
       // build_year: bridge.yearbuilt
@@ -99,9 +118,8 @@ class MapLeaf extends React.Component {
         query={gql`
           query bridgesPaginateQuery(
             $selected: [String!]
-            $yearSelected: [Int!]
-          ) #$maintRespSelected: [String!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
-          {
+            $yearSelected: [Int!] #$maintRespSelected: [String!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+          ) {
             Bridge(
               filter: {
                 place: { county: { state: { abbreviation_in: $selected } } }
@@ -112,9 +130,12 @@ class MapLeaf extends React.Component {
               }
             ) {
               #id
-              state_code
-              county_code
-              place_code
+              #state_code
+              stateCode
+              #county_code
+              countyCode
+              #place_code
+              placeCode
               code
               latitude_decimal
               longitude_decimal
@@ -148,9 +169,17 @@ class MapLeaf extends React.Component {
                 <MarkerClusterGroup>
                   {/* Begin Revised Bridge Query */}
                   {data.Bridge.map(b => {
-                    const id = `${b.state_code}${b.county_code}${b.place_code}${
+                    //const id = `${b.state_code}${b.county_code}${b.place_code}${
+                    const id = `${b.stateCode}${b.countyCode}${b.placeCode}${
                       b.code
                     }`;
+                    // need to clean this up!
+                    // const code = b.code;
+                    // const place_code = b.place_code;
+                    // const county_code = b.county_code;
+                    // const state_code = b.state_code;
+                    // const latitude = b.latitude_decimal;
+                    // const longitude = b.longitude_decimal;
                     return (
                       <Marker
                         key={id}
@@ -160,7 +189,16 @@ class MapLeaf extends React.Component {
                           "right",
                           true,
                           // b
-                          id
+                          // id
+                          b.code,
+                          // b.place_code,
+                          b.placeCode,
+                          // b.county_code,
+                          b.countyCode,
+                          // b.state_code,
+                          b.stateCode
+                          // b.latitude_decimal,
+                          // b.longitude_decimal
                         )}
                       />
                     );
@@ -205,7 +243,15 @@ class MapLeaf extends React.Component {
                     </List>
                     <Divider />
                     <BridgeDrawer
-                      selectedBridge={this.state.bridge_id}
+                      // selectedBridge={this.state.bridge_id}
+                      // selectedBridge={this.state.bridge_code}
+                      selectedBridge={this.state.bridgeCode}
+                      // selectedPlace={this.state.place_code}
+                      selectedPlace={this.state.placeCode}
+                      // selectedCounty={this.state.county_code}
+                      selectedCounty={this.state.countyCode}
+                      // selectedState={this.state.state_code}
+                      selectedState={this.state.stateCode}
                       // open={this.state.right}
                       // onClose={this.toggleDrawer("right", false, "")}
                     />

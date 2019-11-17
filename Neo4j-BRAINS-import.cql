@@ -594,7 +594,9 @@ ON CREATE SET county.createdOn = date(),
 {batchSize:10000,parallel:false})
 
 // Create constraint & node key
-CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.code) IS NODE KEY
+//CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.code) IS NODE KEY
+//DROP CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.code) IS NODE KEY
+CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.stateCode, bridge.countyCode, bridge.placeCode, bridge.code) IS NODE KEY
 
 // create/merge bridge
 CALL apoc.periodic.iterate(
@@ -607,9 +609,9 @@ WITH DISTINCT row.STATE_CODE_001 AS stateCode,
      row.COUNTY_CODE_003 AS countyCode,
      row.PLACE_CODE_004 AS placeCode,
      coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
-MERGE (bridge:Bridge {state_code: stateCode, 
-                      county_code: countyCode, 
-                      place_code: placeCode, 
+MERGE (bridge:Bridge {stateCode: stateCode, 
+                      countyCode: countyCode, 
+                      placeCode: placeCode, 
                       code: bridgeCode})
 ON CREATE SET bridge.createdOn = datetime()
 //CREATE (row)-[:DATA_FOR]->(bridge)
@@ -628,9 +630,9 @@ row.STATE_CODE_001 AS stateCode,
      row.COUNTY_CODE_003 AS countyCode,
      row.PLACE_CODE_004 AS placeCode,
     coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
-MATCH (bridge:Bridge {state_code: stateCode, 
-                      county_code: countyCode, 
-                      place_code: placeCode, 
+MATCH (bridge:Bridge {stateCode: stateCode, 
+                      countyCode: countyCode, 
+                      placeCode: placeCode, 
                       code: bridgeCode})
 CREATE (row)-[:DATA_FOR]->(bridge)
 ',
@@ -644,9 +646,9 @@ MATCH (bridge:Bridge)
 WHERE NOT (bridge)-[:OF_PLACE]->()
 RETURN bridge
 ','
-MATCH (state:State {code: bridge.state_code})
-    <-[:OF_STATE]-(county:County {code: bridge.county_code})
-      <-[:OF_COUNTY]-(place:Place {code: bridge.place_code})
+MATCH (state:State {code: bridge.stateCode})
+    <-[:OF_STATE]-(county:County {code: bridge.countyCode})
+      <-[:OF_COUNTY]-(place:Place {code: bridge.placeCode})
 WITH place, bridge
 CREATE (bridge)-[:OF_PLACE]->(place)
 ',
@@ -916,8 +918,8 @@ AND NOT row.OTHR_STATE_STRUC_NO_099 = ""
 MATCH (row)-[:DATA_FOR]->(bridge)
 RETURN bridge, row
 ','
-MATCH (adj_bridge:Bridge {state_code: left(row.OTHER_STATE_CODE_098A,2),
-              bridge_code: row.OTHR_STATE_STRUC_NO_099 })
+MATCH (adj_bridge:Bridge {stateCode: left(row.OTHER_STATE_CODE_098A,2),
+              bridgeCode: row.OTHR_STATE_STRUC_NO_099 })
 MERGE (bridge)-[:SHARED_BRIDGE]->(adj_bridge)
 ',
 {batchSize:10000})
@@ -930,12 +932,12 @@ MATCH (s1)<-[:LOCATED_IN]-(b1)-[:SHARED_BRIDGE]-(b2)-[:LOCATED_IN]->(s2),
     (b1)<-[:DATA_FOR]-(row1), 
       (b2)<-[:DATA_FOR]-(row2)
 RETURN s1.name AS S1,
-     b1.bridge_code AS B1,
+     b1.bridgeCode AS B1,
        row2.OTHER_STATE_PCNT_098B AS B1_PCNT,
        labels(row2) AS labels2,
        [collect(DISTINCT row2.OTHER_STATE_PCNT_098B), collect(DISTINCT row1.OTHER_STATE_PCNT_098B)] AS PCNT_Pairs,
        s2.name AS S2,
-       b2.bridge_code AS B2,
+       b2.bridgeCode AS B2,
        row1.OTHER_STATE_PCNT_098B AS B2_PCNT,
        labels(row1) AS labels1
 
@@ -1674,8 +1676,8 @@ UNWIND [['N', 'NOT APPLICABLE', ''],
         ['3', 'SERIOUS CONDITION', 'Loss of section, deterioration, spalling or scour have seriously affected primary structural components. Local failures are possible. Fatigue cracks in stell or shear cracks in concrete may be present.'],
         ['2', 'CRITICAL CONDITION', 'Advanced deterioration of primary structural elements. Fatigue cracks in steel or shear cracks in concrete may be present or scour may have removed substructure support. Unless closesly monitored it may be necessary to close the bridge until corrective action is taken.'],
         ['1', '"IMMINENT" FAILURE CONDITION', 'Major deterioration or section loss present in critical structural components or obvious vertical or horizontal movement affecting structure stability. Bridge is closed to traffic but corrective action may put back in light service.'],
-        ['0', 'FAILED CONDITION', 'Out of Service - Beyond corrective action.']] AS rating_code
-CREATE (:ConditionRating {code: rating_code[0], generalDescription: rating_code[1], additionalDescription: rating_code[2]})
+        ['0', 'FAILED CONDITION', 'Out of Service - Beyond corrective action.']] AS ratingCode
+CREATE (:ConditionRating {code: ratingCode[0], generalDescription: ratingCode[1], additionalDescription: ratingCode[2]})
 
 // Create Appraisal Rating Nodes
 UNWIND [['N', 'Not applicable'], 
@@ -1688,8 +1690,8 @@ UNWIND [['N', 'Not applicable'],
         ['3', 'Basically intolerable requiring high priority of corrective action'],
         ['2', 'Basically intolerable requiring high priority of replacement'],
         ['1', 'This value of raiting cide not used'],
-        ['0', 'Bridge closed']] AS appraisal_code
-CREATE (:AppraisalRating {code: appraisal_code[0], description: appraisal_code[1]})
+        ['0', 'Bridge closed']] AS appraisalCode
+CREATE (:AppraisalRating {code: appraisalCode[0], description: appraisalCode[1]})
 
 
 // create (:Evaluation) and connect to (:InspectionDate) and (:Bridge)

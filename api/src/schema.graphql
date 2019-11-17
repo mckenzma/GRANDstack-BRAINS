@@ -100,9 +100,12 @@ type Place {
 type Bridge {
   id: ID!
   # name: String
-  state_code: String
-  county_code: String
-  place_code: String
+  # state_code: String
+  stateCode: String
+  # county_code: String
+  countyCode: String
+  #place_code: String
+  placeCode: String
   code: String
   latitude_decimal: Float
   longitude_decimal: Float
