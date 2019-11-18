@@ -1,7 +1,7 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-import "./Map.css";
+// import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
 import { Map, Marker, TileLayer } from "react-leaflet";
