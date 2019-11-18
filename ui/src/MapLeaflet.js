@@ -1,7 +1,7 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-// import "./Map.css";
+import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";
 
 import { Map, Marker, TileLayer } from "react-leaflet";
@@ -32,14 +32,14 @@ const styles = theme => ({
   root: {
     height: 400,
     overflowX: "auto",
-    paddingTop: theme.spacing.unit * 2
+    paddingTop: theme.spacing(2)
   },
   list: {
     // width: 250
     width: 400
   },
   map: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   card: {
     minWidth: 275
@@ -119,8 +119,10 @@ class MapLeaf extends React.Component {
         query={gql`
           query bridgesPaginateQuery(
             $selected: [String!]
-            $yearSelected: [Int!] #$maintRespSelected: [String!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
-          ) {
+            $yearSelected: [Int!]
+          ) #$maintRespSelected: [String!]
+          #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+          {
             Bridge(
               filter: {
                 place: { county: { state: { abbreviation_in: $selected } } }
@@ -160,7 +162,7 @@ class MapLeaf extends React.Component {
                 center={position}
                 zoom={this.state.zoom}
                 maxZoom={18}
-                className="absolute top right left bottom"
+                // className="absolute top right left bottom"
                 preferCanvas={true}
               >
                 <TileLayer

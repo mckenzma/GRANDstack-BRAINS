@@ -4,7 +4,7 @@ import "./App.css";
 import MapLeaf from "./MapLeaflet";
 
 import PropTypes from "prop-types";
-import classNames from "classnames";
+// import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
@@ -79,7 +79,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     height: "100vh",
     overflow: "auto",
     transition: theme.transitions.create("margin", {
@@ -111,15 +111,15 @@ const styles = theme => ({
     width: "100%"
   },
   text: {
-    paddingTop: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2
+    paddingTop: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   },
   main: {
     overflowY: "auto"
   },
   list: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   subHeader: {
     backgroundColor: "#fff"
@@ -129,7 +129,7 @@ const styles = theme => ({
     justifyContent: "space-between"
   },
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   }
 });
 
@@ -247,22 +247,22 @@ class App extends Component {
       <div className={classes.root}>
         <div className={classes.appFrame}>
           <AppBar
-            className={classNames(classes.appBar, {
-              [classes.appBarShift]: open,
-              [classes[`appBarShift-${anchor}`]]: open
-            })}
+          // className={classNames(classes.appBar, {
+          //   [classes.appBarShift]: open,
+          //   [classes[`appBarShift-${anchor}`]]: open
+          // })}
           >
             <Toolbar disableGutters={!open}>
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
                 onClick={this.handleDrawerOpen}
-                className={classNames(classes.menuButton, open && classes.hide)}
+                // className={classNames(classes.menuButton, open && classes.hide)}
               >
                 <MenuIcon />
               </IconButton>
               <Typography
-                variant="title"
+                variant="h5"
                 color="inherit"
                 noWrap
                 className={classes.root}
@@ -287,14 +287,14 @@ class App extends Component {
           </AppBar>
           {before}
           <main
-            className={classNames(
-              classes.content,
-              classes[`content-${anchor}`],
-              {
-                [classes.contentShift]: open,
-                [classes[`contentShift-${anchor}`]]: open
-              }
-            )}
+          // className={classNames(
+          //   classes.content,
+          //   classes[`content-${anchor}`],
+          //   {
+          //     [classes.contentShift]: open,
+          //     [classes[`contentShift-${anchor}`]]: open
+          //   }
+          // )}
           >
             {/*<div className={classes.drawerHeader} />
             {/*does this do anything?*/}

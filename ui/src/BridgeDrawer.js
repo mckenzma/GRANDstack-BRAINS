@@ -77,15 +77,15 @@ class BridgeDrawer extends React.Component {
               #}
               ########
               # or is it faster to query here with tree?
-              #place {
-              #  code
-              #  county {
-              #    code
-              #    state {
-              #      name
-              #    }
-              #  }
-              #}
+              place {
+                #  code
+                county {
+                  #    code
+                  state {
+                    name
+                  }
+                }
+              }
               ########
               #maintenanceResp {
               #  description
@@ -152,8 +152,8 @@ class BridgeDrawer extends React.Component {
                   <List key={id}>
                     <ListItem>
                       <ListItemText>
-                        {/*State: {b.place.county.state.name}*/}
-                        State: {b.stateCode}
+                        State: {b.place.county.state.name}
+                        {/*State: {b.stateCode}*/}
                       </ListItemText>
                     </ListItem>
                     <ListItem>
