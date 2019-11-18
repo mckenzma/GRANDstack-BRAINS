@@ -203,7 +203,7 @@ class BridgeDrawer extends React.Component {
                 WATERWAY_EVAL_071={this.state.WATERWAY_EVAL_071}
                 APPR_ROAD_EVAL_072={this.state.APPR_ROAD_EVAL_072}
               />
-              {/*<SimpleSlider />*/}
+              <SimpleSlider />
             </div>
           );
         }}

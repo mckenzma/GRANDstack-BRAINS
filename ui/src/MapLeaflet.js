@@ -119,9 +119,8 @@ class MapLeaf extends React.Component {
         query={gql`
           query bridgesPaginateQuery(
             $selected: [String!]
-            $yearSelected: [Int!]
-          ) #$maintRespSelected: [String!]
-          #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+            $yearSelected: [Int!] #$maintRespSelected: [String!]
+          ) #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
           {
             Bridge(
               filter: {
@@ -228,6 +227,7 @@ class MapLeaf extends React.Component {
               </Map>*/}
 
               <Drawer
+                // variant="persistent"
                 anchor="right"
                 open={this.state.right}
                 onClose={this.toggleDrawer("right", false, "")}
@@ -235,8 +235,8 @@ class MapLeaf extends React.Component {
                 <div
                   tabIndex={0}
                   role="button"
-                  onClick={this.toggleDrawer("right", false, "")}
-                  onKeyDown={this.toggleDrawer("right", false, "")}
+                  // onClick={this.toggleDrawer("right", false, "")}
+                  // onKeyDown={this.toggleDrawer("right", false, "")}
                 >
                   <div className={classes.list}>
                     <List>
