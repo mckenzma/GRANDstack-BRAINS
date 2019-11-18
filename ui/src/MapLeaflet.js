@@ -35,7 +35,8 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 2
   },
   list: {
-    width: 250
+    // width: 250
+    width: 400
   },
   map: {
     marginTop: theme.spacing.unit

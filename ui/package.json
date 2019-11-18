@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "@material-ui/lab": "^4.0.0-alpha.32",
     "apexcharts": "^3.6.11",
     "apollo-boost": "^0.1.28",
     "graphql": "^14.2.1",

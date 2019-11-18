@@ -13,9 +13,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import BridgeRadar from "./BridgeRadar";
 
+import SimpleSlider from "./BridgeSlider";
+
 const styles = {
   list: {
-    width: 250
+    width: 400
   }
 };
 
@@ -178,6 +180,7 @@ class BridgeDrawer extends React.Component {
                         Build Year: {b.buildYear}
                       </ListItemText>
                     </ListItem>
+                    <Divider />
                     {/*<Divider />
                     <ListItem>
                       <ListItemText>
@@ -200,6 +203,7 @@ class BridgeDrawer extends React.Component {
                 WATERWAY_EVAL_071={this.state.WATERWAY_EVAL_071}
                 APPR_ROAD_EVAL_072={this.state.APPR_ROAD_EVAL_072}
               />
+              {/*<SimpleSlider />*/}
             </div>
           );
         }}
