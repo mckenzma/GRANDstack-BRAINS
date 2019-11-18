@@ -27,10 +27,34 @@ class BridgeChart extends React.Component {
         yaxis: {
           min: 0,
           max: 9
+        },
+        plotOptions: {
+          radar: {
+            // size: 140,
+            polygons: {
+              // strokeColor: '#e9e9e9',
+              fill: {
+                colors: [
+                  "#b3ffb3", // 9 Green
+                  "#b3ffb3", // 8 Green
+                  "#b3ffb3", // 7 Green
+                  "#ffd1b3", // 6 Orange
+                  "#ffd1b3", // 5 Orange
+                  "#ffd1b3", // 5 Orange /*need to remove this once 5 issue fixed
+                  "#ffc2b3", // 4 Red
+                  "#ffc2b3", // 3 Red
+                  "#ff3300", // 2 Redder
+                  "#b32400", // 1 Dark Red
+                  "#000000" // 0 Black / Dark Gray
+                ]
+              }
+            }
+          }
         }
       },
       series: [
         {
+          // TODO - FIX "5" showing up twice?
           name: "Inspection Log",
           data: [
             // TODO: Clean this logic up. 0 is not an accurate way to handle this...
