@@ -160,8 +160,10 @@ class App extends Component {
       anchor: "left",
       openDialog: false,
 
-      selected: [], //trying to pull selected array up to pass into bridge query
-      yearSelected: [], //needed?
+      // selected: [], //trying to pull selected array up to pass into bridge query
+      selected: ["DC"], //hard coded for development
+      // yearSelected: [], //needed?
+      yearSelected: [1942], //hard coded for development
       maintRespSelected: [],
       ownerSelected: []
     };
