@@ -5,22 +5,40 @@ class BridgeChart extends React.Component {
   constructor(props) {
     super(props);
 
+    const labels = [];
+    const data = [];
+
+    [
+      "STRUCTURAL_EVAL_067",
+      "DECK_GEOMETRY_EVAL_068",
+      "UNDCLRENCE_EVAL_069",
+      "POSTING_EVAL_070",
+      "WATERWAY_EVAL_071",
+      "APPR_ROAD_EVAL_072"
+    ].forEach(key => {
+      if (this.props[key] !== "N") {
+        labels.push(key.substr(-3));
+        data.push(this.props[key]);
+      }
+    });
+
     this.state = {
       options: {
-        labels: [
-          // "STRUCTURAL_EVAL_067",
-          "067",
-          // "DECK_GEOMETRY_EVAL_068",
-          "068",
-          // "UNDCLRENCE_EVAL_069",
-          "069",
-          // "POSTING_EVAL_070",
-          "070",
-          // "WATERWAY_EVAL_071",
-          "071",
-          // "APPR_ROAD_EVAL_072"
-          "072"
-        ],
+        labels,
+        // labels: [
+        //   // "STRUCTURAL_EVAL_067",
+        //   "067",
+        //   // "DECK_GEOMETRY_EVAL_068",
+        //   "068",
+        //   // "UNDCLRENCE_EVAL_069",
+        //   "069",
+        //   // "POSTING_EVAL_070",
+        //   "070",
+        //   // "WATERWAY_EVAL_071",
+        //   "071",
+        //   // "APPR_ROAD_EVAL_072"
+        //   "072"
+        // ],
         title: {
           text: "Bridge Component Rating"
         },
@@ -56,39 +74,40 @@ class BridgeChart extends React.Component {
         {
           // TODO - FIX "5" showing up twice?
           name: "Inspection Log",
-          data: [
-            // TODO: Clean this logic up. 0 is not an accurate way to handle this...
-            parseInt(
-              this.props.STRUCTURAL_EVAL_067 == "N"
-                ? "0"
-                : this.props.STRUCTURAL_EVAL_067
-            ),
-            parseInt(
-              this.props.DECK_GEOMETRY_EVAL_068 == "N"
-                ? "0"
-                : this.props.DECK_GEOMETRY_EVAL_068
-            ),
-            parseInt(
-              this.props.UNDCLRENCE_EVAL_069 == "N"
-                ? "0"
-                : this.props.UNDCLRENCE_EVAL_069
-            ),
-            parseInt(
-              this.props.POSTING_EVAL_070 == "N"
-                ? "0"
-                : this.props.POSTING_EVAL_070
-            ),
-            parseInt(
-              this.props.WATERWAY_EVAL_071 == "N"
-                ? "0"
-                : this.props.WATERWAY_EVAL_071
-            ),
-            parseInt(
-              this.props.APPR_ROAD_EVAL_072 == "N"
-                ? "0"
-                : this.props.APPR_ROAD_EVAL_072
-            )
-          ]
+          data
+          // data: [
+          //   // TODO: Clean this logic up. 0 is not an accurate way to handle this...
+          //   parseInt(
+          //     this.props.STRUCTURAL_EVAL_067 == "N"
+          //       ? "0"
+          //       : this.props.STRUCTURAL_EVAL_067
+          //   ),
+          //   parseInt(
+          //     this.props.DECK_GEOMETRY_EVAL_068 == "N"
+          //       ? "0"
+          //       : this.props.DECK_GEOMETRY_EVAL_068
+          //   ),
+          //   parseInt(
+          //     this.props.UNDCLRENCE_EVAL_069 == "N"
+          //       ? "0"
+          //       : this.props.UNDCLRENCE_EVAL_069
+          //   ),
+          //   parseInt(
+          //     this.props.POSTING_EVAL_070 == "N"
+          //       ? "0"
+          //       : this.props.POSTING_EVAL_070
+          //   ),
+          //   parseInt(
+          //     this.props.WATERWAY_EVAL_071 == "N"
+          //       ? "0"
+          //       : this.props.WATERWAY_EVAL_071
+          //   ),
+          //   parseInt(
+          //     this.props.APPR_ROAD_EVAL_072 == "N"
+          //       ? "0"
+          //       : this.props.APPR_ROAD_EVAL_072
+          //   )
+          // ]
         }
       ]
     };
@@ -103,6 +122,7 @@ class BridgeChart extends React.Component {
           type="radar"
           height="350"
         />
+        {/* TODO Ad text box to state which thing is excluded (NOT APPLICABLE) for this bridge */}
       </div>
     );
   }
