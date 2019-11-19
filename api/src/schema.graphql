@@ -122,12 +122,14 @@ type Bridge {
 
   latestInspectionLog: InspectionLog @relation(name: "LATEST_INSPECTION_LOG", direction: "OUT")
 
-  # inspectionLogs: [InspectionLog] @cypher(statement: """
-  #   OPTIONAL MATCH (this)-[:LATEST_INSPECTION_LOG]->(latestLog)
-  #   OPTIONAL MATCH path = (latestLog)-[:PREV_INSPECTION_LOG*]->(log)
-  #   RETURN nodes(path)
-  #   """
-  # )
+  inspectionLogs: [InspectionLog] @cypher(statement: """
+    MATCH (this)-[:LATEST_INSPECTION_LOG]->(latestLog)
+    MATCH path = (latestLog)-[:PREV_INSPECTION_LOG*]->(log)
+    WITH nodes(path) AS logs
+    UNWIND logs AS log
+    RETURN log
+    """
+  )
 }
 
 type InspectionLog {
@@ -141,6 +143,7 @@ type InspectionLog {
   APPR_ROAD_EVAL_072: String
 
   bridge: Bridge @relation(name: "LATEST_INSPECTION_LOG", direction: "IN")
+  prevInspectionLogIn: InspectionLog @relation(name: "PREV_INSPECTION_LOG", direction: "BOTH")
   # prevInspectionLogIn: InspectionLog @relation(name: "PREV_INSPECTION_LOG", direction: "IN")
   # prevInspectionLogOut: InspectionLog @relation(name: "PREV_INSPECTION_LOG", direction: "OUT")
 }

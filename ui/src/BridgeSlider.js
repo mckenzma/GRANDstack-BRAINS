@@ -13,35 +13,51 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const marks = [
-  {
-    value: 0,
-    label: "0°C"
-  },
-  {
-    value: 20,
-    label: "20°C"
-  },
-  {
-    value: 37,
-    label: "37°C"
-  },
-  {
-    value: 100,
-    label: "100°C"
-  }
-];
+// const marks = [
+//   {
+//     value: 0,
+//     label: "0°C"
+//   },
+//   {
+//     value: 20,
+//     label: "20°C"
+//   },
+//   {
+//     value: 37,
+//     label: "37°C"
+//   },
+//   {
+//     value: 100,
+//     label: "100°C"
+//   }
+// ];
 
-function valuetext(value) {
-  return `${value}°C`;
-}
+// const marks = [];
 
-function valueLabelFormat(value) {
-  return marks.findIndex(mark => mark.value === value) + 1;
-}
-
-export default function DiscreteSlider() {
+export default function DiscreteSlider({ sliderYears }) {
   const classes = useStyles();
+
+  console.log(sliderYears);
+
+  const marks = sliderYears.map(year => ({
+    value: year,
+    label: toString(year)
+  }));
+
+  // [sliderYears].forEach(key => {
+  //   marks.value.push(key);
+  //   marks.label.push(key);
+  // });
+
+  console.log(sliderYears);
+
+  // function valuetext(value) {
+  //   return `${value}°C`;
+  // }
+
+  // function valueLabelFormat(value) {
+  //   return marks.findIndex(mark => mark.value === value) + 1;
+  // }
 
   return (
     <div className={classes.root}>
@@ -102,11 +118,15 @@ export default function DiscreteSlider() {
         Inspection Log Year
       </Typography>
       <Slider
-        defaultValue={80}
-        getAriaValueText={valuetext}
+        // defaultValue={80}
+        // getAriaValueText={valuetext}
         aria-labelledby="discrete-slider-always"
-        step={10}
-        marks={marks}
+        // step={10}
+        step={1}
+        min={Math.min(...sliderYears)}
+        max={Math.max(...sliderYears)}
+        // marks={marks}
+        marks={sliderYears}
         valueLabelDisplay="on"
       />
     </div>

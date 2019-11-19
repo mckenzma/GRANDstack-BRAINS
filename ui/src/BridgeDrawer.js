@@ -26,7 +26,8 @@ class BridgeDrawer extends React.Component {
     super(props);
 
     this.state = {
-      right: false
+      right: false,
+      sliderYears: []
     };
   }
 
@@ -102,6 +103,15 @@ class BridgeDrawer extends React.Component {
                 WATERWAY_EVAL_071
                 APPR_ROAD_EVAL_072
               }
+              inspectionLogs {
+                year
+                STRUCTURAL_EVAL_067
+                DECK_GEOMETRY_EVAL_068
+                UNDCLRENCE_EVAL_069
+                POSTING_EVAL_070
+                WATERWAY_EVAL_071
+                APPR_ROAD_EVAL_072
+              }
             }
           }
         `}
@@ -115,11 +125,6 @@ class BridgeDrawer extends React.Component {
         {({ loading, error, data }) => {
           if (loading) return <p>Loading...</p>;
           if (error) return <p>Error</p>;
-
-          // console.log(this.props.selectedBridge);
-          // console.log(this.props.selectedPlace);
-          // console.log(this.props.selectedCounty);
-          // console.log(this.props.selectedState);
 
           return (
             <div className={classes.list}>
@@ -147,6 +152,9 @@ class BridgeDrawer extends React.Component {
                 this.state.APPR_ROAD_EVAL_072 = `${
                   b.latestInspectionLog.APPR_ROAD_EVAL_072
                 }`;
+
+                const temp = b.inspectionLogs.map(log => log.year);
+                this.state.sliderYears = temp;
 
                 return (
                   <List key={id}>
@@ -203,7 +211,10 @@ class BridgeDrawer extends React.Component {
                 WATERWAY_EVAL_071={this.state.WATERWAY_EVAL_071}
                 APPR_ROAD_EVAL_072={this.state.APPR_ROAD_EVAL_072}
               />
-              <SimpleSlider />
+              <SimpleSlider
+                // sliderYears={{data.Bridge.inspectionLogs.year}}
+                sliderYears={this.state.sliderYears}
+              />
             </div>
           );
         }}
