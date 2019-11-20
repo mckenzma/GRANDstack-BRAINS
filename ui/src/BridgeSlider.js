@@ -63,7 +63,7 @@ export default function DiscreteSlider({ sliderYears, selectedSliderYear }) {
   const handleChange = (event, value) => {
     setValue(value);
     selectedSliderYear(value);
-    console.log(value);
+    // console.log(value);
 
     // this.value = value;
   };

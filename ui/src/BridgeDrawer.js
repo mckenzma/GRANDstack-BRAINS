@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import PropTypes from "prop-types";
@@ -21,13 +21,99 @@ const styles = {
   }
 };
 
+const BridgeDetail = ({ Bridge }) => {
+  const temp = Bridge.inspectionLogs.map(log => log.year);
+  const [currentYear, setCurrentYear] = useState(Math.max(...temp));
+  const [sliderYears, setSliderYears] = useState(temp);
+  const [inspectionLog, setInspectionLog] = useState(
+    Bridge.latestInspectionLog
+  );
+  const id = `${Bridge.stateCode}${Bridge.countyCode}${Bridge.placeCode}${
+    Bridge.code
+  }`;
+
+  const updateYear = year => {
+    setCurrentYear(year);
+    setInspectionLog(
+      Bridge.inspectionLogs.filter(
+        inspectionLog => inspectionLog.year === year
+      )[0]
+    );
+  };
+
+  console.log(currentYear, inspectionLog);
+
+  return (
+    <List>
+      <ListItem>
+        <ListItemText>
+          State: {Bridge.place.county.state.name}
+          {/*State: {Bridge.stateCode}*/}
+        </ListItemText>
+      </ListItem>
+      <ListItem>
+        {/*<ListItemText>County: {Bridge.place.county.name}</ListItemText>*/}
+        <ListItemText>County: {Bridge.countyCode}</ListItemText>
+      </ListItem>
+      <ListItem>
+        {/*<ListItemText>Place: {Bridge.place.code}</ListItemText>*/}
+        <ListItemText>Place: {Bridge.placeCode}</ListItemText>
+      </ListItem>
+      <Divider />
+      <ListItem>
+        <ListItemText>Name: {Bridge.code}</ListItemText>
+      </ListItem>
+      <ListItem>
+        <ListItemText>LAT: {Bridge.latitude_decimal}</ListItemText>
+      </ListItem>
+      <ListItem>
+        <ListItemText>LONG: {Bridge.longitude_decimal}</ListItemText>
+      </ListItem>
+      <ListItem>
+        <ListItemText>
+          {/*Build Year: {Bridge.buildYear.year}*/}
+          Build Year: {Bridge.buildYear}
+        </ListItemText>
+      </ListItem>
+      <Divider />
+      {/*<Divider />
+                    <ListItem>
+                      <ListItemText>
+                        Owned By: {b.owner.description}
+                      </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText>
+                        Maintaned By: {b.maintenanceResp.description}
+                      </ListItemText>
+                    </ListItem>*/}
+
+      <BridgeRadar
+        STRUCTURAL_EVAL_067={inspectionLog.STRUCTURAL_EVAL_067}
+        DECK_GEOMETRY_EVAL_068={inspectionLog.DECK_GEOMETRY_EVAL_068}
+        UNDCLRENCE_EVAL_069={inspectionLog.UNDCLRENCE_EVAL_069}
+        POSTING_EVAL_070={inspectionLog.POSTING_EVAL_070}
+        WATERWAY_EVAL_071={inspectionLog.WATERWAY_EVAL_071}
+        APPR_ROAD_EVAL_072={inspectionLog.APPR_ROAD_EVAL_072}
+      />
+      <SimpleSlider
+        // sliderYears={{data.Bridge.inspectionLogs.year}}
+        // sliderYears={this.state.sliderYears}
+        sliderYears={sliderYears}
+        selectedSliderYear={updateYear}
+      />
+    </List>
+  );
+};
+
 class BridgeDrawer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       right: false,
-      sliderYears: []
+      sliderYears: [],
+      currentYear: null // default to non null value
     };
   }
 
@@ -134,90 +220,39 @@ class BridgeDrawer extends React.Component {
                   b.code
                 }`;
 
-                this.state.STRUCTURAL_EVAL_067 = `${
-                  b.latestInspectionLog.STRUCTURAL_EVAL_067
-                }`;
-                this.state.DECK_GEOMETRY_EVAL_068 = `${
-                  b.latestInspectionLog.DECK_GEOMETRY_EVAL_068
-                }`;
-                this.state.UNDCLRENCE_EVAL_069 = `${
-                  b.latestInspectionLog.UNDCLRENCE_EVAL_069
-                }`;
-                this.state.POSTING_EVAL_070 = `${
-                  b.latestInspectionLog.POSTING_EVAL_070
-                }`;
-                this.state.WATERWAY_EVAL_071 = `${
-                  b.latestInspectionLog.WATERWAY_EVAL_071
-                }`;
-                this.state.APPR_ROAD_EVAL_072 = `${
-                  b.latestInspectionLog.APPR_ROAD_EVAL_072
-                }`;
-
                 // console.log(id);
 
-                const temp = b.inspectionLogs.map(log => log.year);
-                this.state.sliderYears = temp;
+                // this.state.currentYear = b.latestInspectionLog.year;
 
-                return (
-                  <List key={id}>
-                    <ListItem>
-                      <ListItemText>
-                        State: {b.place.county.state.name}
-                        {/*State: {b.stateCode}*/}
-                      </ListItemText>
-                    </ListItem>
-                    <ListItem>
-                      {/*<ListItemText>County: {b.place.county.name}</ListItemText>*/}
-                      <ListItemText>County: {b.countyCode}</ListItemText>
-                    </ListItem>
-                    <ListItem>
-                      {/*<ListItemText>Place: {b.place.code}</ListItemText>*/}
-                      <ListItemText>Place: {b.placeCode}</ListItemText>
-                    </ListItem>
-                    <Divider />
-                    <ListItem>
-                      <ListItemText>Name: {b.code}</ListItemText>
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText>LAT: {b.latitude_decimal}</ListItemText>
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText>LONG: {b.longitude_decimal}</ListItemText>
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText>
-                        {/*Build Year: {b.buildYear.year}*/}
-                        Build Year: {b.buildYear}
-                      </ListItemText>
-                    </ListItem>
-                    <Divider />
-                    {/*<Divider />
-                    <ListItem>
-                      <ListItemText>
-                        Owned By: {b.owner.description}
-                      </ListItemText>
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText>
-                        Maintaned By: {b.maintenanceResp.description}
-                      </ListItemText>
-                    </ListItem>*/}
-                  </List>
-                );
+                // const temp = b.inspectionLogs.map(log => log.year);
+                // this.state.sliderYears = temp;
+                // // this.state.currentYear = temp;
+
+                // // console.log(b.inspectionLogs);
+
+                // console.log("currentYear: " + this.state.currentYear);
+
+                // const inspectionLog = b.inspectionLogs.filter(inspectionLog => inspectionLog.year === this.state.currentYear);
+                // console.log("hello", inspectionLog[0]);
+                // const inspectionLogForRadar = inspectionLog[0] || {
+                //   STRUCTURAL_EVAL_067 : `${b.latestInspectionLog.STRUCTURAL_EVAL_067}`,
+                //   DECK_GEOMETRY_EVAL_068 : `${b.latestInspectionLog.DECK_GEOMETRY_EVAL_068}`,
+                //   UNDCLRENCE_EVAL_069 : `${b.latestInspectionLog.UNDCLRENCE_EVAL_069}`,
+                //   POSTING_EVAL_070 : `${b.latestInspectionLog.POSTING_EVAL_070}`,
+                //   WATERWAY_EVAL_071 : `${b.latestInspectionLog.WATERWAY_EVAL_071}`,
+                //   APPR_ROAD_EVAL_072 : `${b.latestInspectionLog.APPR_ROAD_EVAL_072}`
+                // };
+                // console.log("Radar: ", inspectionLogForRadar);
+
+                // this.state.STRUCTURAL_EVAL_067= inspectionLogForRadar.STRUCTURAL_EVAL_067;
+                // this.state.DECK_GEOMETRY_EVAL_068= inspectionLogForRadar.DECK_GEOMETRY_EVAL_068;
+                // this.state.UNDCLRENCE_EVAL_069= inspectionLogForRadar.UNDCLRENCE_EVAL_069;
+                // this.state.POSTING_EVAL_070= inspectionLogForRadar.POSTING_EVAL_070;
+                // this.state.WATERWAY_EVAL_071= inspectionLogForRadar.WATERWAY_EVAL_071;
+                // this.state.APPR_ROAD_EVAL_072= inspectionLogForRadar.APPR_ROAD_EVAL_072;
+
+                return <BridgeDetail Bridge={b} key={id} />;
               })}
-              <BridgeRadar
-                STRUCTURAL_EVAL_067={this.state.STRUCTURAL_EVAL_067}
-                DECK_GEOMETRY_EVAL_068={this.state.DECK_GEOMETRY_EVAL_068}
-                UNDCLRENCE_EVAL_069={this.state.UNDCLRENCE_EVAL_069}
-                POSTING_EVAL_070={this.state.POSTING_EVAL_070}
-                WATERWAY_EVAL_071={this.state.WATERWAY_EVAL_071}
-                APPR_ROAD_EVAL_072={this.state.APPR_ROAD_EVAL_072}
-              />
-              <SimpleSlider
-                // sliderYears={{data.Bridge.inspectionLogs.year}}
-                sliderYears={this.state.sliderYears}
-                selectedSliderYear={year => console.log("hello", year)}
-              />
             </div>
           );
         }}
