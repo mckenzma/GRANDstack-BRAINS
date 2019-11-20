@@ -153,6 +153,8 @@ class BridgeDrawer extends React.Component {
                   b.latestInspectionLog.APPR_ROAD_EVAL_072
                 }`;
 
+                // console.log(id);
+
                 const temp = b.inspectionLogs.map(log => log.year);
                 this.state.sliderYears = temp;
 
@@ -214,6 +216,7 @@ class BridgeDrawer extends React.Component {
               <SimpleSlider
                 // sliderYears={{data.Bridge.inspectionLogs.year}}
                 sliderYears={this.state.sliderYears}
+                selectedSliderYear={year => console.log("hello", year)}
               />
             </div>
           );
