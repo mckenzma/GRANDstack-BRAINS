@@ -26,7 +26,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import BridgeDrawer from "./BridgeDrawer.js";
 
-import StateMarker from "./MapStateMarker.js";
+// import StateMarker from "./MapStateMarker.js";
 
 const styles = theme => ({
   root: {
@@ -119,9 +119,8 @@ class MapLeaf extends React.Component {
         query={gql`
           query bridgesPaginateQuery(
             $selected: [String!]
-            $yearSelected: [Int!] #$maintRespSelected: [String!]
-          ) #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
-          {
+            $yearSelected: [Int!] #$maintRespSelected: [String!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+          ) {
             Bridge(
               filter: {
                 place: { county: { state: { abbreviation_in: $selected } } }

@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -56,96 +55,52 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent);
 
-class GraphSummaryDialog extends React.Component {
-  state = {
-    open: false
+export default function GraphSummaryDialog() {
+  const [open, setOpen] = useState(false);
+
+  const [maxWidth, setMaxWidth] = useState("xl");
+
+  const handleClickOpen = event => {
+    setOpen(true);
   };
 
-  handleClickOpen = () => {
-    this.setState({
-      open: true,
-      maxWidth: "xl"
-    });
+  const handleClose = event => {
+    setOpen(false);
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  render() {
-    // return (
-    //   <Query
-    //     query={gql`
-    //       {
-    //         relationshipSummaryCount {
-    //           type
-    //           count
-    //         }
-    //       }
-    //     `}
-    //   >
-    //     {({ loading, error, data }) => {
-    //       if (loading) return <p>Loading...</p>;
-    //       if (error) return <p>Error</p>;
-
-    // console.log(data.relationshipSummaryCount);
-
-    return (
-      // <div>
-      //   {data.relationshipSummaryCount.map(rsc => {
-      //   // {data}
-      //     return(
-      //       <p>{rsc.type}: {rsc.count}</p>
-      //     );
-      //   })}
-      //   </div>
-
-      <div>
-        <ListItem
-          button
-          variant="outlined"
-          color="secondary"
-          onClick={this.handleClickOpen}
-        >
-          <ListItemText>Graph Summary</ListItemText>
-        </ListItem>
-        <Dialog
-          onClose={this.handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={this.state.open}
-          fullWidth={true}
-          maxWidth={this.state.maxWidth}
-          scroll={this.state.scroll}
-          // aria-labelledby="scroll-dialog-title"
-        >
-          <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Graph Data Summary
-          </DialogTitle>
-          <DialogContent>
-            <Grid container spacing={24}>
-              <Grid item xs={12} md={6}>
-                <GraphSummaryNodes />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <GraphSummaryRelationships />
-              </Grid>
+  return (
+    <div>
+      <ListItem
+        button
+        variant="outlined"
+        color="secondary"
+        onClick={handleClickOpen}
+      >
+        <ListItemText>Graph Summary</ListItemText>
+      </ListItem>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        fullWidth={true}
+        maxWidth={maxWidth}
+        //scroll={this.state.scroll} // set this with useState?
+        // aria-labelledby="scroll-dialog-title"
+      >
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Graph Data Summary
+        </DialogTitle>
+        <DialogContent>
+          <Grid container spacing={24}>
+            <Grid item xs={12} md={6}>
+              <GraphSummaryNodes />
             </Grid>
-            {/*({data.relationshipSummaryCount.map(rsc => {
-                      return(
-                        <p key={rsc.type}>{rsc.type}: {rsc.count}</p>
-                      );
-                    })}*/}
-            {/*<Typography gutterBottom>
-                    Enter information from query about graph strucutre
-                  </Typography>*/}
-          </DialogContent>
-        </Dialog>
-      </div>
-    );
-    //     }}
-    //   </Query>
-    // );
-  }
+            <Grid item xs={12} md={6}>
+              <GraphSummaryRelationships />
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }
-
-export default GraphSummaryDialog;

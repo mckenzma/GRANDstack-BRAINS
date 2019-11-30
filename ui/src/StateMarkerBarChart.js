@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React /*, { Component }*/ from "react";
 import Chart from "react-apexcharts";
 
 import { Query } from "react-apollo";
@@ -19,10 +19,8 @@ class StateMarkerBarChart extends React.Component {
       // order: "asc", // sets order of states to be named in list
       // orderBy: "abbreviation",
 
-      // this sets the state for the Apex Chart
       options: {
         chart: {
-          // id: "basic-bar",
           type: "bar"
         },
         title: {
@@ -30,21 +28,12 @@ class StateMarkerBarChart extends React.Component {
         },
         plotOptions: {
           bar: {
-            // barHeight: '100%',
-            // distributed: true,
-            // horizontal: true,
             columnWidth: "100%",
             dataLabels: {
               hideOverflowingLabels: false
             }
           }
         }
-        // legend: {
-        //   show:true,
-        //   position: 'bottom'
-        // },
-        //series: [44, 55, 41, 17, 15],
-        //labels: ["A", "B", "C", "D", "E"]
       }
     };
   }
@@ -57,7 +46,6 @@ class StateMarkerBarChart extends React.Component {
         query={gql`
           query statesPaginateQuery($selectedState: String!) {
             State(filter: { name: $selectedState }) {
-              #name
               chartBarBridgeByBuildYear {
                 year
                 count
@@ -102,14 +90,7 @@ class StateMarkerBarChart extends React.Component {
 
           return (
             <div className="mixed-chart">
-              <Chart
-                // options={this.state.options}
-                options={options}
-                // series={this.state.options.series}
-                series={series}
-                type="bar"
-                // width="380"
-              />
+              <Chart options={options} series={series} type="bar" />
             </div>
           );
         }}

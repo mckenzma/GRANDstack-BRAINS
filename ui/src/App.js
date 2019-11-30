@@ -25,7 +25,6 @@ import FiltersDialog from "./Filters";
 import SummaryDialog from "./Summary";
 
 const drawerWidth = 240;
-const drawerWidthRight = 300;
 
 const styles = theme => ({
   root: {

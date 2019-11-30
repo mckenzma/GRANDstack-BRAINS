@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Chart from "react-apexcharts";
 
 import { Query } from "react-apollo";
@@ -13,7 +13,6 @@ class StackedBarChart1 extends React.Component {
     this.state = {
       options: {
         chart: {
-          // height: 350,
           height: "auto",
           type: "bar",
           stacked: true
@@ -38,33 +37,10 @@ class StackedBarChart1 extends React.Component {
           width: 1,
           colors: ["#fff"]
         },
-        // series: [
-        //   {
-        //     name: "Rating 0",
-        //     data: [44, 55, 41, 37, 22, 43, 21]
-        //   },
-        //   {
-        //     name: "Rating 1",
-        //     data: [53, 32, 33, 52, 13, 43, 32]
-        //   },
-        //   {
-        //     name: "Rating 2",
-        //     data: [12, 17, 11, 9, 15, 11, 20]
-        //   },
-        //   {
-        //     name: "Rating 3",
-        //     data: [9, 7, 5, 8, 6, 9, 4]
-        //   },
-        //   {
-        //     name: "Rating 4",
-        //     data: [25, 12, 19, 32, 25, 24, 10]
-        //   }
-        // ],
         title: {
           text: "Rows per State per File Year"
         },
         xaxis: {
-          // categories: ["2018", "2017", "2016", "2015", "2014", "2013", "2012"],
           labels: {
             formatter: function(val) {
               return val /*+ "K"*/;
@@ -112,7 +88,6 @@ class StackedBarChart1 extends React.Component {
         `}
       >
         {({ loading, error, data }) => {
-          // if (loading) return <p>Loading...</p>;
           if (loading) return <Loading />;
           if (error) return <p>Error</p>;
 
@@ -129,12 +104,6 @@ class StackedBarChart1 extends React.Component {
             }
           };
 
-          ///////
-          // 1993 PR is missing from query! WHY?
-          // PR93.txt connect to Oregon for some weird reason...
-          ///////
-          // console.log(data);
-
           const series = data.stackedBarChart_Rows_Per_State_Per_Year__1
             .slice()
             .map(n => {
@@ -146,18 +115,9 @@ class StackedBarChart1 extends React.Component {
               };
             });
 
-          // console.log(series);
-
           return (
             <div className="bar">
-              <Chart
-                // options={this.state.options}
-                options={options}
-                // series={this.state.options.series}
-                series={series}
-                type="bar"
-                // width="380"
-              />
+              <Chart options={options} series={series} type="bar" />
             </div>
           );
         }}

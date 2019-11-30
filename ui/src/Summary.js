@@ -3,10 +3,8 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
-// import BallotIcon from "@material-ui/icons/Ballot";
 
 import Dialog from "@material-ui/core/Dialog";
-// import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -16,10 +14,10 @@ import Grid from "@material-ui/core/Grid";
 
 import DonutChartState from "./ChartDonutState";
 import BarChartState from "./ChartBarState";
-import HeatMapState from "./ChartHeatState";
+// import HeatMapState from "./ChartHeatState";
 
-import StackedBarChart1 from "./StackedBarChart1";
-import StackedBarChart2 from "./StackedBarChart2";
+// import StackedBarChart1 from "./StackedBarChart1";
+// import StackedBarChart2 from "./StackedBarChart2";
 
 const styles = theme => ({
   root: {
@@ -102,7 +100,7 @@ class SummaryDialog extends React.Component {
                     />
                   </Paper>
                 </Grid>
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <HeatMapState
                       selected={this.props.selected}
@@ -111,17 +109,17 @@ class SummaryDialog extends React.Component {
                       ownerSelected={this.props.ownerSelected}
                     />
                   </Paper>
-                </Grid>
-                <Grid item xs={12}>
+                </Grid>*/}
+                {/*<Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <StackedBarChart1 />
                   </Paper>
-                </Grid>
-                <Grid item xs={12}>
+                </Grid>*/}
+                {/*<Grid item xs={12}>
                   <Paper className={classes.paper}>
                     <StackedBarChart2 />
                   </Paper>
-                </Grid>
+                </Grid>*/}
               </Grid>
             </div>
           </DialogContent>

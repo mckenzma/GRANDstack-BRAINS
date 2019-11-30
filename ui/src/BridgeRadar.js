@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Chart from "react-apexcharts";
 
 class BridgeChart extends React.Component {
@@ -21,8 +21,6 @@ class BridgeChart extends React.Component {
         data.push(this.props[key]);
       }
     });
-
-    console.log(data);
 
     this.state = {
       options: {
@@ -85,8 +83,6 @@ class BridgeChart extends React.Component {
         data.push(this.props[key]);
       }
     });
-
-    console.log(data);
 
     const state = {
       options: {

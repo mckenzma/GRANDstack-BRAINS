@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React /*, { Component }*/ from "react";
 import Chart from "react-apexcharts";
 
 import { Query } from "react-apollo";

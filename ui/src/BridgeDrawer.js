@@ -41,8 +41,6 @@ const BridgeDetail = ({ Bridge }) => {
     );
   };
 
-  console.log(currentYear, inspectionLog);
-
   return (
     <List>
       <ListItem>
@@ -77,17 +75,18 @@ const BridgeDetail = ({ Bridge }) => {
       </ListItem>
       <Divider />
       {/*<Divider />
-                    <ListItem>
-                      <ListItemText>
-                        Owned By: {b.owner.description}
-                      </ListItemText>
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText>
-                        Maintaned By: {b.maintenanceResp.description}
-                      </ListItemText>
-                    </ListItem>*/}
+      <ListItem>
+        <ListItemText>
+          Owned By: {b.owner.description}
+        </ListItemText>
+      </ListItem>
+      <ListItem>
+        <ListItemText>
+          Maintaned By: {b.maintenanceResp.description}
+        </ListItemText>
+      </ListItem>*/}
 
+      <SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} />
       <BridgeRadar
         STRUCTURAL_EVAL_067={inspectionLog.STRUCTURAL_EVAL_067}
         DECK_GEOMETRY_EVAL_068={inspectionLog.DECK_GEOMETRY_EVAL_068}
@@ -95,12 +94,6 @@ const BridgeDetail = ({ Bridge }) => {
         POSTING_EVAL_070={inspectionLog.POSTING_EVAL_070}
         WATERWAY_EVAL_071={inspectionLog.WATERWAY_EVAL_071}
         APPR_ROAD_EVAL_072={inspectionLog.APPR_ROAD_EVAL_072}
-      />
-      <SimpleSlider
-        // sliderYears={{data.Bridge.inspectionLogs.year}}
-        // sliderYears={this.state.sliderYears}
-        sliderYears={sliderYears}
-        selectedSliderYear={updateYear}
       />
     </List>
   );

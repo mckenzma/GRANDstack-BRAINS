@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React /*, { Component }*/ from "react";
 import Chart from "react-apexcharts";
 
 import { Query } from "react-apollo";
@@ -29,8 +29,6 @@ class DonutChartState extends React.Component {
         title: {
           text: "Total Bridge Count by State"
         }
-        //series: [44, 55, 41, 17, 15],
-        //labels: ["A", "B", "C", "D", "E"]
       }
     };
   }
@@ -54,13 +52,8 @@ class DonutChartState extends React.Component {
         }}
       >
         {({ loading, error, data }) => {
-          // if (loading) return <p>Loading...</p>;
           if (loading) return <Loading />;
           if (error) return <p>Error</p>;
-
-          // window.data = data;
-          // console.log(data);
-          // console.log(this.props.selected);
 
           const options = {
             ...this.state.options,
@@ -74,16 +67,13 @@ class DonutChartState extends React.Component {
           return (
             <div className="donut">
               <Chart
-                // options={this.state.options}
                 options={options}
-                // series={this.state.options.series}
                 series={data.State.slice()
                   .sort(getSorting(order, orderBy))
                   .map(n => {
                     return n.numBridges.toLocaleString();
                   })}
                 type="donut"
-                // width="380"
               />
             </div>
           );
