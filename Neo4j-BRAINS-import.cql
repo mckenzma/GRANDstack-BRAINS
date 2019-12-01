@@ -700,6 +700,23 @@ ON CREATE SET rc.createdOn = date()
 ',
 {batchSize:1000,parallel:false})
 
+// Set property on (:RowComparison) showing which properties vary between the files
+CALL apoc.periodic.iterate(
+'
+MATCH (rc:RowComparison)
+WHERE rc.varyingProps IS NULL
+RETURN rc
+','
+MATCH (rc)<-[:COMPARES]-(dr:DelimitedRow)
+MATCH (rc)<-[:COMPARES]-(ndr:NoDelimiterRow)
+// dr has more keys/properties than ndr
+WITH rc, dr, ndr, keys(dr) AS propKeys
+WITH rc, FILTER(prop IN propKeys WHERE dr[prop] <> ndr[prop] AND prop <> "url" AND prop <> "createdOn") AS diffProps
+WHERE size(diffProps) > 0
+SET rc.varyingProps = diffProps
+',
+{batchSize:10000, parallel:false})
+
 
 // Connect bridge to place
 // connect bridge to existing (State)<--(County)<--(Place) tree
