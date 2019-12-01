@@ -598,7 +598,7 @@ ON CREATE SET county.createdOn = date(),
 //DROP CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.code) IS NODE KEY
 CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.stateCode, bridge.countyCode, bridge.placeCode, bridge.code) IS NODE KEY
 
-// create/merge bridge
+// create/merge bridge (:NoDelimieterRow)
 CALL apoc.periodic.iterate(
 '
 MATCH (row:NoDelimiterRow)
@@ -618,7 +618,27 @@ ON CREATE SET bridge.createdOn = datetime()
 ',
 {batchSize:10000,parallel:false})
 
-// Connect bridge to row
+// create/merge bridge (:DelimitedRow)
+CALL apoc.periodic.iterate(
+'
+MATCH (row:DelimitedRow)
+WHERE NOT (row)-[:DATA_FOR]->()
+RETURN row
+','
+WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
+     row.COUNTY_CODE_003 AS countyCode,
+     row.PLACE_CODE_004 AS placeCode,
+     coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+MERGE (bridge:Bridge {stateCode: stateCode, 
+                      countyCode: countyCode, 
+                      placeCode: placeCode, 
+                      code: bridgeCode})
+ON CREATE SET bridge.createdOn = datetime()
+//CREATE (row)-[:DATA_FOR]->(bridge)
+',
+{batchSize:10000,parallel:false})
+
+// Connect bridge to row (:NoDelimiterRow)
 CALL apoc.periodic.iterate(
 '
 MATCH (row:NoDelimiterRow)
@@ -637,6 +657,49 @@ MATCH (bridge:Bridge {stateCode: stateCode,
 CREATE (row)-[:DATA_FOR]->(bridge)
 ',
 {batchSize:10000,parallel:false})
+
+// Connect bridge to row (:DelimitedRow)
+CALL apoc.periodic.iterate(
+'
+MATCH (row:DelimitedRow)
+WHERE NOT (row)-[:DATA_FOR]->()
+RETURN row
+','
+WITH row,
+row.STATE_CODE_001 AS stateCode, 
+     row.COUNTY_CODE_003 AS countyCode,
+     row.PLACE_CODE_004 AS placeCode,
+    coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+MATCH (bridge:Bridge {stateCode: stateCode, 
+                      countyCode: countyCode, 
+                      placeCode: placeCode, 
+                      code: bridgeCode})
+CREATE (row)-[:DATA_FOR]->(bridge)
+',
+{batchSize:10000,parallel:false})
+
+
+// Create comparisons between rows for same year files
+CALL apoc.periodic.iterate(
+'
+MATCH (b:Bridge)
+WHERE (b)<-[:DATA_FOR]-(:DelimitedRow)
+AND (b)<-[:DATA_FOR]-(:NoDelimiterRow)
+RETURN b
+','
+MATCH (b)<-[:DATA_FOR]-(dr:DelimitedRow)<-[:CONTAINS]-(df:DelimitedFile)
+WHERE NOT (dr)-[:COMPARES]->()
+WITH b, dr, df
+OPTIONAL MATCH (b)<-[:DATA_FOR]-(ndr:NoDelimiterRow)<-[:CONTAINS]-(ndf:NoDelimiterFile)
+WHERE NOT (ndr)-[:COMPARES]->()
+AND ndf.year = df.year
+WITH b, ndr, dr//, ndf, df
+WHERE NOT ndr IS NULL
+MERGE (dr)-[:COMPARES]->(rc:RowComparison)<-[:COMPARES]-(ndr)
+ON CREATE SET rc.createdOn = date()
+',
+{batchSize:1000,parallel:false})
+
 
 // Connect bridge to place
 // connect bridge to existing (State)<--(County)<--(Place) tree
