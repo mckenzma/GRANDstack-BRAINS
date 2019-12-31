@@ -62,9 +62,9 @@ const GET_STATES = gql`
 
 export default function StateListFilter({
   selectedStates,
-  setSelectedStates,
-  numSelectedStates,
-  setNumSelectedStates
+  setSelectedStates
+  // numSelectedStates,
+  // setNumSelectedStates
 }) {
   const classes = useStyles();
 
@@ -93,6 +93,9 @@ export default function StateListFilter({
 
   const [selected, setSelected] = useState("");
   const [numSelected, setNumSelected] = useState(0);
+  const [numSelectedStates, setNumSelectedStates] = useState(
+    selectedStates.length
+  );
 
   // const order = "asc";
   // const orderBy = "abbreviation";

@@ -186,7 +186,7 @@ export default function App() {
   // selected: ["DC"], //hard coded for development
   const [_selectedStates, _setSelectedStates] = useState(["DC"]);
   // const [numSelected, setNumSelected] = useState(0);
-  const [_numSelectedStates, _setNumSelectedStates] = useState(1); // refactor to remove this
+  // const [_numSelectedStates, _setNumSelectedStates] = useState(1); // refactor to remove this
   // yearSelected: [], //needed?
   // yearSelected: [1942], //hard coded for development
   const [yearSelected, setYearSelected] = useState([1942]);
@@ -314,8 +314,8 @@ export default function App() {
               _selectedStates={_selectedStates}
               _setSelectedStates={_setSelectedStates}
               // numSelected={this.state.numSelected}
-              _numSelectedStates={_numSelectedStates}
-              _setNumSelectedStates={_setNumSelectedStates}
+              // _numSelectedStates={_numSelectedStates}
+              // _setNumSelectedStates={_setNumSelectedStates}
               // yearSelected={this.state.yearSelected}
               // yearSelected={yearSelected}
               // setYearSelected={setYearSelected}

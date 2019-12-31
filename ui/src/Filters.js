@@ -17,9 +17,9 @@ import StateListFilter from "./StateListFilter";
 
 export default function FiltersDialog({
   _selectedStates,
-  _setSelectedStates,
-  _numSelectedStates,
-  _setNumSelectedStates
+  _setSelectedStates //,
+  // _numSelectedStates,
+  // _setNumSelectedStates
   // yearSelected,
   // maintRespSelected,
   // ownerSelected
@@ -48,9 +48,9 @@ export default function FiltersDialog({
   const scroll = "paper";
 
   const [selectedStates, setSelectedStates] = useState(_selectedStates);
-  const [numSelectedStates, setNumSelectedStates] = useState(
-    _numSelectedStates
-  );
+  // const [numSelectedStates, setNumSelectedStates] = useState(
+  //   _numSelectedStates
+  // );
 
   const fullWidth = true;
   const maxWidth = "md";
@@ -108,8 +108,8 @@ export default function FiltersDialog({
             // selected={this.props.selected}
             selectedStates={selectedStates}
             setSelectedStates={setSelectedStates}
-            numSelectedStates={numSelectedStates}
-            setNumSelectedStates={setNumSelectedStates}
+            // numSelectedStates={numSelectedStates}
+            // setNumSelectedStates={setNumSelectedStates}
           />
           {/*<BuildYearFilter
             // triggerParentUpdate={this.updateThisProperty}
