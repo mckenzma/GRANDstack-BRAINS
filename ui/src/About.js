@@ -49,7 +49,7 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent);
 
-export default function CustomizedDialogDemo() {
+export default function AboutDialog() {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = event => {

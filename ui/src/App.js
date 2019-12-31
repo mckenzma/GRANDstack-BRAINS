@@ -19,11 +19,11 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
-// import CustomizedDialogDemo from "./About";
-// import GraphSummaryDialog from "./GraphSummaryDialog";
+import AboutDialog from "./About";
+import GraphSummaryDialog from "./GraphSummaryDialog";
 
 import FiltersDialog from "./Filters";
-// import SummaryDialog from "./Summary";
+import SummaryDialog from "./Summary";
 
 const drawerWidth = 240;
 
@@ -199,7 +199,7 @@ export default function App() {
   // this.handleFilters = this.handleFilters.bind(this);
   // }
 
-  console.log(_selectedStates);
+  // console.log(_selectedStates);
   const handleDrawerOpen = () => {
     // this.setState({ open: true });
     setOpen(true);
@@ -268,8 +268,8 @@ export default function App() {
       </div>
       <Divider />
 
-      {/*<CustomizedDialogDemo />*/}
-      {/*<GraphSummaryDialog />*/}
+      <AboutDialog />
+      <GraphSummaryDialog />
     </Drawer>
   );
 
