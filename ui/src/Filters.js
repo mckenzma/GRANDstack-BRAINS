@@ -11,16 +11,17 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import StateListFilter from "./StateListFilter";
-// import BuildYearFilter from "./BuildYearFilter";
+import BuildYearFilter from "./BuildYearFilter";
 // import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
 // import OwnerFilter from "./OwnerFilter";
 
 export default function FiltersDialog({
   _selectedStates,
-  _setSelectedStates //,
+  _setSelectedStates,
   // _numSelectedStates,
   // _setNumSelectedStates
-  // yearSelected,
+  _selectedYears,
+  _setSelectedYears
   // maintRespSelected,
   // ownerSelected
 }) {
@@ -48,6 +49,7 @@ export default function FiltersDialog({
   const scroll = "paper";
 
   const [selectedStates, setSelectedStates] = useState(_selectedStates);
+  const [selectedYears, setSelectedYears] = useState(_selectedYears);
   // const [numSelectedStates, setNumSelectedStates] = useState(
   //   _numSelectedStates
   // );
@@ -71,6 +73,7 @@ export default function FiltersDialog({
   const handleApply = event => {
     setOpen(false);
     _setSelectedStates(selectedStates);
+    _setSelectedYears(selectedYears);
     // this.setState({ yearSelected: this.state.yearSelected });
     // this.setState({ maintRespSelected: this.state.maintRespSelected });
     // this.setState({ ownerSelected: this.state.ownerSelected });
@@ -111,12 +114,13 @@ export default function FiltersDialog({
             // numSelectedStates={numSelectedStates}
             // setNumSelectedStates={setNumSelectedStates}
           />
-          {/*<BuildYearFilter
+          <BuildYearFilter
             // triggerParentUpdate={this.updateThisProperty}
             // triggerParentUpdate={updateThisProperty}
             // yearSelected={this.props.yearSelected}
-            yearSelected={yearSelected}
-          />*/}
+            selectedYears={selectedYears}
+            setSelectedYears={setSelectedYears}
+          />
           {/*<MaintenanceResponsibilityFilter
               triggerParentUpdate={this.updateThisProperty}
               maintRespSelected={this.props.maintRespSelected}

@@ -1,5 +1,6 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { useQuery } from "@apollo/react-hooks";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
@@ -17,7 +18,8 @@ import PropTypes from "prop-types";
 
 import { withStyles } from "@material-ui/core/styles";
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
+  // const styles = theme => ({
   root: {
     display: "flex",
     flexWrap: "wrap"
@@ -36,170 +38,221 @@ const styles = theme => ({
   noLabel: {
     marginTop: theme.spacing(3)
   }
-});
+  // });
+}));
 
-function getSorting(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
-    : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
-}
-
-class BuildYearFilter extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      order: "desc", // sets order of years to be listed in the menu
-      orderBy: "year",
-      yearSelected: this.props.yearSelected,
-      numYearSelected: this.props.numYearSelected
-    };
+const GET_BUILD_YEARS = gql`
+  {
+    queryBuildYear {
+      year
+    }
   }
+  #{
+  #  BuildYear {
+  #    #id
+  #    year
+  #  }
+  #}
+`;
 
-  handleChange = year => event => {
-    this.setState({ selectedValue: event.target.value });
+// function getSorting(order, orderBy) {
+//   return order === "desc"
+//     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
+//     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
+// }
+
+export default function BuildYearFilter({ selectedYears, setSelectedYears }) {
+  // class BuildYearFilter extends React.Component {
+  // constructor(props) {
+  //   super(props);
+
+  //   this.state = {
+  //     order: "desc", // sets order of years to be listed in the menu
+  //     orderBy: "year",
+  //     yearSelected: this.props.yearSelected,
+  //     numYearSelected: this.props.numYearSelected
+  //   };
+  // }
+
+  const classes = useStyles();
+
+  const { loading, error, data } = useQuery(GET_BUILD_YEARS);
+
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("year");
+
+  const [year, setYear] = useState(null);
+
+  const [state, setState] = useState(null);
+
+  const [selected, setSelected] = useState("");
+  const [numSelected, setNumSelected] = useState(0);
+  const [numSelectedYears, setNumSelectedYears] = useState(
+    selectedYears.length
+  );
+
+  const handleChange = year => event => {
+    // this.setState({ selectedValue: event.target.value });
+    setState({ ...state, [year]: event.target.checked });
   };
 
-  handleClick = (event, year) => {
-    const { yearSelected } = this.state;
-    const selectedIndex = yearSelected.indexOf(year);
+  // console.log(state);
+
+  const handleClick = (event, year) => {
+    // const { yearSelected } = this.state;
+    setSelected(selectedYears);
+    const selectedIndex = selectedYears.indexOf(year);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(yearSelected, year);
+      newSelected = newSelected.concat(selectedYears, year);
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(yearSelected.slice(1));
-    } else if (selectedIndex === yearSelected.length - 1) {
-      newSelected = newSelected.concat(yearSelected.slice(0, -1));
+      newSelected = newSelected.concat(selectedYears.slice(1));
+    } else if (selectedIndex === selectedYears.length - 1) {
+      newSelected = newSelected.concat(selectedYears.slice(0, -1));
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
-        yearSelected.slice(0, selectedIndex),
-        yearSelected.slice(selectedIndex + 1)
+        selectedYears.slice(0, selectedIndex),
+        selectedYears.slice(selectedIndex + 1)
       );
     }
 
-    this.setState({ yearSelected: newSelected.sort().reverse() });
-    this.setState({ numYearSelected: newSelected.length });
-    this.props.triggerParentUpdate("yearSelected", newSelected);
-    this.props.triggerParentUpdate("numYearSelected", newSelected.length);
+    // this.setState({ yearSelected: newSelected.sort().reverse() });
+    setSelectedYears(newSelected.sort().reverse());
+    // this.setState({ numYearSelected: newSelected.length });
+    setNumSelectedYears(newSelected.length);
+    // this.props.triggerParentUpdate("yearSelected", newSelected);
+    // this.props.triggerParentUpdate("numYearSelected", newSelected.length);
   };
 
-  handleSelectAllClick = (event, data) => {
+  // console.log(data);
+
+  const handleSelectAllClick = (event, data) => {
     let newSelected = [];
 
     if (event.target.checked) {
       newSelected = data.map(n => n.year);
-      this.setState({ yearSelected: newSelected.sort().reverse() });
-      this.setState(state => ({ numYearSelected: state.yearSelected.length }));
-      this.props.triggerParentUpdate(state => ({
-        numYearSelected: state.yearSelected.length
-      }));
-      this.props.triggerParentUpdate("yearSelected", newSelected);
+      console.log(data.map(n => n.year));
+      setSelectedYears(newSelected.sort().reverse());
+      // this.setState({ yearSelected: newSelected.sort().reverse() });
+      // this.setState(state => ({ numYearSelected: state.yearSelected.length }));
+      // this.props.triggerParentUpdate(state => ({
+      // numYearSelected: state.yearSelected.length
+      // }));
+      // this.props.triggerParentUpdate("yearSelected", newSelected);
+      setNumSelectedYears(rowCount);
       return;
     }
-    this.setState({ yearSelected: [] });
-    this.setState(state => ({ numYearSelected: state.yearSelected.length }));
-    this.props.triggerParentUpdate(state => ({
-      yearSelected: state.yearSelected
-    }));
+    // this.setState({ yearSelected: [] });
+    setSelectedYears([]);
+    // this.setState(state => ({ numYearSelected: state.yearSelected.length }));
+    setNumSelected(0);
+    // this.props.triggerParentUpdate(state => ({
+    //   yearSelected: state.yearSelected
+    // }));
   };
 
-  isYearSelected = year => this.state.yearSelected.indexOf(year) !== -1;
-
-  render() {
-    const { order, orderBy } = this.state;
-
-    const { numYearSelected } = this.state;
-
-    const { classes } = this.props;
-
-    return (
-      <Query
-        query={gql`
-          {
-            queryBuildYear {
-              year
-            }
-          }
-          #{
-          #  BuildYear {
-          #    #id
-          #    year
-          #  }
-          #}
-        `}
-      >
-        {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>;
-          if (error) return <p>Error</p>;
-
-          // const rowYearCount = Object.keys(data.BuildYear).length;
-          const rowYearCount = Object.keys(data.queryBuildYear).length;
-
-          return (
-            <div className={classes.root}>
-              <FormControl className={classes.formControl}>
-                <InputLabel>Build Years</InputLabel>
-                <Select
-                  multiple
-                  value={this.state.yearSelected}
-                  renderValue={yearSelected => (
-                    <div className={classes.chips}>
-                      {this.state.yearSelected.map(value => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </div>
-                  )}
-                >
-                  <MenuItem>
-                    <Checkbox
-                      // disabled
-                      indeterminate={
-                        numYearSelected > 0 && numYearSelected < rowYearCount
-                      }
-                      checked={numYearSelected === rowYearCount}
-                      onChange={event =>
-                        // this.handleSelectAllClick(event, Object(data.BuildYear))
-                        this.handleSelectAllClick(
-                          event,
-                          Object(data.queryBuildYear)
-                        )
-                      }
-                    />
-                    <ListItemText>Select All</ListItemText>
-                  </MenuItem>
-                  <Divider />
-                  {/*{data.BuildYear.slice()*/}
-                  {data.queryBuildYear
-                    .slice()
-                    .sort(getSorting(order, orderBy))
-                    .map(n => {
-                      const isYearSelected = this.isYearSelected(n.year);
-                      return (
-                        <MenuItem key={n.year}>
-                          <Checkbox
-                            checked={isYearSelected}
-                            onChange={this.handleChange(n.year)}
-                            value={toString(n.year)}
-                            selected={isYearSelected} // is this actually needed? - test removal
-                            onClick={event => this.handleClick(event, n.year)}
-                          />
-                          <ListItemText>{n.year}</ListItemText>
-                        </MenuItem>
-                      );
-                    })}
-                </Select>
-              </FormControl>
-            </div>
-          );
-        }}
-      </Query>
-    );
+  function getSorting(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
+      : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
   }
+
+  // isYearSelected = year => this.state.yearSelected.indexOf(year) !== -1;
+
+  // render() {
+  // const { order, orderBy } = this.state;
+
+  // const { numYearSelected } = this.state;
+
+  // const { classes } = this.props;
+
+  // return (
+  //   <Query
+  //     query={gql`
+  //       {
+  //         queryBuildYear {
+  //           year
+  //         }
+  //       }
+  //       #{
+  //       #  BuildYear {
+  //       #    #id
+  //       #    year
+  //       #  }
+  //       #}
+  //     `}
+  //   >
+  // //     {({ loading, error, data }) => {
+  //       if (loading) return <p>Loading...</p>;
+  //       if (error) return <p>Error</p>;
+
+  if (loading) return "Loading...";
+  if (error) return `Error ${error.message}`;
+
+  // const rowYearCount = Object.keys(data.BuildYear).length;
+  const rowCount = Object.keys(data.queryBuildYear).length;
+
+  return (
+    // <div className={classes.root}>
+    <FormControl className={classes.formControl}>
+      <InputLabel>Build Years</InputLabel>
+      <Select
+        multiple
+        value={selectedYears}
+        renderValue={selectedYears => (
+          <div className={classes.chips}>
+            {selectedYears.map(value => (
+              <Chip key={value} label={value} />
+            ))}
+          </div>
+        )}
+      >
+        <MenuItem>
+          <Checkbox
+            // disabled
+            indeterminate={numSelectedYears > 0 && numSelectedYears < rowCount}
+            checked={numSelectedYears === rowCount}
+            onChange={event =>
+              // this.handleSelectAllClick(event, Object(data.BuildYear))
+              handleSelectAllClick(event, Object(data.queryBuildYear))
+            }
+          />
+          <ListItemText>Select All</ListItemText>
+        </MenuItem>
+        <Divider />
+        {/*{data.BuildYear.slice()*/}
+        {data.queryBuildYear
+          .slice()
+          .sort(getSorting(order, orderBy))
+          .map(n => {
+            // const isYearSelected = isYearSelected(n.year);
+            return (
+              <MenuItem key={n.year} value={n.year}>
+                <Checkbox
+                  checked={selectedYears.indexOf(n.year) !== -1}
+                  onChange={handleChange(n.year)}
+                  value={toString(n.year)}
+                  // value={n.year}
+                  // selected={isYearSelected} // is this actually needed? - test removal
+                  onClick={event => handleClick(event, n.year)}
+                />
+                <ListItemText>{n.year}</ListItemText>
+              </MenuItem>
+            );
+          })}
+      </Select>
+    </FormControl>
+    // </div>
+  );
+  //       }}
+  //     </Query>
+  //   );
+  // }
 }
 
-BuildYearFilter.propTypes = {
-  classes: PropTypes.object.isRequired
-};
+// BuildYearFilter.propTypes = {
+//   classes: PropTypes.object.isRequired
+// };
 
-export default withStyles(styles, { withTheme: true })(BuildYearFilter);
+// export default withStyles(styles, { withTheme: true })(BuildYearFilter);

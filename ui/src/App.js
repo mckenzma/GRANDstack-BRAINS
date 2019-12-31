@@ -189,7 +189,7 @@ export default function App() {
   // const [_numSelectedStates, _setNumSelectedStates] = useState(1); // refactor to remove this
   // yearSelected: [], //needed?
   // yearSelected: [1942], //hard coded for development
-  const [yearSelected, setYearSelected] = useState([1942]);
+  const [_selectedYears, _setSelectedYears] = useState([1942]);
   // maintRespSelected: [],
   const [maintRespSelected, setMaintRespSelected] = useState([]);
   // ownerSelected: []
@@ -317,7 +317,8 @@ export default function App() {
               // _numSelectedStates={_numSelectedStates}
               // _setNumSelectedStates={_setNumSelectedStates}
               // yearSelected={this.state.yearSelected}
-              // yearSelected={yearSelected}
+              _selectedYears={_selectedYears}
+              _setSelectedYears={_setSelectedYears}
               // setYearSelected={setYearSelected}
               // maintRespSelected={this.state.maintRespSelected}
               // maintRespSelected={maintRespSelected}

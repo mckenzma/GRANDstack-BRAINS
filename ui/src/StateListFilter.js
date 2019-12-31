@@ -128,7 +128,7 @@ export default function StateListFilter({
     }
 
     // this.setState({ selected: newSelected.sort() });
-    setSelectedStates(newSelected);
+    setSelectedStates(newSelected.sort());
     // this.setState({ numSelected: newSelected.length });
     setNumSelectedStates(newSelected.length);
     // this.props.triggerParentUpdate("selected", newSelected);
