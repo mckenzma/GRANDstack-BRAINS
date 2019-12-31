@@ -11,15 +11,18 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import StateListFilter from "./StateListFilter";
-import BuildYearFilter from "./BuildYearFilter";
+// import BuildYearFilter from "./BuildYearFilter";
 // import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
 // import OwnerFilter from "./OwnerFilter";
 
 export default function FiltersDialog({
-  selected,
-  yearSelected,
-  maintRespSelected,
-  ownerSelected
+  _selectedStates,
+  _setSelectedStates,
+  _numSelectedStates,
+  _setNumSelectedStates
+  // yearSelected,
+  // maintRespSelected,
+  // ownerSelected
 }) {
   // class FiltersDialog extends React.Component {
   // constructor(props) {
@@ -44,10 +47,16 @@ export default function FiltersDialog({
   const [open, setOpen] = useState(false);
   const scroll = "paper";
 
+  const [selectedStates, setSelectedStates] = useState(_selectedStates);
+  const [numSelectedStates, setNumSelectedStates] = useState(
+    _numSelectedStates
+  );
+
   const fullWidth = true;
   const maxWidth = "md";
 
   // const handleClickOpen = scroll => () => {
+  // const handleClickOpen = event => {
   const handleClickOpen = event => {
     // this.setState({ open: true, scroll });
     setOpen(true);
@@ -60,35 +69,20 @@ export default function FiltersDialog({
   };
 
   const handleApply = event => {
-    // this.setState({ open: false });
     setOpen(false);
-    this.setState({ selected: this.state.selected });
-    this.setState({ yearSelected: this.state.yearSelected });
-    this.setState({ maintRespSelected: this.state.maintRespSelected });
-    this.setState({ ownerSelected: this.state.ownerSelected });
-    // this.props.triggerFiltersUpdate(this.state);
+    _setSelectedStates(selectedStates);
+    // this.setState({ yearSelected: this.state.yearSelected });
+    // this.setState({ maintRespSelected: this.state.maintRespSelected });
+    // this.setState({ ownerSelected: this.state.ownerSelected });
   };
 
   const handleCancel = () => {
-    // this.props = this.props;
-    // this.setState({ open: false });
     setOpen(false);
   };
 
-  // need to look at useReducer for this
-  const updateThisProperty = (propertyName, value) => {
-    this.setState({ [propertyName]: value });
-  };
-
-  // render() {
   return (
     <div>
-      <Button
-        // onClick={this.handleClickOpen("paper")}
-        onClick={handleClickOpen()}
-        variant="contained"
-        color="secondary"
-      >
+      <Button onClick={handleClickOpen} variant="contained" color="secondary">
         <BallotIcon />
         Filters
       </Button>
@@ -112,14 +106,17 @@ export default function FiltersDialog({
             // triggerParentUpdate={this.updateThisProperty}
             // triggerParentUpdate={updateThisProperty}
             // selected={this.props.selected}
-            selected={selected}
+            selectedStates={selectedStates}
+            setSelectedStates={setSelectedStates}
+            numSelectedStates={numSelectedStates}
+            setNumSelectedStates={setNumSelectedStates}
           />
-          <BuildYearFilter
+          {/*<BuildYearFilter
             // triggerParentUpdate={this.updateThisProperty}
             // triggerParentUpdate={updateThisProperty}
             // yearSelected={this.props.yearSelected}
             yearSelected={yearSelected}
-          />
+          />*/}
           {/*<MaintenanceResponsibilityFilter
               triggerParentUpdate={this.updateThisProperty}
               maintRespSelected={this.props.maintRespSelected}

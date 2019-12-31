@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 import MapLeaf from "./MapLeaflet";
 
 import PropTypes from "prop-types";
 // import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
+// import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -18,15 +19,16 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
-import CustomizedDialogDemo from "./About";
-import GraphSummaryDialog from "./GraphSummaryDialog";
+// import CustomizedDialogDemo from "./About";
+// import GraphSummaryDialog from "./GraphSummaryDialog";
 
 import FiltersDialog from "./Filters";
-import SummaryDialog from "./Summary";
+// import SummaryDialog from "./Summary";
 
 const drawerWidth = 240;
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
+  // const styles = theme => ({
   root: {
     flexGrow: 1
   },
@@ -130,195 +132,242 @@ const styles = theme => ({
   button: {
     margin: theme.spacing(1)
   }
-});
+  // });
+}));
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+// TODO: add theme const & theme provider
 
-    this.state = {
-      // from StateMenuList.js
-      order: "asc",
-      orderBy: "name",
-      // from MapLeaflet.js
-      lng: -98.5795, // center of US
-      lat: 39.8283, //center of US
-      zoom: 4,
-      right: false,
-      bridge_id: null,
-      bridge_lat: null,
-      bridge_lng: null,
-      build_year: null,
-      owned_by: null,
-      maintained_by: null,
+export default function App() {
+  const classes = useStyles();
+  // class App extends Component {
+  // constructor(props) {
+  // super(props);
 
-      name: "",
+  // this.state = {
+  // from StateMenuList.js
+  // order: "asc",
+  const [order, setOrder] = useState("asc");
+  // orderBy: "name",
+  const [orderBy, setOrderBy] = useState("name");
+  // from MapLeaflet.js
+  // lng: -98.5795, // center of US
+  const [lng, setLng] = useState(-98.5795);
+  // lat: 39.8283, //center of US
+  const [lat, setLat] = useState(39.8283);
+  // zoom: 4,
+  const [zoom, setZoom] = useState(4);
+  // right: false,
+  const [right, setRight] = useState(false);
+  // bridge_id: null,
+  const [bridge_id, setBridge_id] = useState(null);
+  // bridge_lat: null,
+  const [bridge_lat, setBridge_lat] = useState(null);
+  // bridge_lng: null,
+  const [bridge_lng, setBrige_lng] = useState(null);
+  // build_year: null,
+  const [bridge_year, setBridge_year] = useState(null);
+  // owned_by: null,
+  const [owned_by, setOwned_by] = useState(null);
+  // maintained_by: null,
+  const [maintained_by, setMaintained_by] = useState(null);
 
-      // from here
-      open: false,
-      anchor: "left",
-      openDialog: false,
+  // name: "",
+  const [name, setName] = useState("");
 
-      // selected: [], //trying to pull selected array up to pass into bridge query
-      selected: ["DC"], //hard coded for development
-      // yearSelected: [], //needed?
-      yearSelected: [1942], //hard coded for development
-      maintRespSelected: [],
-      ownerSelected: []
-    };
-    this.updateThisProperty = this.updateThisProperty.bind(this);
-    this.handleFilters = this.handleFilters.bind(this);
+  // from here
+  // open: false,
+  const [open, setOpen] = useState(false);
+  // anchor: "left",
+  const [anchor, setAnchor] = useState("left");
+  // openDialog: false,
+  const [openDialog, setOpenDialog] = useState(false);
+
+  // selected: [], //trying to pull selected array up to pass into bridge query
+  // selected: ["DC"], //hard coded for development
+  const [_selectedStates, _setSelectedStates] = useState(["DC"]);
+  // const [numSelected, setNumSelected] = useState(0);
+  const [_numSelectedStates, _setNumSelectedStates] = useState(1); // refactor to remove this
+  // yearSelected: [], //needed?
+  // yearSelected: [1942], //hard coded for development
+  const [yearSelected, setYearSelected] = useState([1942]);
+  // maintRespSelected: [],
+  const [maintRespSelected, setMaintRespSelected] = useState([]);
+  // ownerSelected: []
+  const [ownerSelected, setOwnerSelected] = useState([]);
+  // };
+  // this.updateThisProperty = this.updateThisProperty.bind(this);
+  // this.handleFilters = this.handleFilters.bind(this);
+  // }
+
+  console.log(_selectedStates);
+  const handleDrawerOpen = () => {
+    // this.setState({ open: true });
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    // this.setState({ open: false });
+    setOpen(false);
+  };
+
+  const handleChangeAnchor = event => {
+    // this.setState({
+    //   anchor: event.target.value
+    // });
+    setAnchor(event.target.value);
+  };
+
+  const handleDialogOpen = () => {
+    // this.setState({ openDialog: true });
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    // this.setState({ openDialog: false });
+    setOpenDialog(false);
+  };
+
+  // updateThisProperty(propertyName, value) {
+  //   this.setState({ [propertyName]: value });
+  // }
+
+  // handleFilters(state) {
+  //   this.setState({
+  //     selected: state.selected,
+  //     numSelected: state.numSelected,
+  //     yearSelected: state.yearSelected,
+  //     numYearSelected: state.numYearSelected,
+  //     maintRespSelected: state.maintRespSelected,
+  //     ownerSelected: state.ownerSelected
+  //   });
+  // }
+
+  // render() {
+  // const { classes, theme } = this.props;
+  // const { anchor, open } = this.state;
+
+  const drawer = (
+    <Drawer
+      variant="persistent"
+      anchor={anchor}
+      open={open}
+      classes={{
+        paper: classes.drawerPaper
+      }}
+    >
+      <div className={classes.drawerHeader}>
+        {/*<IconButton onClick={this.handleDrawerClose}>*/}
+        <IconButton onClick={handleDrawerClose}>
+          {/*{theme.direction === "rtl" ? (*/}
+          {classes.direction === "rtl" ? (
+            <ChevronRightIcon />
+          ) : (
+            <ChevronLeftIcon />
+          )}
+        </IconButton>
+      </div>
+      <Divider />
+
+      {/*<CustomizedDialogDemo />*/}
+      {/*<GraphSummaryDialog />*/}
+    </Drawer>
+  );
+
+  let before = null;
+  let after = null;
+
+  if (anchor === "left") {
+    before = drawer;
+  } else {
+    after = drawer;
   }
 
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleDrawerClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleChangeAnchor = event => {
-    this.setState({
-      anchor: event.target.value
-    });
-  };
-
-  handleDialogOpen = () => {
-    this.setState({ openDialog: true });
-  };
-  handleDialogClose = () => {
-    this.setState({ openDialog: false });
-  };
-
-  updateThisProperty(propertyName, value) {
-    this.setState({ [propertyName]: value });
-  }
-
-  handleFilters(state) {
-    this.setState({
-      selected: state.selected,
-      numSelected: state.numSelected,
-      yearSelected: state.yearSelected,
-      numYearSelected: state.numYearSelected,
-      maintRespSelected: state.maintRespSelected,
-      ownerSelected: state.ownerSelected
-    });
-  }
-
-  render() {
-    const { classes, theme } = this.props;
-    const { anchor, open } = this.state;
-
-    const drawer = (
-      <Drawer
-        variant="persistent"
-        anchor={anchor}
-        open={open}
-        classes={{
-          paper: classes.drawerPaper
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={this.handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </div>
-        <Divider />
-
-        <CustomizedDialogDemo />
-        <GraphSummaryDialog />
-      </Drawer>
-    );
-
-    let before = null;
-    let after = null;
-
-    if (anchor === "left") {
-      before = drawer;
-    } else {
-      after = drawer;
-    }
-
-    return (
-      <div className={classes.root}>
-        <div className={classes.appFrame}>
-          <AppBar
-          // className={classNames(classes.appBar, {
-          //   [classes.appBarShift]: open,
-          //   [classes[`appBarShift-${anchor}`]]: open
-          // })}
-          >
-            <Toolbar disableGutters={!open}>
-              <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={this.handleDrawerOpen}
-                // className={classNames(classes.menuButton, open && classes.hide)}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography
-                variant="h5"
-                color="inherit"
-                noWrap
-                className={classes.root}
-              >
-                National Bridge Index
-              </Typography>
-              <FiltersDialog
-                selected={this.state.selected}
-                numSelected={this.state.numSelected}
-                yearSelected={this.state.yearSelected}
-                maintRespSelected={this.state.maintRespSelected}
-                ownerSelected={this.state.ownerSelected}
-                triggerFiltersUpdate={this.handleFilters}
-              />
-              <SummaryDialog
+  return (
+    <div className={classes.root}>
+      <div className={classes.appFrame}>
+        <AppBar
+        // className={classNames(classes.appBar, {
+        //   [classes.appBarShift]: open,
+        //   [classes[`appBarShift-${anchor}`]]: open
+        // })}
+        >
+          <Toolbar disableGutters={!open}>
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              // onClick={this.handleDrawerOpen}
+              onClick={handleDrawerOpen}
+              // className={classNames(classes.menuButton, open && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h5"
+              color="inherit"
+              noWrap
+              className={classes.root}
+            >
+              National Bridge Index
+            </Typography>
+            <FiltersDialog
+              // selected={this.state.selected}
+              _selectedStates={_selectedStates}
+              _setSelectedStates={_setSelectedStates}
+              // numSelected={this.state.numSelected}
+              _numSelectedStates={_numSelectedStates}
+              _setNumSelectedStates={_setNumSelectedStates}
+              // yearSelected={this.state.yearSelected}
+              // yearSelected={yearSelected}
+              // setYearSelected={setYearSelected}
+              // maintRespSelected={this.state.maintRespSelected}
+              // maintRespSelected={maintRespSelected}
+              // setMaintRespSelected={setMaintRespSelected}
+              // ownerSelected={this.state.ownerSelected}
+              // ownerSelected={ownerSelected}
+              // setOwnerSelected={setOwnerSelected}
+              // triggerFiltersUpdate={this.handleFilters}
+            />
+            {/*<SummaryDialog
                 selected={this.state.selected}
                 yearSelected={this.state.yearSelected}
                 // maintRespSelected={this.state.maintRespSelected}
                 // ownerSelected={this.state.ownerSelected}
-              />
-            </Toolbar>
-          </AppBar>
-          {before}
-          <main
-          // className={classNames(
-          //   classes.content,
-          //   classes[`content-${anchor}`],
-          //   {
-          //     [classes.contentShift]: open,
-          //     [classes[`contentShift-${anchor}`]]: open
-          //   }
-          // )}
-          >
-            {/*<div className={classes.drawerHeader} />
+              />*/}
+          </Toolbar>
+        </AppBar>
+        {before}
+        <main
+        // className={classNames(
+        //   classes.content,
+        //   classes[`content-${anchor}`],
+        //   {
+        //     [classes.contentShift]: open,
+        //     [classes[`contentShift-${anchor}`]]: open
+        //   }
+        // )}
+        >
+          {/*<div className={classes.drawerHeader} />
             {/*does this do anything?*/}
-            <MapLeaf
+          {/*<MapLeaf
               selected={this.state.selected}
               yearSelected={this.state.yearSelected}
               // maintRespSelected={this.state.maintRespSelected}
               // ownerSelected={this.state.ownerSelected}
-            />
-          </main>
-          {after}
-        </div>
-
-        {/*<div className={classes.container} />
-        {/* does this do anything */}
+            />*/}
+        </main>
+        {after}
       </div>
-    );
-  }
+
+      {/*<div className={classes.container} />
+        {/* does this do anything */}
+    </div>
+  );
+  // }
 }
 
-App.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired
-};
+// App.propTypes = {
+//   classes: PropTypes.object.isRequired,
+//   theme: PropTypes.object.isRequired
+// };
 
-export default withStyles(styles, { withTheme: true })(App);
+// export default withStyles(styles, { withTheme: true })(App);
