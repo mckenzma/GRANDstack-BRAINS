@@ -717,6 +717,37 @@ SET rc.varyingProps = diffProps
 ',
 {batchSize:10000, parallel:false})
 
+// Add processing lables to (:RowComparison)
+CALL apoc.periodic.iterate(
+'
+MATCH (rc:RowComparison)
+RETURN rc
+','
+SET rc:ProcessRowComparison
+',
+{batchSize:10000,parallel:false});
+
+
+// Create (:RowAuditLogs) annd connect to (:RowComparison)
+CALL apoc.periodic.iterate(
+'
+MATCH (rc:ProcessRowComparison)
+RETURN rc
+','
+WITH rc
+REMOVE rc:ProcessRowComparison
+WITH rc, rc.varyingProps AS props
+UNWIND props AS prop
+MATCH (ndr:NoDelimiterRow)-[:COMPARES]->(rc)<-[:COMPARES]-(dr:DelimitedRow)
+MERGE (ral:RowAuditLog {
+  property: prop,
+  ndr_value: ndr[prop],
+  dr_value: dr[prop]
+})-[:AUDITS_ROW]->(rc)
+
+//MERGE (ral)-[:AUDITS_ROW]->(rc)
+',
+{batchSize:10000, parallel:false});
 
 // Connect bridge to place
 // connect bridge to existing (State)<--(County)<--(Place) tree
