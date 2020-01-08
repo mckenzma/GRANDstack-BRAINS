@@ -349,12 +349,12 @@ export default function App() {
         >
           {/*<div className={classes.drawerHeader} />
             {/*does this do anything?*/}
-          {/*<MapLeaf
-              selected={this.state.selected}
-              yearSelected={this.state.yearSelected}
-              // maintRespSelected={this.state.maintRespSelected}
-              // ownerSelected={this.state.ownerSelected}
-            />*/}
+          <MapLeaf
+            _selectedStates={_selectedStates}
+            _selectedYears={_selectedYears}
+            // maintRespSelected={this.state.maintRespSelected}
+            // ownerSelected={this.state.ownerSelected}
+          />
         </main>
         {after}
       </div>
