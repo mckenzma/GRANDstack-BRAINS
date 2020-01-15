@@ -717,6 +717,20 @@ SET rc.varyingProps = diffProps
 ',
 {batchSize:10000, parallel:false})
 
+// iterate through and add fileName field to rc for faster queries
+CALL apoc.periodic.iterate(
+'
+MATCH (rc:RowComparison)
+WHERE rc.fileName IS NULL
+RETURN rc
+','
+MATCH (rc)<-[:COMPARES]-(:NoDelimiterRow)<-[:CONTAINS]-(ndf:NoDelimiterFile)
+MATCH (rc)<-[:COMPARES]-(:DelimitedRow)<-[:CONTAINS]-(df:DelimitedFile)
+WHERE df.name = ndf.name
+SET rc.fileName = df.name
+',
+{batchSize:10000,parallel:false})
+
 // Add processing lables to (:RowComparison)
 CALL apoc.periodic.iterate(
 '
