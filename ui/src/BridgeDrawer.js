@@ -166,15 +166,15 @@ const BridgeDetail = ({ Bridge }) => {
         </ListItemText>
       </ListItem>*/}
 
-      {/*<SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} />*/}
-      {/*<BridgeRadar
+      <SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} />
+      <BridgeRadar
         STRUCTURAL_EVAL_067={inspectionLog.STRUCTURAL_EVAL_067}
         DECK_GEOMETRY_EVAL_068={inspectionLog.DECK_GEOMETRY_EVAL_068}
         UNDCLRENCE_EVAL_069={inspectionLog.UNDCLRENCE_EVAL_069}
         POSTING_EVAL_070={inspectionLog.POSTING_EVAL_070}
         WATERWAY_EVAL_071={inspectionLog.WATERWAY_EVAL_071}
         APPR_ROAD_EVAL_072={inspectionLog.APPR_ROAD_EVAL_072}
-      />*/}
+      />
     </List>
   );
 };
@@ -185,9 +185,12 @@ export default function BridgeDrawer({
   selectedBridge,
   selectedPlace,
   selectedCounty,
-  selectedState
+  selectedState,
+  open
 }) {
   const classes = useStyles();
+
+  // setRight(true);
 
   const { loading, error, data } = useQuery(GET_BRIDGE, {
     variables: {
@@ -202,6 +205,8 @@ export default function BridgeDrawer({
   console.log(selectedPlace);
   console.log(selectedCounty);
   console.log(selectedState);
+  console.log(right);
+  console.log(open);
   console.log(data);
   // class BridgeDrawer extends React.Component {
   // constructor(props) {
@@ -209,7 +214,7 @@ export default function BridgeDrawer({
 
   // this.state = {
   // right: false,
-  setRight(false);
+  // setRight(false);
   // sliderYears: [],
   const [sliderYears, setSliderYears] = useState([]);
   // currentYear: null // default to non null value
@@ -317,45 +322,43 @@ export default function BridgeDrawer({
 
   return (
     <div className={classes.list}>
-      {/*{data.Bridge.map(b => {
-                // const id = `${b.state_code}${b.county_code}${b.place_code}${b.code}`;
-                const id = `${b.stateCode}${b.countyCode}${b.placeCode}${
-                  b.code
-                }`;
+      {data.Bridge.map(b => {
+        // const id = `${b.state_code}${b.county_code}${b.place_code}${b.code}`;
+        const id = `${b.stateCode}${b.countyCode}${b.placeCode}${b.code}`;
 
-                // console.log(id);
+        // console.log(id);
 
-                // this.state.currentYear = b.latestInspectionLog.year;
+        // this.state.currentYear = b.latestInspectionLog.year;
 
-                // const temp = b.inspectionLogs.map(log => log.year);
-                // this.state.sliderYears = temp;
-                // // this.state.currentYear = temp;
+        // const temp = b.inspectionLogs.map(log => log.year);
+        // this.state.sliderYears = temp;
+        // // this.state.currentYear = temp;
 
-                // // console.log(b.inspectionLogs);
+        // // console.log(b.inspectionLogs);
 
-                // console.log("currentYear: " + this.state.currentYear);
+        // console.log("currentYear: " + this.state.currentYear);
 
-                // const inspectionLog = b.inspectionLogs.filter(inspectionLog => inspectionLog.year === this.state.currentYear);
-                // console.log("hello", inspectionLog[0]);
-                // const inspectionLogForRadar = inspectionLog[0] || {
-                //   STRUCTURAL_EVAL_067 : `${b.latestInspectionLog.STRUCTURAL_EVAL_067}`,
-                //   DECK_GEOMETRY_EVAL_068 : `${b.latestInspectionLog.DECK_GEOMETRY_EVAL_068}`,
-                //   UNDCLRENCE_EVAL_069 : `${b.latestInspectionLog.UNDCLRENCE_EVAL_069}`,
-                //   POSTING_EVAL_070 : `${b.latestInspectionLog.POSTING_EVAL_070}`,
-                //   WATERWAY_EVAL_071 : `${b.latestInspectionLog.WATERWAY_EVAL_071}`,
-                //   APPR_ROAD_EVAL_072 : `${b.latestInspectionLog.APPR_ROAD_EVAL_072}`
-                // };
-                // console.log("Radar: ", inspectionLogForRadar);
+        // const inspectionLog = b.inspectionLogs.filter(inspectionLog => inspectionLog.year === this.state.currentYear);
+        // console.log("hello", inspectionLog[0]);
+        // const inspectionLogForRadar = inspectionLog[0] || {
+        //   STRUCTURAL_EVAL_067 : `${b.latestInspectionLog.STRUCTURAL_EVAL_067}`,
+        //   DECK_GEOMETRY_EVAL_068 : `${b.latestInspectionLog.DECK_GEOMETRY_EVAL_068}`,
+        //   UNDCLRENCE_EVAL_069 : `${b.latestInspectionLog.UNDCLRENCE_EVAL_069}`,
+        //   POSTING_EVAL_070 : `${b.latestInspectionLog.POSTING_EVAL_070}`,
+        //   WATERWAY_EVAL_071 : `${b.latestInspectionLog.WATERWAY_EVAL_071}`,
+        //   APPR_ROAD_EVAL_072 : `${b.latestInspectionLog.APPR_ROAD_EVAL_072}`
+        // };
+        // console.log("Radar: ", inspectionLogForRadar);
 
-                // this.state.STRUCTURAL_EVAL_067= inspectionLogForRadar.STRUCTURAL_EVAL_067;
-                // this.state.DECK_GEOMETRY_EVAL_068= inspectionLogForRadar.DECK_GEOMETRY_EVAL_068;
-                // this.state.UNDCLRENCE_EVAL_069= inspectionLogForRadar.UNDCLRENCE_EVAL_069;
-                // this.state.POSTING_EVAL_070= inspectionLogForRadar.POSTING_EVAL_070;
-                // this.state.WATERWAY_EVAL_071= inspectionLogForRadar.WATERWAY_EVAL_071;
-                // this.state.APPR_ROAD_EVAL_072= inspectionLogForRadar.APPR_ROAD_EVAL_072;
+        // this.state.STRUCTURAL_EVAL_067= inspectionLogForRadar.STRUCTURAL_EVAL_067;
+        // this.state.DECK_GEOMETRY_EVAL_068= inspectionLogForRadar.DECK_GEOMETRY_EVAL_068;
+        // this.state.UNDCLRENCE_EVAL_069= inspectionLogForRadar.UNDCLRENCE_EVAL_069;
+        // this.state.POSTING_EVAL_070= inspectionLogForRadar.POSTING_EVAL_070;
+        // this.state.WATERWAY_EVAL_071= inspectionLogForRadar.WATERWAY_EVAL_071;
+        // this.state.APPR_ROAD_EVAL_072= inspectionLogForRadar.APPR_ROAD_EVAL_072;
 
-                return <BridgeDetail Bridge={b} key={id} />;
-              })}*/}
+        return <BridgeDetail Bridge={b} key={id} />;
+      })}
     </div>
   );
   //       }}

@@ -315,7 +315,8 @@ export default function MapLeaf({ _selectedStates, _selectedYears }) {
         // variant="persistent"
         anchor="right"
         open={right}
-        onClose={toggleDrawer("right", false, "")}
+        // onClose={toggleDrawer("right", false, "")}
+        onClose={toggleDrawer(false)}
       >
         <div
           tabIndex={0}
