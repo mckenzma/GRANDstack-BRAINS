@@ -201,13 +201,13 @@ export default function BridgeDrawer({
     }
   });
 
-  console.log(selectedBridge);
-  console.log(selectedPlace);
-  console.log(selectedCounty);
-  console.log(selectedState);
-  console.log(right);
-  console.log(open);
-  console.log(data);
+  // console.log(selectedBridge);
+  // console.log(selectedPlace);
+  // console.log(selectedCounty);
+  // console.log(selectedState);
+  // console.log(right);
+  // console.log(open);
+  // console.log(data);
   // class BridgeDrawer extends React.Component {
   // constructor(props) {
   // super(props);

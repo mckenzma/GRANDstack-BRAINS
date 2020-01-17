@@ -178,13 +178,13 @@ export default function MapLeaf({ _selectedStates, _selectedYears }) {
   const setBridge = bridge => {
     setRight(true);
     setBridge_code(bridge.code);
-    console.log(bridge.code);
+    // console.log(bridge.code);
     setPlace_code(bridge.placeCode);
-    console.log(bridge.placeCode);
+    // console.log(bridge.placeCode);
     setCounty_code(bridge.countyCode);
-    console.log(bridge.countyCode);
+    // console.log(bridge.countyCode);
     setState_code(bridge.stateCode);
-    console.log(bridge.stateCode);
+    // console.log(bridge.stateCode);
   };
 
   // return (
