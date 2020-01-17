@@ -14,7 +14,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 
 import DonutChartState from "./ChartDonutState";
-// import BarChartState from "./ChartBarState";
+import BarChartState from "./ChartBarState";
 
 // import HeatMapState from "./ChartHeatState";
 
@@ -113,12 +113,13 @@ export default function SummaryDialog({ _selectedStates, _selectedYears }) {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Paper className={classes.paper}>
-                  {/*<BarChartState
-                      selected={this.props.selected}
-                      // yearSelected={this.state.yearSelected}
-                      // maintRespSelected={this.state.maintRespSelected}
-                      // ownerSelected={this.state.ownerSelected}
-                    />*/}
+                  <BarChartState
+                    // selected={this.props.selected}
+                    _selectedStates={_selectedStates}
+                    // yearSelected={this.state.yearSelected}
+                    // maintRespSelected={this.state.maintRespSelected}
+                    // ownerSelected={this.state.ownerSelected}
+                  />
                 </Paper>
               </Grid>
               {/*<Grid item xs={12}>

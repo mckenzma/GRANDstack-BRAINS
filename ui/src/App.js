@@ -330,9 +330,9 @@ export default function App() {
             />
             <SummaryDialog
               // selected={this.state.selected}
-              _selectedStates={_setSelectedStates}
+              _selectedStates={_selectedStates}
               // yearSelected={this.state.yearSelected}
-              _selectedYears={_setSelectedYears}
+              _selectedYears={_selectedYears}
               // maintRespSelected={this.state.maintRespSelected}
               // ownerSelected={this.state.ownerSelected}
             />

@@ -7,6 +7,9 @@ import gql from "graphql-tag";
 
 import Loading from "./Loading";
 
+// IDEA: update to use image fill with State flags
+// https://apexcharts.com/react-chart-demos/pie-charts/pie-with-image/
+
 // function getSorting(order, orderBy) {
 //   return order === "desc"
 //     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
@@ -68,7 +71,11 @@ export default function DonutChartState({ _selectedStates }) {
       : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
   }
 
-  const { loading, error, data } = useQuery(GET_STATE_QUERY);
+  const { loading, error, data } = useQuery(GET_STATE_QUERY, {
+    variables: {
+      _selectedStates
+    }
+  });
 
   // render() {
   // const { order, orderBy } = this.state;
@@ -106,7 +113,7 @@ export default function DonutChartState({ _selectedStates }) {
       labels.push(n.abbreviation);
     });
 
-  console.log(labels);
+  // console.log(labels);
 
   // console.log(options.labels);
 
@@ -123,7 +130,7 @@ export default function DonutChartState({ _selectedStates }) {
       series.push(n.numBridges);
     });
 
-  console.log(series);
+  // console.log(series);
 
   // setOptions({
   //   // const options = {
