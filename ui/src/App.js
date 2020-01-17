@@ -328,12 +328,14 @@ export default function App() {
               // setOwnerSelected={setOwnerSelected}
               // triggerFiltersUpdate={this.handleFilters}
             />
-            {/*<SummaryDialog
-                selected={this.state.selected}
-                yearSelected={this.state.yearSelected}
-                // maintRespSelected={this.state.maintRespSelected}
-                // ownerSelected={this.state.ownerSelected}
-              />*/}
+            <SummaryDialog
+              // selected={this.state.selected}
+              _selectedStates={_setSelectedStates}
+              // yearSelected={this.state.yearSelected}
+              _selectedYears={_setSelectedYears}
+              // maintRespSelected={this.state.maintRespSelected}
+              // ownerSelected={this.state.ownerSelected}
+            />
           </Toolbar>
         </AppBar>
         {before}
