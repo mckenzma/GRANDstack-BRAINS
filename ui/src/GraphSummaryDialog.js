@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -11,6 +12,11 @@ import Typography from "@material-ui/core/Typography";
 
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+
+import GraphSummaryNodes from "./GraphSummaryNodes";
+import GraphSummaryRelationships from "./GraphSummaryRelationships";
+
+import Grid from "@material-ui/core/Grid";
 
 const DialogTitle = withStyles(theme => ({
   root: {
@@ -49,8 +55,10 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent);
 
-export default function AboutDialog() {
+export default function GraphSummaryDialog() {
   const [open, setOpen] = useState(false);
+
+  const [maxWidth, setMaxWidth] = useState("xl");
 
   const handleClickOpen = event => {
     setOpen(true);
@@ -68,46 +76,29 @@ export default function AboutDialog() {
         color="secondary"
         onClick={handleClickOpen}
       >
-        <ListItemText>About</ListItemText>
+        <ListItemText>Graph Summary</ListItemText>
       </ListItem>
       <Dialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        fullWidth={true}
+        maxWidth={maxWidth}
+        //scroll={this.state.scroll} // set this with useState?
+        // aria-labelledby="scroll-dialog-title"
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          About
+          Graph Data Summary
         </DialogTitle>
         <DialogContent>
-          <Typography gutterBottom>
-            This demo was built on the{" "}
-            <a href="https://grandstack.io/">
-              <u>GRANDstack</u>
-            </a>{" "}
-            utilizing GraphQL, React, Apollo, and Neo4j Database.
-          </Typography>
-          <Typography gutterBottom>
-            All data included in this web application can be found at{" "}
-            <a href="https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm">
-              <u>Nation Bride Index</u>
-            </a>{" "}
-            website. Some data cleaning was conducted for importation into the{" "}
-            <a href="https://neo4j.com/">
-              <u>Neo4j</u>
-            </a>{" "}
-            database.
-          </Typography>
-          <Typography gutterBottom>
-            The purpose of this web application is to provide an interactive
-            experience for you to explore the National Bridge Index data.
-          </Typography>
-          <Typography gutterBottom>
-            This application and database was designed abd built by{" "}
-            <a href="https://www.mckenzma.com/">
-              <u>Michael McKenzie</u>
-            </a>{" "}
-            .
-          </Typography>
+          <Grid container spacing={24}>
+            <Grid item xs={12} md={6}>
+              <GraphSummaryNodes />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <GraphSummaryRelationships />
+            </Grid>
+          </Grid>
         </DialogContent>
       </Dialog>
     </div>

@@ -5,14 +5,14 @@ import "./BridgeList.css";
 import { withStyles } from "@material-ui/core/styles";
 
 import Paper from "@material-ui/core/Paper";
-import 'mapbox-gl/dist/mapbox-gl.css';
+import "mapbox-gl/dist/mapbox-gl.css";
 
-import MapLeaf from './MapLeaflet';
+import MapLeaf from "./MapLeaflet";
 
 const styles = theme => ({
   root: {
     // maxWidth: 700,
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: "auto",
     margin: "auto"
   },
@@ -21,23 +21,20 @@ const styles = theme => ({
   }
 });
 
-
 class BridgeList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-           
       businesses: [],
       mapCenter: {
-        longitude: -93.2650,
+        longitude: -93.265,
         latitude: 44.9778,
-        zoom: 13,
+        zoom: 13
       }
     };
   }
 
-  
   render() {
     // const { order, orderBy } = this.state;
     return (
