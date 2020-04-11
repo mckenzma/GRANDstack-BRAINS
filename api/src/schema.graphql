@@ -1,0 +1,434 @@
+type State {
+  id: ID!
+  code: String
+  name: String
+  abbreviation: String
+  latitude_decimal: Float
+  longitude_decimal: Float
+
+  bridges: [Bridge] @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(bridge:Bridge) RETURN bridge")
+
+  numCounties: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(c:County) RETURN count(DISTINCT c)")
+  numPlaces: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(p:Place) RETURN count(DISTINCT p)")
+  numBridges: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(b:Bridge) RETURN count(DISTINCT b)")
+
+  chartBarBridgeByBuildYear: [BarChartPairs] @cypher(statement: """
+    MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(bridge:Bridge) 
+    WITH bridge.yearbuilt AS year, count(bridge) AS count
+    RETURN {year: year, count: count} AS datapoint
+    ORDER BY year ASC
+    """
+  )
+
+  # chartHeatMapStateOwnerCount(owners: [String]): Int @cypher(statement: """
+  #   MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owners
+  #   RETURN count(bridge)
+  #   """
+  # )
+
+  # chartHeatMapStateOwnerCount(owner: String): Int @cypher(statement: """
+  # chartHeatMapStateOwnerCount: Int @cypher(statement: """
+  #   MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   RETURN count(bridge)
+  #   """
+  # )
+
+  # chartHeatMapStateOwnerCount(owners: [String]): [String], [Int] @cypher(statement: """
+  #   MATCH (this)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owners
+  #   RETURN owner.description, count(bridge)
+  #   """
+  # )
+
+  # chartHeatMapStateOwners(owners: [String]): String @cypher(statement: """
+  #   MATCH (this)<-[*]-(:Bridge)-[OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owners
+  #   RETURN owner.description
+  #   """
+  # )
+
+  chartHeatMapStateOwners(owners: [String]): [Pairs] @cypher(statement: """
+    MATCH (this)
+    UNWIND $owners AS owner
+<<<<<<< HEAD
+//<<<<<<< HEAD
+//    # WITH [ (this)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner) WHERE o.description = owner | b ] AS bridges, owner
+    WITH [ (this)<-[*]-(b:Bridge)<-[OWNS]-(e.Entity) WHERE o.description = owner | b ] AS bridges, owner
+//=======
+//    WITH [ (this)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner) WHERE o.description = owner | b ] AS bridges, owner
+//>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+=======
+    WITH [ (this)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner) WHERE o.description = owner | b ] AS bridges, owner
+>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+    WITH owner AS ownerDescription, size(bridges) AS bridgeCount
+    RETURN {ownerDescription: ownerDescription, bridgeCount: bridgeCount} AS datapoint
+    """
+  )
+
+  # stackedBarChart_Rows_Per_State_Per_Year: [RowCountByYear] @cypher(statement: """
+  #     // MATCH (s:State)
+  #     MATCH (this)
+  #     // WITH s ORDER BY s.abbreviation ASC
+  #     WITH this ORDER BY this.abbreviation ASC
+  #     // MATCH (s)<-[:FILE_FOR]-(f:File:NoDelimiterFile)
+  #     MATCH (this)<-[:FILE_FOR]-(f:File:NoDelimiterFile)
+  #     // WITH this, f ORDER BY f.year
+  #     WITH f ORDER BY f.year
+  #     MATCH (f)-[r:CONTAINS]->()
+  #     WITH f.year AS year, count(r) as count
+  #     // WITH this, [f.year,count(r)] AS pairs
+  #     //WITH [f.year,count(r)] AS pairs
+  #     // RETURN this.abbreviation, collect(pairs), size(collect(pairs))
+  #     //RETURN collect(pairs)
+  #     RETURN {year: year, count: count} AS datapoint
+  #   """
+  # )
+
+  county: [County] @relation(name: "OF_STATE", direction: "IN")
+
+  files: [File] @relation(name: "FILE_FOR", direction: "IN")
+}
+
+type County {
+  id: ID!
+  name: String
+
+  state: State @relation(name: "OF_STATE", direction: "OUT")
+  place: [Place] @relation(name: "OF_COUNTY", direction: "IN")
+}
+
+type Place {
+  id: ID!
+  name: String
+
+  county: County @relation(name: "OF_COUNTY", direction: "OUT")
+  bridge: [Bridge] @relation(name: "OF_PLACE", direction: "IN")
+}
+
+type Bridge {
+  id: ID!
+  # name: String
+  # state_code: String
+  stateCode: String
+  # county_code: String
+  countyCode: String
+  #place_code: String
+  placeCode: String
+  code: String
+  latitude_decimal: Float
+  longitude_decimal: Float
+  # yearbuilt: Int
+  buildYear: Int
+
+  place: Place @relation(name: "OF_PLACE", direction: "OUT")
+  # buildYear: BuildYear @relation(name: "BUILT_IN", direction: "OUT")
+<<<<<<< HEAD
+#<<<<<<< HEAD
+  # maintenanceResp: MaintenanceResp @relation(name: "MAINTAINED_BY", direction: "OUT")
+  # owner: Owner @relation(name: "OWNED_BY", direction: "OUT")
+#=======
+  maintenanceResp: MaintenanceResp @relation(name: "MAINTAINED_BY", direction: "OUT")
+  owner: Owner @relation(name: "OWNED_BY", direction: "OUT")
+#>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+=======
+  maintenanceResp: MaintenanceResp @relation(name: "MAINTAINED_BY", direction: "OUT")
+  owner: Owner @relation(name: "OWNED_BY", direction: "OUT")
+>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+
+  rows: [Row] @relation(name: "DATA_FOR", direction: "IN")
+  numRows: Int @cypher(statement: "MATCH (this)<-[:DATA_FOR]-(r:Row) RETURN count(r)")
+
+  latestInspectionLog: InspectionLog @relation(name: "LATEST_INSPECTION_LOG", direction: "OUT")
+
+  inspectionLogs: [InspectionLog] @cypher(statement: """
+    MATCH (this)-[:LATEST_INSPECTION_LOG]->(latestLog)
+    MATCH path = (latestLog)-[:PREV_INSPECTION_LOG*]->(log)
+    WITH nodes(path) AS logs
+    UNWIND logs AS log
+    RETURN log
+    """
+  )
+<<<<<<< HEAD
+#<<<<<<< HEAD
+
+  owners: [Entity] @relation(name: "OWNS", direction: "IN")
+  maintainers: [Entity] @relation(name: "MAINTAINS", direction: "IN")
+#=======
+#>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+=======
+>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+}
+
+type InspectionLog {
+  id: ID!
+  year: Int
+  STRUCTURAL_EVAL_067: String
+  DECK_GEOMETRY_EVAL_068: String
+  UNDCLRENCE_EVAL_069: String
+  POSTING_EVAL_070: String
+  WATERWAY_EVAL_071: String
+  APPR_ROAD_EVAL_072: String
+
+  bridge: Bridge @relation(name: "LATEST_INSPECTION_LOG", direction: "IN")
+  prevInspectionLogIn: InspectionLog @relation(name: "PREV_INSPECTION_LOG", direction: "BOTH")
+  # prevInspectionLogIn: InspectionLog @relation(name: "PREV_INSPECTION_LOG", direction: "IN")
+  # prevInspectionLogOut: InspectionLog @relation(name: "PREV_INSPECTION_LOG", direction: "OUT")
+}
+
+type BuildYear {
+  # id: ID!
+  year: Int
+
+  # bridge: [Bridge] @relation(name: "BUILT_IN", direction: "IN")
+}
+
+<<<<<<< HEAD
+#<<<<<<< HEAD
+type Entity {
+  id: ID!
+  code: String
+  description: String
+
+  ownedBridges: [Bridge] @relation(name: "OWNS", direction: "OUT")
+  maintainedBridges: [Bridge] @relation(name: "MAINTAINS", direction: "OUT")
+}
+
+# type MaintenanceResp {
+#   id: ID!
+#   description: String
+
+#   bridge: [Bridge] @relation(name: "MAINTAINED_BY", direction: "IN")
+# }
+
+# type Owner {
+#   id: ID!
+#   description: String
+
+#   bridge: [Bridge] @relation(name: "OWNED_BY", direction: "IN")
+# }
+#=======
+=======
+>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+
+type MaintenanceResp {
+  id: ID!
+  description: String
+
+  bridge: [Bridge] @relation(name: "MAINTAINED_BY", direction: "IN")
+}
+
+type Owner {
+  id: ID!
+  description: String
+
+  bridge: [Bridge] @relation(name: "OWNED_BY", direction: "IN")
+}
+<<<<<<< HEAD
+#>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+=======
+>>>>>>> 53613e45cc5999579bb569b91ca1765e4ce075ea
+
+type HeatMapDataPoint {
+  stateName: String
+  ownerDescription: String
+  bridgeCount: Int
+}
+
+type HeatMapDataPoint_1 {
+  stateName: String
+  pairs: [Pairs]
+}
+
+type Pairs {
+  ownerDescription: String
+  bridgeCount: Int
+}
+
+type BarChartPairs 
+{
+  year: Int
+  count: Int
+}
+
+type NodeCount {
+  label: String
+  count: Int
+}
+
+type RelationshipCount {
+  type: String
+  count: Int
+}
+
+type File {
+  name: String
+  year: String
+
+  rows: [Row] @relation(name: "CONTAINS", direction: "OUT")
+  state: State @relation(name: "FILE_FOR", direction: "OUT")
+
+  numRows: Int @cypher(statement: "MATCH (this)-[:CONTAINS]->(r:Row) RETURN count(DISTINCT r)")
+}
+
+type Row {
+  data: String
+
+  file: File @relation(name: "CONTAINS", direction: "IN")
+  bridge: Bridge @relation(name: "DATA_FOR", direction: "OUT")
+}
+
+type stackedBarChart_Rows_Per_State_Per_Year_Data_Point {
+  year: String
+  # data: [RowCountByState]
+  data: [RowCountByState] @cypher(statement: """
+    MATCH (ndf:NoDelimiterFile {year: this.year})-[:FILE_FOR]->(s:State)
+    WITH ndf, s 
+    ORDER BY s.abbreviation ASC
+    MATCH (ndf)-[r:CONTAINS]->()
+    WITH s.abbreviation AS state, count(r) AS count
+    RETURN {state: state, count: count}
+  """)
+}
+
+type RowCountByState {
+  state: String
+  count: Int
+}
+
+type stackedBarChart_Rows_Per_Year_Per_State_Data_Point {
+  state: String
+  data: [RowCountByYear] @cypher(statement: """
+    MATCH (s:State {abbreviation: this.state})<-[:FILE_FOR]-(ndf:NoDelimiterFile)
+    WITH s, ndf
+    ORDER BY ndf.year DESC
+    MATCH (ndf)-[r:CONTAINS]->()
+    WITH ndf.year AS year, count(r) AS count
+    RETURN {year: year, count: count}
+
+  """)
+}
+
+type RowCountByYear {
+  year: String
+  count: Int
+}
+
+type Query {
+    
+  bridge(state: String, owner: String): [Bridge] @cypher(statement: """
+    MATCH (b:Bridge)-[*]->(state:State)
+    MATCH (b)-->(o:Owner)
+    WHERE state.name = $state
+    AND by.year = $year
+    RETURN b
+    """
+    )
+
+  nodeSummaryCount: [NodeCount] @cypher(statement: """
+    CALL db.labels() YIELD label
+    CALL apoc.cypher.run('MATCH (:`'+label+'`) RETURN count(*) as count',{}) YIELD value
+    RETURN { label: label, count: value.count } AS nodeCount
+    ORDER BY nodeCount.count DESC, nodeCount.label ASC
+    """
+  )
+
+  NodeCount(label: String, count: Int): [NodeCount]
+
+  relationshipSummaryCount: [RelationshipCount] @cypher(statement: """
+    CALL db.relationshipTypes() YIELD relationshipType as type
+    CALL apoc.cypher.run('MATCH ()-[:`'+type+'`]->() RETURN count(*) as count',{}) YIELD value
+    RETURN {type: type, count: value.count } AS relationshipCount
+    ORDER BY relationshipCount.count DESC, relationshipCount.type ASC
+    """
+  )
+
+  RelationshipCount(type: String, count: Int): [RelationshipCount]
+
+  queryBuildYear: [BuildYear] @cypher(statement: """
+    MATCH (b:Bridge) 
+    WHERE NOT b.buildYear IS NULL
+    WITH DISTINCT b.buildYear AS year
+    RETURN { year: year } AS buildYear
+    ORDER BY buildYear.year DESC
+    """
+  )
+
+  BuildYear(year: Int): [BuildYear]
+
+  heatmapData(states: [String], owners: [String]): [HeatMapDataPoint] @cypher(statement: """
+    MATCH (s:State)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner)
+    WHERE s.name IN $states
+    AND o.description IN $owners
+    WITH s.name AS stateName, o.description AS ownerDescription, count(b) AS bridgeCount
+    RETURN {stateName: stateName, ownerDescription: ownerDescription, bridgeCount: bridgeCount} AS datapoint
+    """
+  )
+
+  heatmapData_1(states: [String], owners: [String]): [HeatMapDataPoint_1] @cypher(statement: """
+    MATCH (s:State)<-[*]-(b:Bridge)-[:OWNED_BY]->(o:Owner)
+    WHERE s.name IN $states
+    AND o.description IN $owners
+    WITH s.name AS stateName, o.description AS ownerDescription, count(b) AS bridgeCount
+    RETURN {stateName: stateName, pairs: collect({ownerDescription: ownerDescription, bridgeCount: bridgeCount})} AS datapoint
+    """
+  )
+
+  Pairs(ownerDescription: String, bridgeCount: Int): [Pairs]
+
+  BarChartPairs(year: Int, count: Int): [BarChartPairs]
+
+  stackedBarChart_Rows_Per_State_Per_Year__1: [stackedBarChart_Rows_Per_State_Per_Year_Data_Point] @cypher(statement: """
+      MATCH (ndf:NoDelimiterFile)
+      WITH DISTINCT ndf.year AS year
+      ORDER BY year DESC
+      MATCH (ndf:NoDelimiterFile {year: year})-[:FILE_FOR]->(s:State)
+      WITH year, ndf, s 
+      ORDER BY year DESC, s.abbreviation ASC
+      MATCH (ndf)-[r:CONTAINS]->()
+      WITH year, s.abbreviation AS state, count(r) AS count
+      RETURN {year: year, data: collect({state: state, count: count})}
+    """
+  )
+
+  stackedBarChart_Rows_Per_Year_Per_State__1: [stackedBarChart_Rows_Per_Year_Per_State_Data_Point] @cypher(statement: """
+      MATCH (s:State) 
+      WITH s
+      ORDER BY s.abbreviation ASC
+      MATCH (s)<-[:FILE_FOR]-(ndf:NoDelimiterFile)
+      WITH s, ndf, ndf.year AS year
+      ORDER BY year DESC
+      MATCH (ndf)-[r:CONTAINS]->()
+      WITH s.abbreviation AS state, year, count(r) AS count
+      RETURN {state: state, data: collect({year: year, count: count})}
+    """
+  )
+
+  # stackedBarChart_Rows_Per_State_Per_Year__1: [stackedBarChart_Rows_Per_State_Per_Year_Data_Point] @cypher(statement: """
+  #     MATCH (ndf:NoDelimiterFile)
+  #     RETURN DISTINCT ndf.year AS year
+  #     ORDER BY year DESC
+  #   """
+  # )
+
+  # stackedBarChart_Rows_Per_State_Per_Year_Data_Point(year: String, data: [RowCountByState]): stackedBarChart_Rows_Per_State_Per_Year_Data_Point
+
+  RowCountByState(state: String, count: Int): [RowCountByState]
+
+  RowCountByYear(year: String, count: Int): [RowCountByYear]
+
+  # chartHeatMapStateOwner2(state: [String], owner: [String]): Int @cypher(statement: """
+  #   MATCH (state:State)
+  #   WHERE state.name in $state
+  #   WITH state
+  #   MATCH (state)<-[*]-(bridge:Bridge)-[:OWNED_BY]->(owner:Owner)
+  #   WHERE owner.description in $owner
+  #   //RETURN state.name, owner.description, count(bridge)
+  #   RETURN count(bridge)
+  #   //RETURN state
+  #   """
+  # )
+
+  # usersBySubstring(substring: String, first: Int = 10, offset: Int = 0): [User] @cypher(statement: "MATCH (u:User) WHERE u.name CONTAINS $substring RETURN u")
+ 
+}

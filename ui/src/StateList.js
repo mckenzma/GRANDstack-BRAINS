@@ -15,7 +15,7 @@ import { TableSortLabel } from "@material-ui/core";
 const styles = theme => ({
   root: {
     maxWidth: 700,
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: "auto",
     margin: "auto"
   },
@@ -173,8 +173,7 @@ class StateList extends React.Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.State
-                    .slice()
+                  {data.State.slice()
                     .sort(getSorting(order, orderBy))
                     .map(n => {
                       return (
