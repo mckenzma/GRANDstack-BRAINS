@@ -10,7 +10,7 @@
     "@material-ui/styles": "^4.0.0",
     "apexcharts": "^3.6.11",
     "apollo-boost": "^0.1.28",
-    "graphql": "^14.2.1",
+    "graphql": "^15.0.0",
     "graphql-tag": "^2.10.1",
     "leaflet": "^1.4.0",
     "leaflet.markercluster": "^1.4.1",
