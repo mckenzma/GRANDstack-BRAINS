@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Query } from "react-apollo";
+// import { Query } from "react-apollo";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import PropTypes from "prop-types";
@@ -108,9 +108,7 @@ const BridgeDetail = ({ Bridge }) => {
   const [inspectionLog, setInspectionLog] = useState(
     Bridge.latestInspectionLog
   );
-  const id = `${Bridge.stateCode}${Bridge.countyCode}${Bridge.placeCode}${
-    Bridge.code
-  }`;
+  const id = `${Bridge.stateCode}${Bridge.countyCode}${Bridge.placeCode}${Bridge.code}`;
 
   const updateYear = year => {
     setCurrentYear(year);

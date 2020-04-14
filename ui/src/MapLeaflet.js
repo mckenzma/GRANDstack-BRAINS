@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useQuery } from "@apollo/react-hooks";
-import { Query } from "react-apollo";
+// import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import "./Map.css";
 import { withStyles } from "@material-ui/core/styles";

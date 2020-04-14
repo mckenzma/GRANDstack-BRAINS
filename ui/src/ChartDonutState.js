@@ -1,7 +1,7 @@
 import React, { useState /*, { Component }*/ } from "react";
 import Chart from "react-apexcharts";
 
-import { Query } from "react-apollo";
+// import { Query } from "react-apollo";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
