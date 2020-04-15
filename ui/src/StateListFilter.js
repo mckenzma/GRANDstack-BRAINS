@@ -1,17 +1,14 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { useQuery } from "@apollo/react-hooks";
 
-// import { Query } from "react-apollo";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
+import { makeStyles } from "@material-ui/core/styles";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-
 import Divider from "@material-ui/core/Divider";
-
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -19,10 +16,7 @@ import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
 import PropTypes from "prop-types";
 
-import { withStyles } from "@material-ui/core/styles";
-
 const useStyles = makeStyles(theme => ({
-  // const styles = theme => ({
   root: {
     display: "flex",
     flexWrap: "wrap"
@@ -41,7 +35,6 @@ const useStyles = makeStyles(theme => ({
   noLabel: {
     marginTop: theme.spacing(3)
   }
-  // });
 }));
 
 const GET_STATES = gql`
@@ -54,12 +47,6 @@ const GET_STATES = gql`
   }
 `;
 
-// function getSorting(order, orderBy) {
-//   return order === "desc"
-//     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
-//     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
-// }
-
 export default function StateListFilter({
   selectedStates,
   setSelectedStates
@@ -68,27 +55,11 @@ export default function StateListFilter({
 }) {
   const classes = useStyles();
 
-  // console.log(selected);
-
   const { loading, error, data } = useQuery(GET_STATES);
-  // class StateListFilter extends React.Component {
-  // constructor(props) {
-  // super(props);
 
-  // this.state = {
-  // order: "asc", // sets order of states to be named in list
   const [order, setOrder] = useState("asc");
-  // orderBy: "abbreviation",
   const [orderBy, setOrderBy] = useState("abbreviation");
-  // abbreviation: null,
   const [abbreviation, setAbbreviation] = useState(null);
-  // selectedStates: [],
-  // const [selectedStates, setSelectedStates] = useState([]);
-  // const [numSelectedStates, setNumSelectedStates] = useState(0);
-  // selected: this.props.selected,
-  // numSelected: this.props.numSelected
-  // };
-  // };
   const [state, setState] = useState(null);
 
   const [selected, setSelected] = useState("");
@@ -97,19 +68,11 @@ export default function StateListFilter({
     selectedStates.length
   );
 
-  // const order = "asc";
-  // const orderBy = "abbreviation";
-  // const [abbreviation, setAbbreviation] = useState("");
-  // const [selectedStates, setSelectedState] = useState([]);
-
   const handleChange = abbreviation => event => {
-    // this.props.triggerParentUpdate("abbreviation", abbreviation);
-    // this.setState({ selectedValue: event.target.value });
     setState({ ...state, [abbreviation]: event.target.checked });
   };
 
   function handleClick(event, abbreviation) {
-    // const { selected } = this.state;
     setSelected(selectedStates);
     const selectedIndex = selectedStates.indexOf(abbreviation);
     let newSelected = [];
@@ -127,12 +90,8 @@ export default function StateListFilter({
       );
     }
 
-    // this.setState({ selected: newSelected.sort() });
     setSelectedStates(newSelected.sort());
-    // this.setState({ numSelected: newSelected.length });
     setNumSelectedStates(newSelected.length);
-    // this.props.triggerParentUpdate("selected", newSelected);
-    // this.props.triggerParentUpdate("numSelected", newSelected.length);
   }
 
   const handleSelectAllClick = (event, data) => {
@@ -141,21 +100,11 @@ export default function StateListFilter({
     if (event.target.checked) {
       newSelected = data.map(n => n.abbreviation);
       setSelectedStates(newSelected.sort());
-      // newSelected = data.map(n => n.abbreviation);
-      // this.setState({ selected: newSelected.sort() });
-      // this.setState(state => ({ numSelected: state.selected.length }));
-      // this.props.triggerParentUpdate(state => ({
-      // numSelected: state.selected.length
       setNumSelectedStates(rowCount);
-      // }));
-      // this.props.triggerParentUpdate("selected", newSelected);
       return;
     }
-    // this.setState({ selected: [] });
     setSelectedStates([]);
-    // this.setState(state => ({ numSelected: state.selected.length }));
     setNumSelected(0);
-    // this.props.triggerParentUpdate(state => ({ selected: state.selected }));
   };
 
   function getSorting(order, orderBy) {
@@ -164,39 +113,10 @@ export default function StateListFilter({
       : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
   }
 
-  // isSelected = abbreviation => this.state.selected.indexOf(abbreviation) !== -1;
-
-  // render() {
-  //   const { order, orderBy } = this.state;
-
-  //   const { numSelected } = this.state;
-
-  //   const { classes } = this.props;
-
-  // return (
-  //   <Query
-  //     query={gql`
-  //       {
-  //         State {
-  //           # id
-  //           name
-  //           code
-  //           abbreviation
-  //         }
-  //       }
-  //     `}
-  //   >
-  //     {({ loading, error, data }) => {
-  //       if (loading) return <p>Loading...</p>;
-  //       if (error) return <p>Error</p>;
-
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
 
-  // console.log(data);
-
   const rowCount = Object.keys(data.State).length;
-  // const rowCount = 0;
 
   return (
     // <div className={classes.root}>
@@ -204,7 +124,6 @@ export default function StateListFilter({
       <InputLabel>States</InputLabel>
       <Select
         multiple
-        // value={this.state.selected}
         value={selectedStates}
         renderValue={selectedStates => (
           <div className={classes.chips}>
@@ -224,10 +143,7 @@ export default function StateListFilter({
               numSelectedStates > 0 && numSelectedStates < rowCount
             }
             checked={numSelectedStates === rowCount}
-            onChange={event =>
-              // this.handleSelectAllClick(event, Object(data.State))
-              handleSelectAllClick(event, Object(data.State))
-            }
+            onChange={event => handleSelectAllClick(event, Object(data.State))}
           />
           <ListItemText>Select All</ListItemText>
         </MenuItem>
@@ -235,20 +151,15 @@ export default function StateListFilter({
         {data.State.slice()
           .sort(getSorting(order, orderBy))
           .map(n => {
-            // const isSelected = this.isSelected(n.abbreviation);
             // const isSelected = isSelected(n.abbreviation);
             return (
               <MenuItem key={n.abbreviation} value={n.abbreviation}>
                 <Checkbox
                   checked={selectedStates.indexOf(n.abbreviation) !== -1}
-                  // onChange={this.handleChange(n.abbreviation)}
                   onChange={handleChange(n.abbreviation)}
                   value={n.abbreviation}
                   // selected={isSelected} // is this actually needed? - test removal
-                  onClick={event =>
-                    // this.handleClick(event, n.abbreviation)
-                    handleClick(event, n.abbreviation)
-                  }
+                  onClick={event => handleClick(event, n.abbreviation)}
                 />
                 <ListItemText>{n.abbreviation}</ListItemText>
               </MenuItem>
@@ -258,14 +169,4 @@ export default function StateListFilter({
     </FormControl>
     // </div>
   );
-  // }}
-  // </Query>
-  // );
-  // }
 }
-
-// StateListFilter.propTypes = {
-// classes: PropTypes.object.isRequired
-// };
-
-// export default withStyles(styles, { withTheme: true })(StateListFilter);

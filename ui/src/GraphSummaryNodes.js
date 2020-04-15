@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-// import { Query } from "react-apollo";
+
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { withStyles } from "@material-ui/core/styles";
+// Material UI components
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -16,7 +16,6 @@ import { TableSortLabel } from "@material-ui/core";
 import Loading from "./Loading";
 
 const useStyles = makeStyles(theme => ({
-  // const styles = theme => ({
   root: {
     maxWidth: 700,
     marginTop: theme.spacing(3),
@@ -26,7 +25,6 @@ const useStyles = makeStyles(theme => ({
   table: {
     // minWidth: 700
   }
-  // });
 }));
 
 const GET_NODES = gql`
@@ -38,23 +36,7 @@ const GET_NODES = gql`
   }
 `;
 
-// function getSorting(order, orderBy) {
-//   return order === "desc"
-//     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
-//     : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
-// }
-
 export default function GraphSummaryNodes() {
-  // class GraphSummaryNodes extends React.Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     order: "desc",
-  //     orderBy: "count"
-  //   };
-  // }
-
   const classes = useStyles();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("count");
@@ -67,7 +49,6 @@ export default function GraphSummaryNodes() {
       newOrder = "asc";
     }
 
-    // this.setState({ order, orderBy });
     setOrder(newOrder);
     setOrderBy(newOrderBy);
   };
@@ -79,26 +60,9 @@ export default function GraphSummaryNodes() {
   }
 
   const { loading, error, data } = useQuery(GET_NODES);
-  // render() {
-  //   const { order, orderBy } = this.state;
-  //   return (
-  //     <Query
-  //       query={gql`
-  //         {
-  //           nodeSummaryCount {
-  //             label
-  //             count
-  //           }
-  //         }
-  //       `}
-  //     >
-  //       {({ loading, error, data }) => {
-  //         // if (loading) return <p>Loading...</p>;
 
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
-  // if (loading) return <Loading />;
-  // if (error) return <p>Error</p>;
 
   return (
     <Paper className={classes.root}>
@@ -154,10 +118,4 @@ export default function GraphSummaryNodes() {
       </Table>
     </Paper>
   );
-  //       }}
-  //     </Query>
-  //   );
-  // }
 }
-
-// export default withStyles(styles)(GraphSummaryNodes);

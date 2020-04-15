@@ -18,6 +18,7 @@ import GraphSummaryRelationships from "./GraphSummaryRelationships";
 
 import Grid from "@material-ui/core/Grid";
 
+// TODO update to makeStyles
 const DialogTitle = withStyles(theme => ({
   root: {
     borderBottom: `1px solid ${theme.palette.divider}`,
