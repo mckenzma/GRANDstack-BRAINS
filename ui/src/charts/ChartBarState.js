@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import Loading from "./Loading";
+import Loading from "./../Loading";
 
 const GET_STATES_QUERY = gql`
   query statesPaginateQuery($_selectedStates: [String!]) {
@@ -16,7 +16,6 @@ const GET_STATES_QUERY = gql`
 `;
 
 export default function BarChartState({ _selectedStates }) {
-  console.log(_selectedStates);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("abbreviation");
 
@@ -35,28 +34,20 @@ export default function BarChartState({ _selectedStates }) {
   if (loading) return <Loading />;
   if (error) return <p>Error</p>;
 
-  const categories = [
-    data.State.slice()
-      .sort(getSorting(order, orderBy))
-      .map(n => {
-        return n.abbreviation;
-      })
-  ];
-
-  console.log(categories);
+  let categories = [];
+  data.State.sort(getSorting(order, orderBy)).map(n => {
+    categories.push(n.abbreviation);
+  });
 
   const series = [
     {
-      abbreviation: "Number of Bridges",
-      data: data.State.slice()
-        .sort(getSorting(order, orderBy))
+      name: "Number of Bridges",
+      data: data.State.sort(getSorting(order, orderBy)) //.slice()
         .map(n => {
           return n.numBridges;
         })
     }
   ];
-
-  console.log(series);
 
   return (
     <div className="mixed-chart">
@@ -65,7 +56,7 @@ export default function BarChartState({ _selectedStates }) {
         options={{
           chart: {
             // id: "basic-bar",
-            type: "bar"
+            // type: "bar"
           },
           title: {
             text: "Total Bridge Count by State"
@@ -77,19 +68,37 @@ export default function BarChartState({ _selectedStates }) {
               // horizontal: true,
               columnWidth: "90%",
               dataLabels: {
+                position: "top",
                 hideOverflowingLabels: false
               }
             }
           },
+          dataLabels: {
+            enabled: true,
+            formatter: function(val) {
+              return val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+            },
+            offsetY: -20,
+            style: {
+              fontSize: "12px",
+              colors: ["#304758"]
+            }
+          },
           xaxis: {
+            // categories: categories[0]
             categories: categories
+          },
+          tooltip: {
+            y: {
+              formatter: function(val) {
+                return val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+              }
+            }
           }
           // legend: {
           //   show:true,
           //   position: 'bottom'
           // },
-          //series: [44, 55, 41, 17, 15],
-          //labels: ["A", "B", "C", "D", "E"]
         }}
         series={series}
         type="bar"

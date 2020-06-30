@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import Loading from "./Loading";
+import Loading from "./../Loading";
 
 // IDEA: update to use image fill with State flags
 // https://apexcharts.com/react-chart-demos/pie-charts/pie-with-image/
@@ -55,7 +55,6 @@ export default function DonutChartState({ _selectedStates }) {
   return (
     <div className="donut">
       <Chart
-        // options={options}
         options={{
           legend: {
             show: true,
@@ -64,7 +63,17 @@ export default function DonutChartState({ _selectedStates }) {
           title: {
             text: "Total Bridge Count by State"
           },
-          labels: labels
+          dataLabels: {
+            enabled: false
+          },
+          labels: labels,
+          tooltip: {
+            y: {
+              formatter: function(val) {
+                return val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+              }
+            }
+          }
         }}
         series={series}
         type="donut"

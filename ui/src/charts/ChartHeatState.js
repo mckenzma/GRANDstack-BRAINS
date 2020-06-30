@@ -1,10 +1,10 @@
-import React /*, { Component }*/ from "react";
+import React from "react";
 import Chart from "react-apexcharts";
 
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-import Loading from "./Loading";
+import Loading from "./../Loading";
 
 function getSorting(order, orderBy) {
   return order === "desc"
