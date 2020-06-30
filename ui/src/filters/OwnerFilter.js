@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { Query } from "react-apollo";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
+import { makeStyles } from "@material-ui/core/styles";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -15,7 +16,7 @@ import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
 import PropTypes from "prop-types";
 
-import { withStyles } from "@material-ui/core/styles";
+import Loading from "./../Loading";
 
 const styles = theme => ({
   root: {

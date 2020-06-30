@@ -13,6 +13,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Chip from "@material-ui/core/Chip";
 
+import Loading from "./../Loading";
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
@@ -112,7 +114,7 @@ export default function BuildYearFilter({ selectedYears, setSelectedYears }) {
       : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
   }
 
-  if (loading) return "Loading...";
+  if (loading) return <Loading />;
   if (error) return `Error ${error.message}`;
 
   const rowCount = Object.keys(data.queryBuildYear).length;

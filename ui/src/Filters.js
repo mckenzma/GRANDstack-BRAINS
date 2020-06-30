@@ -7,11 +7,20 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Grid from "@material-ui/core/Grid";
 // External functions/components
-import StateListFilter from "./StateListFilter";
-import BuildYearFilter from "./BuildYearFilter";
+import StateListFilter from "./filters/StateListFilter";
+import BuildYearFilter from "./filters/BuildYearFilter";
 // import MaintenanceResponsibilityFilter from "./MaintenanceResponsibilityFilter";
 // import OwnerFilter from "./OwnerFilter";
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1)
+    }
+  }
+}));
 
 export default function FiltersDialog({
   _selectedStates,
@@ -23,6 +32,8 @@ export default function FiltersDialog({
   // maintRespSelected,
   // ownerSelected
 }) {
+  const classes = useStyles();
+
   const [open, setOpen] = useState(false);
   const scroll = "paper";
 
@@ -50,7 +61,7 @@ export default function FiltersDialog({
   };
 
   return (
-    <div>
+    <div className={classes.root}>
       <Button onClick={handleClickOpen} variant="contained" color="secondary">
         <BallotIcon />
         Filters
@@ -67,26 +78,32 @@ export default function FiltersDialog({
       >
         <DialogTitle id="scroll-dialog-title">Filters</DialogTitle>
         <DialogContent>
-          <StateListFilter
-            selectedStates={selectedStates}
-            setSelectedStates={setSelectedStates}
-            // numSelectedStates={numSelectedStates}
-            // setNumSelectedStates={setNumSelectedStates}
-          />
-          <BuildYearFilter
-            selectedYears={selectedYears}
-            setSelectedYears={setSelectedYears}
-          />
-          {/*<MaintenanceResponsibilityFilter
+          <Grid container className={classes.root} spacing={2}>
+            <Grid item xs={12}>
+              <StateListFilter
+                selectedStates={selectedStates}
+                setSelectedStates={setSelectedStates}
+                // numSelectedStates={numSelectedStates}
+                // setNumSelectedStates={setNumSelectedStates}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <BuildYearFilter
+                selectedYears={selectedYears}
+                setSelectedYears={setSelectedYears}
+              />
+            </Grid>
+            {/*<MaintenanceResponsibilityFilter
               triggerParentUpdate={this.updateThisProperty}
               maintRespSelected={this.props.maintRespSelected}
               maintRespSelected={maintRespSelected}
             />*/}
-          {/*<OwnerFilter
+            {/*<OwnerFilter
               triggerParentUpdate={this.updateThisProperty}
               ownerSelected={this.props.ownerSelected}
               ownerSelected={ownerSelected}
             />*/}
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} color="primary" /*value="Cancel"*/>
