@@ -85,23 +85,33 @@ export default function AboutDialog() {
             </a>{" "}
             utilizing GraphQL, React, Apollo, and Neo4j Database.
           </Typography>
+          <br />
           <Typography gutterBottom>
             All data included in this web application can be found at{" "}
             <a href="https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm">
               <u>Nation Bride Index</u>
             </a>{" "}
-            website. Some data cleaning was conducted for importation into the{" "}
+            (NBI) website. Data decoding was done in accordance with{" "}
+            <a href="https://www.fhwa.dot.gov/bridge/mtguide.pdf">
+              <u>
+                Recording and Coding Guide for the Structure Inventory and
+                Appraisal of the Nations Bridges
+              </u>
+            </a>{" "}
+            for importation into the{" "}
             <a href="https://neo4j.com/">
               <u>Neo4j</u>
             </a>{" "}
             database.
           </Typography>
+          <br />
           <Typography gutterBottom>
             The purpose of this web application is to provide an interactive
             experience for you to explore the National Bridge Index data.
           </Typography>
+          <br />
           <Typography gutterBottom>
-            This application and database was designed abd built by{" "}
+            This application and database was designed and built by{" "}
             <a href="https://www.mckenzma.com/">
               <u>Michael McKenzie</u>
             </a>{" "}
