@@ -3,6 +3,10 @@
 // To build a copy of this, these should be completed in order as listed below
 /////////////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////////////////////////////
+// TODO: Consider splitting data between delimited vs no-delimiter data
+/////////////////////////////////////////////////////////////////////////////////
+
 // Create nodes for each file URL (Delimited Files)
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row
@@ -45,8 +49,8 @@ SET fileRow += row,
 fileRow.url = $url,
 fileRow.createdOn = date()
 ',
-{batchSize:10000,parallel:false,params:{url:fileURL}}) YIELD batches, total
-RETURN batches, total
+{batchSize:10000,parallel:false,params:{url:fileURL}}) YIELD IELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
 
 // Iterate through files and import rows (NoDelimiter)
 MATCH (file:NoDelimiterFile)
