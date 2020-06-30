@@ -8,15 +8,18 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 // External functions/components
-import DonutChartState from "./ChartDonutState";
-import BarChartState from "./ChartBarState";
+import DonutChartState from "./charts/ChartDonutState";
+import BarChartState from "./charts/ChartBarState";
 // import HeatMapState from "./ChartHeatState";
-// import StackedBarChart1 from "./StackedBarChart1";
-// import StackedBarChart2 from "./StackedBarChart2";
+// import StackedBarChart1 from "./charts/StackedBarChart1";
+// import StackedBarChart2 from "./charts/StackedBarChart2";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    // flexGrow: 1,
+    "& > *": {
+      margin: theme.spacing(1)
+    }
   },
   paper: {
     padding: theme.spacing(2),
@@ -41,7 +44,7 @@ export default function SummaryDialog({ _selectedStates, _selectedYears }) {
   };
 
   return (
-    <div>
+    <div className={classes.root}>
       <Button onClick={handleClickOpen} variant="contained" color="secondary">
         Summary
       </Button>
@@ -56,7 +59,7 @@ export default function SummaryDialog({ _selectedStates, _selectedYears }) {
         <DialogTitle id="scroll-dialog-title">Summary</DialogTitle>
         <DialogContent>
           <div className={classes.root}>
-            <Grid container spacing={24}>
+            <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <Paper className={classes.paper}>
                   <DonutChartState _selectedStates={_selectedStates} />
