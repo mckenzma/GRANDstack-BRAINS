@@ -15,6 +15,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 // External functions/components
 import BridgeRadar from "./BridgeRadar";
 import SimpleSlider from "./BridgeSlider";
+import BridgeRatingLineChart from "./BridgeRatingLineChart";
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -32,50 +33,18 @@ const GET_BRIDGE = gql`
     Bridge(
       filter: {
         code: $selectedBridge
-        #place_code: $selectedPlace
         placeCode: $selectedPlace
-        #county_code: $selectedCounty
         countyCode: $selectedCounty
-        #state_code: $selectedState
         stateCode: $selectedState
-        #place : {county: { state: { code: $selectedState } } }
       }
     ) {
-      #id
-      ########
-      # is it faster to query on these here with Node Key?
-      #state_code
       stateCode
-      #county_code
       countyCode
-      #place_code
       placeCode
-      ########
       code
       latitude_decimal
       longitude_decimal
       buildYear
-      #buildYear {
-      #  year
-      #}
-      ########
-      # or is it faster to query here with tree?
-      place {
-        #  code
-        county {
-          #    code
-          state {
-            name
-          }
-        }
-      }
-      ########
-      #maintenanceResp {
-      #  description
-      #}
-      #owner {
-      #  description
-      #}
       latestInspectionLog {
         year
         STRUCTURAL_EVAL_067
@@ -97,6 +66,8 @@ const GET_BRIDGE = gql`
     }
   }
 `;
+
+// TODO add button to show raw file data
 
 const BridgeDetail = ({ Bridge }) => {
   const temp = Bridge.inspectionLogs.map(log => log.year);
@@ -162,14 +133,8 @@ const BridgeDetail = ({ Bridge }) => {
       </ListItem>*/}
 
       <SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} />
-      <BridgeRadar
-        STRUCTURAL_EVAL_067={inspectionLog.STRUCTURAL_EVAL_067}
-        DECK_GEOMETRY_EVAL_068={inspectionLog.DECK_GEOMETRY_EVAL_068}
-        UNDCLRENCE_EVAL_069={inspectionLog.UNDCLRENCE_EVAL_069}
-        POSTING_EVAL_070={inspectionLog.POSTING_EVAL_070}
-        WATERWAY_EVAL_071={inspectionLog.WATERWAY_EVAL_071}
-        APPR_ROAD_EVAL_072={inspectionLog.APPR_ROAD_EVAL_072}
-      />
+      <BridgeRadar inspectionLog={inspectionLog} />
+      <BridgeRatingLineChart inspectionLogs={Bridge.inspectionLogs} />
     </List>
   );
 };
