@@ -32,7 +32,11 @@ const driver = neo4j.driver(
   neo4j.auth.basic(
     process.env.NEO4J_USER || "neo4j",
     process.env.NEO4J_PASSWORD || "neo4j"
-  )
+  ),
+  // add this below because updated to Neo4j 4.0
+  {
+    encrypted: "ENCRYPTION_OFF"
+  }
 );
 
 /*
