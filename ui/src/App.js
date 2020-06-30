@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 // Material UI components
 import { makeStyles } from "@material-ui/core/styles";
@@ -132,7 +132,7 @@ export default function App() {
   const classes = useStyles();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
-  const [lng, setLng] = useState(-98.5795);
+  // const [lng, setLng] = useState(-98.5795);
   const [lat, setLat] = useState(39.8283);
   const [zoom, setZoom] = useState(4);
   const [right, setRight] = useState(false);
@@ -222,14 +222,38 @@ export default function App() {
     after = drawer;
   }
 
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const headerRef = useRef(null);
+  useEffect(() => {
+    if (headerRef) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+    // window.temp = headerRef.current;
+  });
+
+  // return (
+  //   <div className={classes.root}>
+  //     <AppBar position="fixed" ref={headerRef}>
+  //       <Toolbar>
+  //         <Typography variant="h6" className={classes.title}>
+  //           Curriculum
+  //         </Typography>
+  //       </Toolbar>
+  //     </AppBar>
+
+  //     <SimpleTabs headerHeight={headerHeight} />
+  //   </div>
+  // );
+
   return (
     <div className={classes.root}>
       <div className={classes.appFrame}>
         <AppBar
-        // className={classNames(classes.appBar, {
-        //   [classes.appBarShift]: open,
-        //   [classes[`appBarShift-${anchor}`]]: open
-        // })}
+          ref={headerRef}
+          // className={classNames(classes.appBar, {
+          //   [classes.appBarShift]: open,
+          //   [classes[`appBarShift-${anchor}`]]: open
+          // })}
         >
           <Toolbar disableGutters={!open}>
             <IconButton
@@ -283,6 +307,7 @@ export default function App() {
           <MapLeaf
             _selectedStates={_selectedStates}
             _selectedYears={_selectedYears}
+            headerHeight={headerHeight}
           />
         </main>
         {after}
