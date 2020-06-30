@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./Map.css";
 
 // Material UI components
@@ -26,6 +26,7 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 
 // External function/components
 import BridgeDrawer from "./BridgeDrawer.js";
+import Loading from "./Loading";
 // import StateMarker from "./MapStateMarker.js";
 
 const useStyles = makeStyles(theme => ({
@@ -48,23 +49,20 @@ const useStyles = makeStyles(theme => ({
 const GET_BRIDGES = gql`
   query bridgesPaginateQuery(
     $_selectedStates: [String!]
-    $_selectedYears: [Int!] #$maintRespSelected: [String!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
-  ) {
+    $_selectedYears: [Int!]
+  ) #$maintRespSelected: [String!]
+  #$ownerSelected: [String!]
+  #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+  {
     Bridge(
       filter: {
         place: { county: { state: { abbreviation_in: $_selectedStates } } }
         buildYear_in: $_selectedYears
-        #maintenanceResp: { description_in: $maintRespSelected }
-        #owner: { description_in: $ownerSelected }
         #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' */} this is a way to not pass every filter in unless selected
       }
     ) {
-      #id
-      #state_code
       stateCode
-      #county_code
       countyCode
-      #place_code
       placeCode
       code
       latitude_decimal
@@ -73,7 +71,11 @@ const GET_BRIDGES = gql`
   }
 `;
 
-export default function MapLeaf({ _selectedStates, _selectedYears }) {
+export default function MapLeaf({
+  _selectedStates,
+  _selectedYears,
+  headerHeight
+}) {
   const classes = useStyles();
   const { loading, error, data } = useQuery(GET_BRIDGES, {
     variables: {
@@ -99,6 +101,14 @@ export default function MapLeaf({ _selectedStates, _selectedYears }) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [state, setState] = useState(null);
+
+  const tabHeaderRef = useRef(null);
+  const style = { top: headerHeight };
+  const style2 = {
+    marginTop:
+      headerHeight +
+      (tabHeaderRef.current ? tabHeaderRef.current.offsetHeight : 0)
+  };
 
   const toggleDrawer = (
     open,
@@ -131,12 +141,13 @@ export default function MapLeaf({ _selectedStates, _selectedYears }) {
     setState_code(bridge.stateCode);
   };
 
-  if (loading) return "Loading...";
+  if (loading) return <Loading />;
   if (error) return `Error ${error.message}`;
 
   return (
-    <div>
+    <div style={style} ref={tabHeaderRef}>
       <Map
+        style={style2}
         center={position}
         zoom={zoom}
         maxZoom={18}
@@ -161,23 +172,6 @@ export default function MapLeaf({ _selectedStates, _selectedYears }) {
           })}
         </MarkerClusterGroup>
       </Map>
-
-      {/*  This is the previous attempt to create a heat map layer*/}
-      {/*<Map center={position} zoom={this.state.zoom} className="absolute top right left bottom" >
-                <HeatmapLayer
-                  //blur={10.0}
-                  //radius={10.0}
-                  fitBoundsOnLoad
-                  fitBoundsOnUpdate
-                  points={data.Bridge}
-                  longitudeExtractor={m => m['longitude_decimal']}
-                  latitudeExtractor={m => m['latitude_decimal']}
-                  intensityExtractor={m => 5.0} />
-                <TileLayer
-                  url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                />
-              </Map>*/}
 
       <Drawer
         // variant="persistent"
