@@ -5,21 +5,22 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 // TODO: Consider splitting data between delimited vs no-delimiter data
+// TODO: Add processing labels
 /////////////////////////////////////////////////////////////////////////////////
 
-// Create nodes for each file URL (Delimited Files)
-// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
-LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row
-WITH row
-WHERE NOT row.Year IS NULL
-//AND row.Import = "Yes"
-WITH row, row.URL AS fileUrl
-MERGE (file:File:DelimitedFile {url: fileUrl})
-ON CREATE SET file.url = fileUrl,
-              file.folder = row.Folder,
-              file.name = row.File,
-              file.year = toInteger(row.Year),
-              file.createdOn = timestamp()
+//// Create nodes for each file URL (Delimited Files)
+//// Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
+//LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A/export?format=csv&id=1sFcY7LFBCGXSFG336UPoOf72BBv3bmv_AVaYLxwiV4A&gid=1318941318" AS row
+//WITH row
+//WHERE NOT row.Year IS NULL
+////AND row.Import = "Yes"
+//WITH row, row.URL AS fileUrl
+//MERGE (file:File:DelimitedFile {url: fileUrl})
+//ON CREATE SET file.url = fileUrl,
+//              file.folder = row.Folder,
+//              file.name = row.File,
+//              file.year = toInteger(row.Year),
+//              file.createdOn = timestamp()
 
 // Create nodes for each file URL (No Delimiter)
 // Data loaded from https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm via define URLs stored in Google Sheet
@@ -34,23 +35,23 @@ ON CREATE SET file.url = fileUrl,
               file.year = toInteger(row.Year),
               file.createdOn = timestamp()
 
-// Iterate through files and import rows (Delimited)
-MATCH (file:DelimitedFile)
-WHERE NOT (file)-[:CONTAINS]->(:DelimitedRow)
-WITH collect(file.url) AS fileURLs
-UNWIND fileURLs AS fileURL
-CALL apoc.periodic.iterate(
-'
-CALL apoc.load.csv($url,{header:true,quoteChar:"\u0000"}) YIELD map AS row
-RETURN row
-','
-CREATE (fileRow:Row:DelimitedRow {createdOn: date()})
-SET fileRow += row,
-fileRow.url = $url,
-fileRow.createdOn = date()
-',
-{batchSize:10000,parallel:false,params:{url:fileURL}}) YIELD IELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
-RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+//// Iterate through files and import rows (Delimited)
+//MATCH (file:DelimitedFile)
+//WHERE NOT (file)-[:CONTAINS]->(:DelimitedRow)
+//WITH collect(file.url) AS fileURLs
+//UNWIND fileURLs AS fileURL
+//CALL apoc.periodic.iterate(
+//'
+//CALL apoc.load.csv($url,{header:true,quoteChar:"\u0000"}) YIELD map AS row
+//RETURN row
+//','
+//CREATE (fileRow:Row:DelimitedRow {createdOn: date()})
+//SET fileRow += row,
+//fileRow.url = $url,
+//fileRow.createdOn = date()
+//',
+//{batchSize:10000,parallel:false,params:{url:fileURL}}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+//RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
 
 // Iterate through files and import rows (NoDelimiter)
 MATCH (file:NoDelimiterFile)
@@ -397,19 +398,19 @@ SET ndr += record
 
 
 
-// Connect rows to files (Delimited)
-CALL apoc.periodic.iterate(
-'
-MATCH (row:DelimitedRow)
-WHERE NOT (row)<-[:CONTAINS]-()
-RETURN row
-','
-MATCH (file:DelimitedFile)
-WHERE file.url = row.url
-MERGE (file)-[:CONTAINS]->(row)
-',
-{batchSize:10000,parallel:false}) YIELD batches, total
-RETURN batches, total
+//// Connect rows to files (Delimited)
+//CALL apoc.periodic.iterate(
+//'
+//MATCH (row:DelimitedRow)
+//WHERE NOT (row)<-[:CONTAINS]-()
+//RETURN row
+//','
+//MATCH (file:DelimitedFile)
+//WHERE file.url = row.url
+//MERGE (file)-[:CONTAINS]->(row)
+//',
+//{batchSize:10000,parallel:false}) YIELD batches, total
+//RETURN batches, total
 
 // Connect rows to files (No Delimiter)
 CALL apoc.periodic.iterate(
@@ -425,22 +426,22 @@ MERGE (file)-[:CONTAINS]->(row)
 {batchSize:10000,parallel:false}) YIELD batches, total
 RETURN batches, total
 
-// Create state node and connect to file
-CALL apoc.periodic.iterate(
-'
-MATCH (file:File)
-WHERE NOT (file)-[:FILE_FOR]->()
-RETURN file
-','
-MATCH (file)-[:CONTAINS]->(row)
-WITH file, row LIMIT 1
-MERGE (state:State {code: row.STATE_CODE_001})
-ON CREATE SET state.createdOn = date()
-WITH file, state
-MERGE (file)-[:FILE_FOR]->(state)
-',
-{batchSize:1, parallel:false}) YIELD batches, total
-RETURN batches, total
+//// Create state node and connect to file
+//CALL apoc.periodic.iterate(
+//'
+//MATCH (file:File)
+//WHERE NOT (file)-[:FILE_FOR]->()
+//RETURN file
+//','
+//MATCH (file)-[:CONTAINS]->(row)
+//WITH file, row LIMIT 1
+//MERGE (state:State {code: row.STATE_CODE_001})
+//ON CREATE SET state.createdOn = date()
+//WITH file, state
+//MERGE (file)-[:FILE_FOR]->(state)
+//',
+//{batchSize:1, parallel:false}) YIELD batches, total
+//RETURN batches, total
 
 // Connect files per state in order by year
 // TO DO - Delimiter and NO Delimiter Files shoudl each have their own string
@@ -456,127 +457,127 @@ WITH orderedFiles[i] AS start, orderedFiles[i+1] AS end
 MERGE (start)-[:NEXT_FILE]->(end)
 
 
-// Update State properties
-MATCH (state:State)
-SET state.abbreviation = 
-      CASE state.code
-        WHEN "01" THEN "AL"
-          WHEN "02" THEN "AK"
-          //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
-          WHEN "04" THEN "AZ"
-          WHEN "05" THEN "AR"
-          WHEN "06" THEN "CA"
-          //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
-          WHEN "08" THEN "CO"
-          WHEN "09" THEN "CT"
-          WHEN "10" THEN "DE"
-          WHEN "11" THEN "DC"
-          WHEN "12" THEN "FL"
-          WHEN "13" THEN "GA"
-          //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
-          WHEN "15" THEN "HI"
-          WHEN "16" THEN "ID"
-          WHEN "17" THEN "IL"
-          WHEN "18" THEN "IN"
-          WHEN "19" THEN "IA"
-          WHEN "20" THEN "KS"
-          WHEN "21" THEN "KY"
-          WHEN "22" THEN "LA"
-          WHEN "23" THEN "ME"
-          WHEN "24" THEN "MD"
-          WHEN "25" THEN "MA"
-          WHEN "26" THEN "MI"
-          WHEN "27" THEN "MN"
-          WHEN "28" THEN "MS"
-          WHEN "29" THEN "MO"
-          WHEN "30" THEN "MT"
-          WHEN "31" THEN "NE"
-          WHEN "32" THEN "NV"
-          WHEN "33" THEN "NH"
-          WHEN "34" THEN "NJ"
-          WHEN "35" THEN "NM"
-          WHEN "36" THEN "NY"
-          WHEN "37" THEN "NC"
-          WHEN "38" THEN "ND"
-          WHEN "39" THEN "OH"
-          WHEN "40" THEN "OK"
-          WHEN "41" THEN "OR"
-          WHEN "42" THEN "PA"
-          //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
-          WHEN "44" THEN "RI"
-          WHEN "45" THEN "SC"
-          WHEN "46" THEN "SD"
-          WHEN "47" THEN "TN"
-          WHEN "48" THEN "TX"
-          WHEN "49" THEN "UT"
-          WHEN "50" THEN "VT"
-          WHEN "51" THEN "VA"
-          WHEN "53" THEN "WA"
-          WHEN "54" THEN "WV"
-          WHEN "55" THEN "WI"
-          WHEN "56" THEN "WY"
-          WHEN "72" THEN "PR"
-      END,
-      state.name = 
-      CASE state.code
-      //need to incorporate longer state names
-        WHEN "01" THEN "Alabama"
-          WHEN "02" THEN "Alaska"
-          //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
-          WHEN "04" THEN "Arizona"
-          WHEN "05" THEN "Arkansas"
-          WHEN "06" THEN "California"
-          //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
-          WHEN "08" THEN "Colorado"
-          WHEN "09" THEN "Connecticut"
-          WHEN "10" THEN "Deleware"
-          WHEN "11" THEN "District of Columbia"
-          WHEN "12" THEN "Florida"
-          WHEN "13" THEN "Georgia"
-          //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
-          WHEN "15" THEN "Hawaii"
-          WHEN "16" THEN "Idaho"
-          WHEN "17" THEN "Illinois"
-          WHEN "18" THEN "Indiana"
-          WHEN "19" THEN "Iowa"
-          WHEN "20" THEN "Kansas"
-          WHEN "21" THEN "Kentucky"
-          WHEN "22" THEN "Louisianna"
-          WHEN "23" THEN "Maine"
-          WHEN "24" THEN "Maryland"
-          WHEN "25" THEN "Massachusetts"
-          WHEN "26" THEN "Michigan"
-          WHEN "27" THEN "Minnesota"
-          WHEN "28" THEN "Mississippi"
-          WHEN "29" THEN "Missouri"
-          WHEN "30" THEN "Montana"
-          WHEN "31" THEN "Nebraska"
-          WHEN "32" THEN "Nevada"
-          WHEN "33" THEN "New Hampshire"
-          WHEN "34" THEN "New Jersey"
-          WHEN "35" THEN "New Mexico"
-          WHEN "36" THEN "New York"
-          WHEN "37" THEN "North Carolina"
-          WHEN "38" THEN "North Dakota"
-          WHEN "39" THEN "Ohio"
-          WHEN "40" THEN "Oklahoma"
-          WHEN "41" THEN "Oregon"
-          WHEN "42" THEN "Pennsylvania"
-          //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
-          WHEN "44" THEN "Rhode Island"
-          WHEN "45" THEN "South Carolina"
-          WHEN "46" THEN "South Dakota"
-          WHEN "47" THEN "Tennessee"
-          WHEN "48" THEN "Texas"
-          WHEN "49" THEN "Utah"
-          WHEN "50" THEN "Vermont"
-          WHEN "51" THEN "Virginia"
-          WHEN "53" THEN "Washington"
-          WHEN "54" THEN "West Virginia"
-          WHEN "55" THEN "Wisconsin"
-          WHEN "56" THEN "Wyoming"
-          WHEN "72" THEN "Puerto Rico"
-        END;
+//// Update State properties
+//MATCH (state:State)
+//SET state.abbreviation = 
+//      CASE state.code
+//        WHEN "01" THEN "AL"
+//        WHEN "02" THEN "AK"
+//        //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
+//        WHEN "04" THEN "AZ"
+//        WHEN "05" THEN "AR"
+//        WHEN "06" THEN "CA"
+//        //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
+//        WHEN "08" THEN "CO"
+//        WHEN "09" THEN "CT"
+//        WHEN "10" THEN "DE"
+//        WHEN "11" THEN "DC"
+//        WHEN "12" THEN "FL"
+//        WHEN "13" THEN "GA"
+//        //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
+//        WHEN "15" THEN "HI"
+//        WHEN "16" THEN "ID"
+//        WHEN "17" THEN "IL"
+//        WHEN "18" THEN "IN"
+//        WHEN "19" THEN "IA"
+//        WHEN "20" THEN "KS"
+//        WHEN "21" THEN "KY"
+//        WHEN "22" THEN "LA"
+//        WHEN "23" THEN "ME"
+//        WHEN "24" THEN "MD"
+//        WHEN "25" THEN "MA"
+//        WHEN "26" THEN "MI"
+//        WHEN "27" THEN "MN"
+//        WHEN "28" THEN "MS"
+//        WHEN "29" THEN "MO"
+//        WHEN "30" THEN "MT"
+//        WHEN "31" THEN "NE"
+//        WHEN "32" THEN "NV"
+//        WHEN "33" THEN "NH"
+//        WHEN "34" THEN "NJ"
+//        WHEN "35" THEN "NM"
+//        WHEN "36" THEN "NY"
+//        WHEN "37" THEN "NC"
+//        WHEN "38" THEN "ND"
+//        WHEN "39" THEN "OH"
+//        WHEN "40" THEN "OK"
+//        WHEN "41" THEN "OR"
+//        WHEN "42" THEN "PA"
+//        //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
+//        WHEN "44" THEN "RI"
+//        WHEN "45" THEN "SC"
+//        WHEN "46" THEN "SD"
+//        WHEN "47" THEN "TN"
+//        WHEN "48" THEN "TX"
+//        WHEN "49" THEN "UT"
+//        WHEN "50" THEN "VT"
+//        WHEN "51" THEN "VA"
+//        WHEN "53" THEN "WA"
+//        WHEN "54" THEN "WV"
+//        WHEN "55" THEN "WI"
+//        WHEN "56" THEN "WY"
+//        WHEN "72" THEN "PR"
+//      END,
+//      state.name = 
+//      CASE state.code
+//      //need to incorporate longer state names
+//        WHEN "01" THEN "Alabama"
+//          WHEN "02" THEN "Alaska"
+//          //WHEN "03" THEN "" //this is not referenced. kept for numeric continuity
+//          WHEN "04" THEN "Arizona"
+//          WHEN "05" THEN "Arkansas"
+//          WHEN "06" THEN "California"
+//          //WHEN "07" THEN "" //this is not referenced. kept for numeric continuity
+//          WHEN "08" THEN "Colorado"
+//          WHEN "09" THEN "Connecticut"
+//          WHEN "10" THEN "Deleware"
+//          WHEN "11" THEN "District of Columbia"
+//          WHEN "12" THEN "Florida"
+//          WHEN "13" THEN "Georgia"
+//          //WHEN "14" THEN "" //this is not referenced. kept for numeric continuity
+//          WHEN "15" THEN "Hawaii"
+//          WHEN "16" THEN "Idaho"
+//          WHEN "17" THEN "Illinois"
+//          WHEN "18" THEN "Indiana"
+//          WHEN "19" THEN "Iowa"
+//          WHEN "20" THEN "Kansas"
+//          WHEN "21" THEN "Kentucky"
+//          WHEN "22" THEN "Louisianna"
+//          WHEN "23" THEN "Maine"
+//          WHEN "24" THEN "Maryland"
+//          WHEN "25" THEN "Massachusetts"
+//          WHEN "26" THEN "Michigan"
+//          WHEN "27" THEN "Minnesota"
+//          WHEN "28" THEN "Mississippi"
+//          WHEN "29" THEN "Missouri"
+//          WHEN "30" THEN "Montana"
+//          WHEN "31" THEN "Nebraska"
+//          WHEN "32" THEN "Nevada"
+//          WHEN "33" THEN "New Hampshire"
+//          WHEN "34" THEN "New Jersey"
+//          WHEN "35" THEN "New Mexico"
+//          WHEN "36" THEN "New York"
+//          WHEN "37" THEN "North Carolina"
+//          WHEN "38" THEN "North Dakota"
+//          WHEN "39" THEN "Ohio"
+//          WHEN "40" THEN "Oklahoma"
+//          WHEN "41" THEN "Oregon"
+//          WHEN "42" THEN "Pennsylvania"
+//          //WHEN "43" THEN "" //this is not referenced. kept for numeric continuity
+//          WHEN "44" THEN "Rhode Island"
+//          WHEN "45" THEN "South Carolina"
+//          WHEN "46" THEN "South Dakota"
+//          WHEN "47" THEN "Tennessee"
+//          WHEN "48" THEN "Texas"
+//          WHEN "49" THEN "Utah"
+//          WHEN "50" THEN "Vermont"
+//          WHEN "51" THEN "Virginia"
+//          WHEN "53" THEN "Washington"
+//          WHEN "54" THEN "West Virginia"
+//          WHEN "55" THEN "Wisconsin"
+//          WHEN "56" THEN "Wyoming"
+//          WHEN "72" THEN "Puerto Rico"
+//        END;
 
 
 // Create (:State)<--(:County)<--(:Place)
@@ -747,6 +748,7 @@ SET rc:ProcessRowComparison
 
 
 // Create (:RowAuditLogs) annd connect to (:RowComparison)
+// TODO: Does it make sense to have each difference as its own node or stored on a single node?
 CALL apoc.periodic.iterate(
 '
 MATCH (rc:ProcessRowComparison)
