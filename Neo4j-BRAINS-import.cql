@@ -580,23 +580,23 @@ MERGE (start)-[:NEXT_FILE]->(end)
 //        END;
 
 
-// Create (:State)<--(:County)<--(:Place)
-CALL apoc.periodic.iterate(
-'
-MATCH (row:NoDelimiterRow)
-//WHERE NOT (row)-[:DATA_FOR]->()
-RETURN row
-','
-WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
-        row.COUNTY_CODE_003 AS countyCode,
-              row.PLACE_CODE_004 AS placeCode
-MATCH (state:State {code: stateCode})
-MERGE (state)<-[:OF_STATE]-(county:County {code: countyCode})
-MERGE (county)<-[:OF_COUNTY]-(place:Place {code: placeCode})
-ON CREATE SET county.createdOn = date(),
-        place.createdOn = date()
-',
-{batchSize:10000,parallel:false})
+//// Create (:State)<--(:County)<--(:Place)
+//CALL apoc.periodic.iterate(
+//'
+//MATCH (row:NoDelimiterRow)
+////WHERE NOT (row)-[:DATA_FOR]->()
+//RETURN row
+//','
+//WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
+//        row.COUNTY_CODE_003 AS countyCode,
+//              row.PLACE_CODE_004 AS placeCode
+//MATCH (state:State {code: stateCode})
+//MERGE (state)<-[:OF_STATE]-(county:County {code: countyCode})
+//MERGE (county)<-[:OF_COUNTY]-(place:Place {code: placeCode})
+//ON CREATE SET county.createdOn = date(),
+//        place.createdOn = date()
+//',
+//{batchSize:10000,parallel:false})
 
 // Create constraint & node key
 //CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.code) IS NODE KEY
@@ -623,25 +623,25 @@ ON CREATE SET bridge.createdOn = datetime()
 ',
 {batchSize:10000,parallel:false})
 
-// create/merge bridge (:DelimitedRow)
-CALL apoc.periodic.iterate(
-'
-MATCH (row:DelimitedRow)
-WHERE NOT (row)-[:DATA_FOR]->()
-RETURN row
-','
-WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
-     row.COUNTY_CODE_003 AS countyCode,
-     row.PLACE_CODE_004 AS placeCode,
-     coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
-MERGE (bridge:Bridge {stateCode: stateCode, 
-                      countyCode: countyCode, 
-                      placeCode: placeCode, 
-                      code: bridgeCode})
-ON CREATE SET bridge.createdOn = datetime()
-//CREATE (row)-[:DATA_FOR]->(bridge)
-',
-{batchSize:10000,parallel:false})
+//// create/merge bridge (:DelimitedRow)
+//CALL apoc.periodic.iterate(
+//'
+//MATCH (row:DelimitedRow)
+//WHERE NOT (row)-[:DATA_FOR]->()
+//RETURN row
+//','
+//WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
+//     row.COUNTY_CODE_003 AS countyCode,
+//     row.PLACE_CODE_004 AS placeCode,
+//     coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+//MERGE (bridge:Bridge {stateCode: stateCode, 
+//                      countyCode: countyCode, 
+//                      placeCode: placeCode, 
+//                      code: bridgeCode})
+//ON CREATE SET bridge.createdOn = datetime()
+////CREATE (row)-[:DATA_FOR]->(bridge)
+//',
+//{batchSize:10000,parallel:false})
 
 // Connect bridge to row (:NoDelimiterRow)
 CALL apoc.periodic.iterate(
@@ -663,25 +663,25 @@ CREATE (row)-[:DATA_FOR]->(bridge)
 ',
 {batchSize:10000,parallel:false})
 
-// Connect bridge to row (:DelimitedRow)
-CALL apoc.periodic.iterate(
-'
-MATCH (row:DelimitedRow)
-WHERE NOT (row)-[:DATA_FOR]->()
-RETURN row
-','
-WITH row,
-row.STATE_CODE_001 AS stateCode, 
-     row.COUNTY_CODE_003 AS countyCode,
-     row.PLACE_CODE_004 AS placeCode,
-    coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
-MATCH (bridge:Bridge {stateCode: stateCode, 
-                      countyCode: countyCode, 
-                      placeCode: placeCode, 
-                      code: bridgeCode})
-CREATE (row)-[:DATA_FOR]->(bridge)
-',
-{batchSize:10000,parallel:false})
+//// Connect bridge to row (:DelimitedRow)
+//CALL apoc.periodic.iterate(
+//'
+//MATCH (row:DelimitedRow)
+//WHERE NOT (row)-[:DATA_FOR]->()
+//RETURN row
+//','
+//WITH row,
+//row.STATE_CODE_001 AS stateCode, 
+//     row.COUNTY_CODE_003 AS countyCode,
+//     row.PLACE_CODE_004 AS placeCode,
+//    coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+//MATCH (bridge:Bridge {stateCode: stateCode, 
+//                      countyCode: countyCode, 
+//                      placeCode: placeCode, 
+//                      code: bridgeCode})
+//CREATE (row)-[:DATA_FOR]->(bridge)
+//',
+//{batchSize:10000,parallel:false})
 
 
 // Create comparisons between rows for same year files

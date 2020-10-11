@@ -119,6 +119,8 @@ SET file:ConnectFileToState
 CALL apoc.periodic.iterate(
 '
 MATCH (file:ConnectFileToState)
+WITH file
+REMOVE file:ConnectFileToState
 RETURN file
 ','
 MERGE (state:State {abbreviation: left(file.name,2)})
@@ -250,4 +252,154 @@ SET state.code =
         WHEN "WY" THEN "Wyoming"
         WHEN "PR" THEN "Puerto Rico"
       END;
+
+
+// Create index for each bridge based on STATE_CODE_001, COUNTY_CODE_003, PLACE_CODE_004, STRUCTURE_NUMBER_008
+CREATE INDEX bridgePlaceCountyState FOR (b:Bridge) ON (b.stateCode, b.countyCode, b.placeCode, b.code)
+
+// Add processing label to each (:Row) not connected to a (:Bridge)
+// TODO - add this processing label upon row creation
+CALL apoc.periodic.iterate(
+'
+MATCH (row:Row)
+WHERE NOT (row)-[:DATA_FOR]->()
+RETURN row
+','
+SET row:ConnectRowToBridge
+',
+{batchSize:10000, parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+
+// Add processing row for first record row
+CALL apoc.periodic.iterate(
+'
+MATCH (row:Row)
+WHERE NOT (row)-[:DATA_FOR]->()
+AND NOT ()-[:NEXT_ROW]->(row)
+RETURN row
+','
+SET row:CreateBridge
+',
+{batchSize:10000, parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+
+
+
+/////////////////////////////////////
+// WIP
+/////////////////////////////////////
+// Create (:Bridge) 
+CALL apoc.periodic.iterate(
+'
+MATCH (row:CreateBridge)
+RETURN row
+','
+REMOVE row:CreateBridge
+WITH row, 
+     row.STATE_CODE_001 AS stateCode,
+     row.COUNTY_CODE_003 AS countyCode,
+     row.PLACE_CODE_004 AS placeCode,
+     coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+CREATE (bridge:Bridge {stateCode: stateCode, 
+											countyCode: countyCode, 
+											placeCode: placeCode, 
+											code: bridgeCode})
+SET bridge:ConnectToPlace
+',
+{batchSize:10000, parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+
+// Connect bridge to row
+CALL apoc.periodic.iterate(
+'
+MATCH (row:ConnectRowToBridge)<-[:CONTAINS]-(file:File)
+WHERE file.year = 2019
+RETURN row
+','
+WITH row
+REMOVE row:ConnectRowToBridge
+WITH row,
+row.STATE_CODE_001 AS stateCode, 
+     row.COUNTY_CODE_003 AS countyCode,
+     row.PLACE_CODE_004 AS placeCode,
+    coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+MATCH (bridge:Bridge {stateCode: stateCode, 
+                      countyCode: countyCode, 
+                      placeCode: placeCode, 
+                      code: bridgeCode})
+CREATE (row)-[:DATA_FOR]->(bridge)
+',
+{batchSize:1000,parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+
+// Create Index for places
+CREATE INDEX placeCountyState FOR (p:Place) ON (p.stateCode, p.countyCode, p.code)
+
+// MERGE (:Place)
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:ConnectToPlace)
+RETURN bridge
+','
+MERGE (place:Place {code: bridge.placeCode, countyCode: bridge.countyCode, stateCode: bridge.stateCode})
+ON CREATE SET place:ConnectToCounty
+',
+{batchSize:1000, parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+
+// Create (:Place)-[:HAS_BRIDGE]->(:Bridge)
+CALL apoc.periodic.iterate(
+'
+MATCH (bridge:ConnectToPlace)
+RETURN bridge
+','
+REMOVE bridge:ConnectToPlace
+WITH bridge
+MATCH (place:Place {code: bridge.placeCode, countyCode: bridge.countyCode, stateCode: bridge.stateCode})
+CREATE (place)-[:HAS_BRIDGE]->(bridge)
+',
+{batchSize:1000, parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+
+CREATE INDEX countyState FOR (c:County) ON (c.code, c.StateCode)
+
+// Merge (:County)
+CALL apoc.periodic.iterate(
+'
+MATCH (place:ConnectToCounty)
+RETURN place
+','
+MERGE (county:County {code: place.countyCode, stateCode: place.stateCode})
+ON CREATE SET county:ConnectToState
+',
+{batchSize:1000, parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+
+// Create (:County)-[:HAS_PLACE]->(:Place)
+CALL apoc.periodic.iterate(
+'
+MATCH (place:ConnectToCounty)
+RETURN place
+','
+REMOVE place:ConnectToCounty
+WITH place
+MATCH (county:County {code: place.countyCode, stateCode: place.stateCode})
+CREATE (county)-[:HAS_PLACE]->(place)
+',
+{batchSize:1000, parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+
+// Create (:State)-[:HAS_COUNTY]->(:County)
+CALL apoc.periodic.iterate(
+'
+MATCH (county:ConnectToState)
+RETURN county
+','
+REMOVE county:ConnectToState
+WITH county
+MATCH (state:State {code: county.stateCode})
+CREATE (state)-[:HAS_COUNTY]->(county)
+',
+{batchSize:1000, parallel:false}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
 
