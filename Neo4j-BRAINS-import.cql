@@ -1199,35 +1199,35 @@ WHERE state.abbreviation = row.state
 SET state.latitude_decimal = toFloat(row.latitude),
   state.longitude_decimal = toFloat(row.longitude)
 
-// Build (:State)<--(:County)<--(:Place)<--(:Bridge) tree
-CALL apoc.periodic.iterate(
-'
-MATCH (row:Row)
-WHERE NOT (row)-[:DATA_FOR]->()
-RETURN row
-','
-MATCH (state:State {code: row.STATE_CODE_001})
-MERGE (state)<-[:OF_STATE]-(county:County {code: row.COUNTY_CODE_003})
-MERGE (county)<-[:OF_COUNTY]-(place:Place {code: row.PLACE_CODE_004})
-MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
-                                               row.COUNTY_CODE_003 + "_" + 
-                                               row.PLACE_CODE_004 + "_" + 
-                                               row.STRUCTURE_NUMBER_008 + 
-                                               "_LAT_" + row.LAT_016 + 
-                                               "_LONG_" +row.LONG_017})
-ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
-        bridge.latitude = row.LAT_016,
-        bridge.longitude = row.LONG_017,
-        bridge.yearbuilt = toInteger(row.YEAR_BUILT_027),
-        
-        place.code = row.PLACE_CODE_004,
-        county.code = row.COUNTY_CODE_003,
-        state.code = row.STATE_CODE_001
-WITH row, bridge
-MERGE (row)-[:DATA_FOR]->(bridge)
-',
-{batchSize:10000,parallel:false}) YIELD batches, total
-RETURN batches, total
+//// Build (:State)<--(:County)<--(:Place)<--(:Bridge) tree
+//CALL apoc.periodic.iterate(
+//'
+//MATCH (row:Row)
+//WHERE NOT (row)-[:DATA_FOR]->()
+//RETURN row
+//','
+//MATCH (state:State {code: row.STATE_CODE_001})
+//MERGE (state)<-[:OF_STATE]-(county:County {code: row.COUNTY_CODE_003})
+//MERGE (county)<-[:OF_COUNTY]-(place:Place {code: row.PLACE_CODE_004})
+//MERGE (place)<-[:OF_PLACE]-(bridge:Bridge {id: row.STATE_CODE_001 + "_" + 
+//                                               row.COUNTY_CODE_003 + "_" + 
+//                                               row.PLACE_CODE_004 + "_" + 
+//                                               row.STRUCTURE_NUMBER_008 + 
+//                                               "_LAT_" + row.LAT_016 + 
+//                                               "_LONG_" +row.LONG_017})
+//ON CREATE SET bridge.name = row.STRUCTURE_NUMBER_008,
+//        bridge.latitude = row.LAT_016,
+//        bridge.longitude = row.LONG_017,
+//        bridge.yearbuilt = toInteger(row.YEAR_BUILT_027),
+//        
+//        place.code = row.PLACE_CODE_004,
+//        county.code = row.COUNTY_CODE_003,
+//        state.code = row.STATE_CODE_001
+//WITH row, bridge
+//MERGE (row)-[:DATA_FOR]->(bridge)
+//',
+//{batchSize:10000,parallel:false}) YIELD batches, total
+//RETURN batches, total
 
 
 
