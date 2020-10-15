@@ -119,10 +119,10 @@ SET file:ConnectFileToState
 CALL apoc.periodic.iterate(
 '
 MATCH (file:ConnectFileToState)
-WITH file
-REMOVE file:ConnectFileToState
 RETURN file
 ','
+REMOVE file:ConnectFileToState
+WITH file
 MERGE (state:State {abbreviation: left(file.name,2)})
 WITH file, state
 MERGE (file)-[:FILE_FOR]->(state)
