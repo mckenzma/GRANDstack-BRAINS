@@ -92,7 +92,7 @@ export default function GraphSummaryDialog() {
           Graph Data Summary
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={24}>
+          <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <GraphSummaryNodes />
             </Grid>
