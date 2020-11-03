@@ -5,15 +5,16 @@ type State {
   abbreviation: String
   latitude_decimal: Float
   longitude_decimal: Float
+  location: Point
 
-  bridges: [Bridge] @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(bridge:Bridge) RETURN bridge")
+  bridges: [Bridge] @cypher(statement: "MATCH (this)-[:HAS_COUNTY]->(:County)-[:HAS_PLACE]->(:Place)-[:HAS_BRIDGE]->(bridge:Bridge) RETURN bridge")
 
-  numCounties: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(c:County) RETURN count(DISTINCT c)")
-  numPlaces: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(p:Place) RETURN count(DISTINCT p)")
-  numBridges: Int @cypher(statement: "MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(b:Bridge) RETURN count(DISTINCT b)")
+  numCounties: Int @cypher(statement: "MATCH (this)-[:HAS_COUNTY]->(c:County) RETURN count(DISTINCT c)")
+  numPlaces: Int @cypher(statement: "MATCH (this)-[:HAS_COUNTY]->(:County)-[:HAS_PLACE]->(p:Place) RETURN count(DISTINCT p)")
+  numBridges: Int @cypher(statement: "MATCH (this)-[:HAS_COUNTY]->(:County)-[:HAS_PLACE]->(:Place)-[:HAS_BRIDGE]->(b:Bridge) RETURN count(DISTINCT b)")
 
   chartBarBridgeByBuildYear: [BarChartPairs] @cypher(statement: """
-    MATCH (this)<-[:OF_STATE]-(:County)<-[:OF_COUNTY]-(:Place)<-[:OF_PLACE]-(bridge:Bridge) 
+    MATCH (this)-[:HAS_COUNTY]->(:County)-[:HAS_PLACE]->(:Place)-[:HAS_BRIDGE]->(bridge:Bridge) 
     WITH bridge.yearbuilt AS year, count(bridge) AS count
     RETURN {year: year, count: count} AS datapoint
     ORDER BY year ASC
@@ -76,25 +77,29 @@ type State {
   #   """
   # )
 
-  county: [County] @relation(name: "OF_STATE", direction: "IN")
+  county: [County] @relation(name: "HAS_COUNTY", direction: "OUT")
 
   files: [File] @relation(name: "FILE_FOR", direction: "IN")
 }
 
 type County {
   id: ID!
+  code: String
   name: String
+  location: Point
 
-  state: State @relation(name: "OF_STATE", direction: "OUT")
-  place: [Place] @relation(name: "OF_COUNTY", direction: "IN")
+  state: State @relation(name: "HAS_COUNTY", direction: "IN")
+  place: [Place] @relation(name: "HAS_PLACE", direction: "OUT")
 }
 
 type Place {
   id: ID!
+  code: String
   name: String
+  location: Point
 
-  county: County @relation(name: "OF_COUNTY", direction: "OUT")
-  bridge: [Bridge] @relation(name: "OF_PLACE", direction: "IN")
+  county: County @relation(name: "HAS_PLACE", direction: "IN")
+  bridge: [Bridge] @relation(name: "HAS_BRIDGE", direction: "OUT")
 }
 
 type Bridge {
@@ -111,8 +116,9 @@ type Bridge {
   longitude_decimal: Float
   # yearbuilt: Int
   buildYear: Int
+  location: Point
 
-  place: Place @relation(name: "OF_PLACE", direction: "OUT")
+  place: Place @relation(name: "HAS_BRIDGE", direction: "IN")
   # buildYear: BuildYear @relation(name: "BUILT_IN", direction: "OUT")
   maintenanceResp: MaintenanceResp @relation(name: "MAINTAINED_BY", direction: "OUT")
   owner: Owner @relation(name: "OWNED_BY", direction: "OUT")
