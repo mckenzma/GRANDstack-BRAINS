@@ -217,7 +217,17 @@ export default function BridgeTable({
               if (prop === "file") {
                 return (
                   <>
-                    <TableCell key={"year"}>Year{/*prop.year*/}</TableCell>
+                    <TableCell
+                      style={{
+                        position: "-webkit-sticky",
+                        position: "sticky",
+                        left: 0,
+                        zIndex: 3
+                      }}
+                      key={"year"}
+                    >
+                      Year{/*prop.year*/}
+                    </TableCell>
                     <TableCell key={"fileName"}>
                       File Name{/*prop.name*/}
                     </TableCell>
@@ -274,6 +284,13 @@ export default function BridgeTable({
 
                   {/* Manually typing out every column */}
                   <TableCell /*style={{backgroundColor: rowIndex !== 0 ? (row.file.year !== data.Bridge[0].rows[rowIndex-1]["file"]["year"] ? '#ef9a9a': '') : ''}}*/
+                    style={{
+                      position: "-webkit-sticky",
+                      position: "sticky",
+                      background: "#fff",
+                      left: 0,
+                      zIndex: 1
+                    }}
                   >
                     {row.file.year}
                   </TableCell>
