@@ -16,6 +16,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import BridgeRadar from "./BridgeRadar";
 import SimpleSlider from "./BridgeSlider";
 import BridgeRatingLineChart from "./BridgeRatingLineChart";
+import ShowBridgeRows from "./BridgeRows";
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -42,8 +43,19 @@ const GET_BRIDGE = gql`
       countyCode
       placeCode
       code
-      latitude_decimal
-      longitude_decimal
+      place {
+        county {
+          state {
+            name
+          }
+        }
+      }
+      # latitude_decimal
+      # longitude_decimal
+      location {
+        latitude
+        longitude
+      }
       buildYear
       latestInspectionLog {
         year
@@ -87,6 +99,8 @@ const BridgeDetail = ({ Bridge }) => {
     );
   };
 
+  console.log("Bridge", Bridge);
+
   return (
     <List>
       <ListItem>
@@ -108,15 +122,15 @@ const BridgeDetail = ({ Bridge }) => {
         <ListItemText>Name: {Bridge.code}</ListItemText>
       </ListItem>
       <ListItem>
-        <ListItemText>LAT: {Bridge.latitude_decimal}</ListItemText>
+        <ListItemText>LAT: {Bridge.location.latitude}</ListItemText>
       </ListItem>
       <ListItem>
-        <ListItemText>LONG: {Bridge.longitude_decimal}</ListItemText>
+        <ListItemText>LONG: {Bridge.location.longitude}</ListItemText>
       </ListItem>
       <ListItem>
         <ListItemText>
           {/*Build Year: {Bridge.buildYear.year}*/}
-          Build Year: {Bridge.buildYear}
+          {/* Build Year: {Bridge.buildYear} */}
         </ListItemText>
       </ListItem>
       <Divider />
@@ -132,9 +146,15 @@ const BridgeDetail = ({ Bridge }) => {
         </ListItemText>
       </ListItem>*/}
 
-      <SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} />
-      <BridgeRadar inspectionLog={inspectionLog} />
-      <BridgeRatingLineChart inspectionLogs={Bridge.inspectionLogs} />
+      {/* <SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} /> */}
+      {/* <BridgeRadar inspectionLog={inspectionLog} /> */}
+      {/* <BridgeRatingLineChart inspectionLogs={Bridge.inspectionLogs} /> */}
+      <ShowBridgeRows
+        code={Bridge.code}
+        placeCode={Bridge.placeCode}
+        countyCode={Bridge.countyCode}
+        stateCode={Bridge.stateCode}
+      />
     </List>
   );
 };
@@ -149,7 +169,16 @@ export default function BridgeDrawer({
   open
 }) {
   const classes = useStyles();
-
+  console.log("open drawer");
+  console.log(
+    right,
+    // setRight,
+    selectedBridge,
+    selectedPlace,
+    selectedCounty,
+    selectedState,
+    open
+  );
   const { loading, error, data } = useQuery(GET_BRIDGE, {
     variables: {
       selectedBridge,
@@ -164,6 +193,8 @@ export default function BridgeDrawer({
 
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
+
+  console.log(selectedBridge, selectedPlace, selectedCounty, selectedState);
 
   return (
     <div className={classes.list}>
