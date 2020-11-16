@@ -89,7 +89,7 @@ export default function AboutDialog() {
           <Typography gutterBottom>
             All data included in this web application can be found at{" "}
             <a href="https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm">
-              <u>Nation Bride Index</u>
+              <u>Nation Bridge Inventory</u>
             </a>{" "}
             (NBI) website. Data decoding was done in accordance with{" "}
             <a href="https://www.fhwa.dot.gov/bridge/mtguide.pdf">
@@ -107,7 +107,7 @@ export default function AboutDialog() {
           <br />
           <Typography gutterBottom>
             The purpose of this web application is to provide an interactive
-            experience for you to explore the National Bridge Index data.
+            experience for you to explore the National Bridge Inventory data.
           </Typography>
           <br />
           <Typography gutterBottom>
