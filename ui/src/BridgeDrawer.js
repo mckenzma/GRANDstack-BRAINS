@@ -99,7 +99,7 @@ const BridgeDetail = ({ Bridge }) => {
     );
   };
 
-  console.log("Bridge", Bridge);
+  // console.log("Bridge", Bridge);
 
   return (
     <List>
@@ -169,16 +169,16 @@ export default function BridgeDrawer({
   open
 }) {
   const classes = useStyles();
-  console.log("open drawer");
-  console.log(
-    right,
-    // setRight,
-    selectedBridge,
-    selectedPlace,
-    selectedCounty,
-    selectedState,
-    open
-  );
+  // console.log("open drawer");
+  // console.log(
+  //   right,
+  //   // setRight,
+  //   selectedBridge,
+  //   selectedPlace,
+  //   selectedCounty,
+  //   selectedState,
+  //   open
+  // );
   const { loading, error, data } = useQuery(GET_BRIDGE, {
     variables: {
       selectedBridge,
@@ -194,7 +194,7 @@ export default function BridgeDrawer({
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
 
-  console.log(selectedBridge, selectedPlace, selectedCounty, selectedState);
+  // console.log(selectedBridge, selectedPlace, selectedCounty, selectedState);
 
   return (
     <div className={classes.list}>
