@@ -200,7 +200,7 @@ export default function BridgeTable({
       : (a, b) => (a["file"][orderBy] < b["file"][orderBy] ? -1 : 1);
   }
 
-  console.log(data.Bridge[0]);
+  //   console.log(data.Bridge[0]);
 
   return (
     <TableContainer /*component={Paper}*/>
@@ -245,10 +245,10 @@ export default function BridgeTable({
           {data.Bridge[0].rows
             .sort(getSorting(order, orderBy))
             .map((row, rowIndex) => {
-              if (rowIndex !== 0) {
-                console.log(row.file.year);
-                console.log("prevRow", data.Bridge[0].rows[rowIndex - 1]);
-              }
+              //   if (rowIndex !== 0) {
+              //     // console.log(row.file.year);
+              //     // console.log("prevRow", data.Bridge[0].rows[rowIndex - 1]);
+              //   }
               return (
                 <TableRow key={rowIndex}>
                   {/* Trying to not have to specify each property from the Row node */}
@@ -283,6 +283,7 @@ export default function BridgeTable({
                             })} */}
 
                   {/* Manually typing out every column */}
+                  {/* TODO - make this dynamic. order by number (order as shown in document) not by alpha */}
                   <TableCell /*style={{backgroundColor: rowIndex !== 0 ? (row.file.year !== data.Bridge[0].rows[rowIndex-1]["file"]["year"] ? '#ef9a9a': '') : ''}}*/
                     style={{
                       position: "-webkit-sticky",
@@ -291,10 +292,12 @@ export default function BridgeTable({
                       left: 0,
                       zIndex: 1
                     }}
+                    key={"file_year_" + rowIndex}
                   >
                     {row.file.year}
                   </TableCell>
                   <TableCell /*style={{backgroundColor: rowIndex !== 0 ? (row.file.year !== data.Bridge[0].rows[rowIndex-1]["file"]["year"] ? '#ef9a9a': '') : ''}}*/
+                    key={"file_name_" + rowIndex}
                   >
                     {row.file.name}
                   </TableCell>
@@ -309,6 +312,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"ADT_029" + "_" + rowIndex}
                   >
                     {row.ADT_029}
                   </TableCell>
@@ -323,6 +327,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"APPR_KIND_044A" + "_" + rowIndex}
                   >
                     {row.APPR_KIND_044A}
                   </TableCell>
@@ -337,6 +342,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"APPR_RAIL_036C" + "_" + rowIndex}
                   >
                     {row.APPR_RAIL_036C}
                   </TableCell>
@@ -353,6 +359,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"APPR_RAIL_END_036D" + "_" + rowIndex}
                   >
                     {row.APPR_RAIL_END_036D}
                   </TableCell>
@@ -369,6 +376,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"APPR_ROAD_EVAL_072" + "_" + rowIndex}
                   >
                     {row.APPR_ROAD_EVAL_072}
                   </TableCell>
@@ -383,6 +391,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"APPR_SPANS_046" + "_" + rowIndex}
                   >
                     {row.APPR_SPANS_046}
                   </TableCell>
@@ -397,6 +406,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"APPR_TYPE_044B" + "_" + rowIndex}
                   >
                     {row.APPR_TYPE_044B}
                   </TableCell>
@@ -413,6 +423,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"APPR_WIDTH_MT_032" + "_" + rowIndex}
                   >
                     {row.APPR_WIDTH_MT_032}
                   </TableCell>
@@ -429,6 +440,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"BASE_HWY_NETWORK_012" + "_" + rowIndex}
                   >
                     {row.BASE_HWY_NETWORK_012}
                   </TableCell>
@@ -445,6 +457,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"BRIDGE_IMP_COST_094" + "_" + rowIndex}
                   >
                     {row.BRIDGE_IMP_COST_094}
                   </TableCell>
@@ -461,6 +474,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"BRIDGE_LEN_IND_112" + "_" + rowIndex}
                   >
                     {row.BRIDGE_LEN_IND_112}
                   </TableCell>
@@ -477,6 +491,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"CHANNEL_COND_061" + "_" + rowIndex}
                   >
                     {row.CHANNEL_COND_061}
                   </TableCell>
@@ -491,6 +506,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"COUNTY_CODE_003" + "_" + rowIndex}
                   >
                     {row.COUNTY_CODE_003}
                   </TableCell>
@@ -507,6 +523,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"CRITICAL_FACILITY_006B" + "_" + rowIndex}
                   >
                     {row.CRITICAL_FACILITY_006B}
                   </TableCell>
@@ -523,6 +540,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"CULVERT_COND_062" + "_" + rowIndex}
                   >
                     {row.CULVERT_COND_062}
                   </TableCell>
@@ -539,6 +557,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DATE_LAST_UPDATE" + "_" + rowIndex}
                   >
                     {row.DATE_LAST_UPDATE}
                   </TableCell>
@@ -555,6 +574,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DATE_OF_INSPECT_090" + "_" + rowIndex}
                   >
                     {row.DATE_OF_INSPECT_090}
                   </TableCell>
@@ -569,6 +589,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DECK_COND_058" + "_" + rowIndex}
                   >
                     {row.DECK_COND_058}
                   </TableCell>
@@ -585,6 +606,9 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={
+                      "APPR_RDECK_GEOMETRY_EVAL_068AIL_036C" + "_" + rowIndex
+                    }
                   >
                     {row.DECK_GEOMETRY_EVAL_068}
                   </TableCell>
@@ -601,6 +625,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DECK_PROTECTION_108C" + "_" + rowIndex}
                   >
                     {row.DECK_PROTECTION_108C}
                   </TableCell>
@@ -617,6 +642,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DECK_STRUCTURE_TYPE_107" + "_" + rowIndex}
                   >
                     {row.DECK_STRUCTURE_TYPE_107}
                   </TableCell>
@@ -633,6 +659,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DECK_WIDTH_MT_052" + "_" + rowIndex}
                   >
                     {row.DECK_WIDTH_MT_052}
                   </TableCell>
@@ -647,6 +674,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DEDUCT_CODE" + "_" + rowIndex}
                   >
                     {row.DEDUCT_CODE}
                   </TableCell>
@@ -663,6 +691,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DEGREES_SKEW_034" + "_" + rowIndex}
                   >
                     {row.DEGREES_SKEW_034}
                   </TableCell>
@@ -677,6 +706,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DESIGN_LOAD_031" + "_" + rowIndex}
                   >
                     {row.DESIGN_LOAD_031}
                   </TableCell>
@@ -693,6 +723,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DETOUR_KILOS_019" + "_" + rowIndex}
                   >
                     {row.DETOUR_KILOS_019}
                   </TableCell>
@@ -707,6 +738,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DIRECTION_005E" + "_" + rowIndex}
                   >
                     {row.DIRECTION_005E}
                   </TableCell>
@@ -721,6 +753,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"DTL_TYPE_OF_IMP" + "_" + rowIndex}
                   >
                     {row.DTL_TYPE_OF_IMP}
                   </TableCell>
@@ -737,6 +770,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"FACILITY_CARRIED_007" + "_" + rowIndex}
                   >
                     {row.FACILITY_CARRIED_007}
                   </TableCell>
@@ -753,6 +787,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"FEATURES_DESC_006A" + "_" + rowIndex}
                   >
                     {row.FEATURES_DESC_006A}
                   </TableCell>
@@ -769,6 +804,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"FEDERAL_LANDS_105" + "_" + rowIndex}
                   >
                     {row.FEDERAL_LANDS_105}
                   </TableCell>
@@ -783,6 +819,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"FED_AGENCY" + "_" + rowIndex}
                   >
                     {row.FED_AGENCY}
                   </TableCell>
@@ -797,6 +834,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"FRACTURE_092A" + "_" + rowIndex}
                   >
                     {row.FRACTURE_092A}
                   </TableCell>
@@ -813,6 +851,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"FRACTURE_LAST_DATE_093A" + "_" + rowIndex}
                   >
                     {row.FRACTURE_LAST_DATE_093A}
                   </TableCell>
@@ -829,6 +868,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"FUNCTIONAL_CLASS_026" + "_" + rowIndex}
                   >
                     {row.FUNCTIONAL_CLASS_026}
                   </TableCell>
@@ -843,6 +883,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"FUTURE_ADT_114" + "_" + rowIndex}
                   >
                     {row.FUTURE_ADT_114}
                   </TableCell>
@@ -859,6 +900,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"HIGHWAY_DISTRICT_002" + "_" + rowIndex}
                   >
                     {row.HIGHWAY_DISTRICT_002}
                   </TableCell>
@@ -875,6 +917,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"HIGHWAY_SYSTEM_104" + "_" + rowIndex}
                   >
                     {row.HIGHWAY_SYSTEM_104}
                   </TableCell>
@@ -889,6 +932,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"HISTORY_037" + "_" + rowIndex}
                   >
                     {row.HISTORY_037}
                   </TableCell>
@@ -903,6 +947,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"HORR_CLR_MT_047" + "_" + rowIndex}
                   >
                     {row.HORR_CLR_MT_047}
                   </TableCell>
@@ -917,6 +962,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"IMP_LEN_MT_076" + "_" + rowIndex}
                   >
                     {row.IMP_LEN_MT_076}
                   </TableCell>
@@ -933,6 +979,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"INSPECT_FREQ_MONTHS_091" + "_" + rowIndex}
                   >
                     {row.INSPECT_FREQ_MONTHS_091}
                   </TableCell>
@@ -949,6 +996,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"INVENTORY_RATING_066" + "_" + rowIndex}
                   >
                     {row.INVENTORY_RATING_066}
                   </TableCell>
@@ -965,6 +1013,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"INV_RATING_METH_065" + "_" + rowIndex}
                   >
                     {row.INV_RATING_METH_065}
                   </TableCell>
@@ -979,6 +1028,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"KILOPOINT_011" + "_" + rowIndex}
                   >
                     {row.KILOPOINT_011}
                   </TableCell>
@@ -993,6 +1043,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"LAT_016" + "_" + rowIndex}
                   >
                     {row.LAT_016}
                   </TableCell>
@@ -1007,6 +1058,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"LAT_UND_MT_055B" + "_" + rowIndex}
                   >
                     {row.LAT_UND_MT_055B}
                   </TableCell>
@@ -1023,6 +1075,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"LAT_UND_REF_055A" + "_" + rowIndex}
                   >
                     {row.LAT_UND_REF_055A}
                   </TableCell>
@@ -1039,6 +1092,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"LEFT_CURB_MT_050A" + "_" + rowIndex}
                   >
                     {row.LEFT_CURB_MT_050A}
                   </TableCell>
@@ -1055,6 +1109,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"LEFT_LAT_UND_MT_056" + "_" + rowIndex}
                   >
                     {row.LEFT_LAT_UND_MT_056}
                   </TableCell>
@@ -1069,6 +1124,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"LOCATION_009" + "_" + rowIndex}
                   >
                     {row.LOCATION_009}
                   </TableCell>
@@ -1083,6 +1139,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"LONG_017" + "_" + rowIndex}
                   >
                     {row.LONG_017}
                   </TableCell>
@@ -1099,6 +1156,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"LRS_INV_ROUTE_013A" + "_" + rowIndex}
                   >
                     {row.LRS_INV_ROUTE_013A}
                   </TableCell>
@@ -1113,6 +1171,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"MAINTENANCE_021" + "_" + rowIndex}
                   >
                     {row.MAINTENANCE_021}
                   </TableCell>
@@ -1129,6 +1188,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"MAIN_UNIT_SPANS_045" + "_" + rowIndex}
                   >
                     {row.MAIN_UNIT_SPANS_045}
                   </TableCell>
@@ -1145,6 +1205,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"MAX_SPAN_LEN_MT_048" + "_" + rowIndex}
                   >
                     {row.MAX_SPAN_LEN_MT_048}
                   </TableCell>
@@ -1159,6 +1220,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"MEDIAN_CODE_033" + "_" + rowIndex}
                   >
                     {row.MEDIAN_CODE_033}
                   </TableCell>
@@ -1175,6 +1237,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"MEMBRANE_TYPE_108B" + "_" + rowIndex}
                   >
                     {row.MEMBRANE_TYPE_108B}
                   </TableCell>
@@ -1191,6 +1254,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"MIN_NAV_CLR_MT_116" + "_" + rowIndex}
                   >
                     {row.MIN_NAV_CLR_MT_116}
                   </TableCell>
@@ -1207,6 +1271,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"MIN_VERT_CLR_010" + "_" + rowIndex}
                   >
                     {row.MIN_VERT_CLR_010}
                   </TableCell>
@@ -1223,6 +1288,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"NATIONAL_NETWORK_110" + "_" + rowIndex}
                   >
                     {row.NATIONAL_NETWORK_110}
                   </TableCell>
@@ -1237,6 +1303,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"NAVIGATION_038" + "_" + rowIndex}
                   >
                     {row.NAVIGATION_038}
                   </TableCell>
@@ -1253,6 +1320,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"NAV_HORR_CLR_MT_040" + "_" + rowIndex}
                   >
                     {row.NAV_HORR_CLR_MT_040}
                   </TableCell>
@@ -1269,6 +1337,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"NAV_VERT_CLR_MT_039" + "_" + rowIndex}
                   >
                     {row.NAV_VERT_CLR_MT_039}
                   </TableCell>
@@ -1283,6 +1352,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"NBI_TYPE_OF_IMP" + "_" + rowIndex}
                   >
                     {row.NBI_TYPE_OF_IMP}
                   </TableCell>
@@ -1299,6 +1369,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"OPEN_CLOSED_POSTED_041" + "_" + rowIndex}
                   >
                     {row.OPEN_CLOSED_POSTED_041}
                   </TableCell>
@@ -1315,6 +1386,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"OPERATING_RATING_064" + "_" + rowIndex}
                   >
                     {row.OPERATING_RATING_064}
                   </TableCell>
@@ -1331,6 +1403,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"OPR_RATING_METH_063" + "_" + rowIndex}
                   >
                     {row.OPR_RATING_METH_063}
                   </TableCell>
@@ -1347,6 +1420,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"OTHER_STATE_CODE_098A" + "_" + rowIndex}
                   >
                     {row.OTHER_STATE_CODE_098A}
                   </TableCell>
@@ -1363,6 +1437,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"OTHER_STATE_PCNT_098B" + "_" + rowIndex}
                   >
                     {row.OTHER_STATE_PCNT_098B}
                   </TableCell>
@@ -1379,6 +1454,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"OTHR_STATE_STRUC_NO_099" + "_" + rowIndex}
                   >
                     {row.OTHR_STATE_STRUC_NO_099}
                   </TableCell>
@@ -1393,6 +1469,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"OWNER_022" + "_" + rowIndex}
                   >
                     {row.OWNER_022}
                   </TableCell>
@@ -1409,6 +1486,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"PARALLEL_STRUCTURE_101" + "_" + rowIndex}
                   >
                     {row.PARALLEL_STRUCTURE_101}
                   </TableCell>
@@ -1425,6 +1503,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"PERCENT_ADT_TRUCK_109" + "_" + rowIndex}
                   >
                     {row.PERCENT_ADT_TRUCK_109}
                   </TableCell>
@@ -1441,6 +1520,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"PIER_PROTECTION_111" + "_" + rowIndex}
                   >
                     {row.PIER_PROTECTION_111}
                   </TableCell>
@@ -1455,6 +1535,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"PLACE_CODE_004" + "_" + rowIndex}
                   >
                     {row.PLACE_CODE_004}
                   </TableCell>
@@ -1471,6 +1552,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"POSTING_EVAL_070" + "_" + rowIndex}
                   >
                     {row.POSTING_EVAL_070}
                   </TableCell>
@@ -1485,6 +1567,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"PROGRAM_CODE" + "_" + rowIndex}
                   >
                     {row.PROGRAM_CODE}
                   </TableCell>
@@ -1499,6 +1582,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"PROJ_NO" + "_" + rowIndex}
                   >
                     {row.PROJ_NO}
                   </TableCell>
@@ -1513,6 +1597,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"PROJ_SUFFIX" + "_" + rowIndex}
                   >
                     {row.PROJ_SUFFIX}
                   </TableCell>
@@ -1527,6 +1612,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"RAILINGS_036A" + "_" + rowIndex}
                   >
                     {row.RAILINGS_036A}
                   </TableCell>
@@ -1543,6 +1629,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"RECORD_TYPE_005A" + "_" + rowIndex}
                   >
                     {row.RECORD_TYPE_005A}
                   </TableCell>
@@ -1557,6 +1644,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"REMARKS" + "_" + rowIndex}
                   >
                     {row.REMARKS}
                   </TableCell>
@@ -1573,6 +1661,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"RIGHT_CURB_MT_050B" + "_" + rowIndex}
                   >
                     {row.RIGHT_CURB_MT_050B}
                   </TableCell>
@@ -1589,6 +1678,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"ROADWAY_IMP_COST_095" + "_" + rowIndex}
                   >
                     {row.ROADWAY_IMP_COST_095}
                   </TableCell>
@@ -1605,6 +1695,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"ROADWAY_WIDTH_MT_051" + "_" + rowIndex}
                   >
                     {row.ROADWAY_WIDTH_MT_051}
                   </TableCell>
@@ -1621,6 +1712,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"ROUTE_NUMBER_005D" + "_" + rowIndex}
                   >
                     {row.ROUTE_NUMBER_005D}
                   </TableCell>
@@ -1637,6 +1729,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"ROUTE_PREFIX_005B" + "_" + rowIndex}
                   >
                     {row.ROUTE_PREFIX_005B}
                   </TableCell>
@@ -1653,6 +1746,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SCOUR_CRITICAL_113" + "_" + rowIndex}
                   >
                     {row.SCOUR_CRITICAL_113}
                   </TableCell>
@@ -1669,6 +1763,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SERVICE_LEVEL_005C" + "_" + rowIndex}
                   >
                     {row.SERVICE_LEVEL_005C}
                   </TableCell>
@@ -1683,6 +1778,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SERVICE_ON_042A" + "_" + rowIndex}
                   >
                     {row.SERVICE_ON_042A}
                   </TableCell>
@@ -1699,6 +1795,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SERVICE_UND_042B" + "_" + rowIndex}
                   >
                     {row.SERVICE_UND_042B}
                   </TableCell>
@@ -1713,6 +1810,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SPECIAL_CODE" + "_" + rowIndex}
                   >
                     {row.SPECIAL_CODE}
                   </TableCell>
@@ -1729,6 +1827,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SPEC_INSPECT_092C" + "_" + rowIndex}
                   >
                     {row.SPEC_INSPECT_092C}
                   </TableCell>
@@ -1745,6 +1844,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SPEC_LAST_DATE_093C" + "_" + rowIndex}
                   >
                     {row.SPEC_LAST_DATE_093C}
                   </TableCell>
@@ -1759,6 +1859,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STATE_CODE_001" + "_" + rowIndex}
                   >
                     {row.STATE_CODE_001}
                   </TableCell>
@@ -1775,6 +1876,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STATUS_NO_10YR_RULE" + "_" + rowIndex}
                   >
                     {row.STATUS_NO_10YR_RULE}
                   </TableCell>
@@ -1791,6 +1893,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STATUS_WITH_10YR_RULE" + "_" + rowIndex}
                   >
                     {row.STATUS_WITH_10YR_RULE}
                   </TableCell>
@@ -1805,6 +1908,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STEP_CODE" + "_" + rowIndex}
                   >
                     {row.STEP_CODE}
                   </TableCell>
@@ -1821,6 +1925,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STRAHNET_HIGHWAY_100" + "_" + rowIndex}
                   >
                     {row.STRAHNET_HIGHWAY_100}
                   </TableCell>
@@ -1837,6 +1942,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STRUCTURAL_EVAL_067" + "_" + rowIndex}
                   >
                     {row.STRUCTURAL_EVAL_067}
                   </TableCell>
@@ -1853,6 +1959,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STRUCTURE_FLARED_035" + "_" + rowIndex}
                   >
                     {row.STRUCTURE_FLARED_035}
                   </TableCell>
@@ -1869,6 +1976,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STRUCTURE_KIND_043A" + "_" + rowIndex}
                   >
                     {row.STRUCTURE_KIND_043A}
                   </TableCell>
@@ -1885,6 +1993,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STRUCTURE_LEN_MT_049" + "_" + rowIndex}
                   >
                     {row.STRUCTURE_LEN_MT_049}
                   </TableCell>
@@ -1901,6 +2010,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STRUCTURE_NUMBER_008" + "_" + rowIndex}
                   >
                     {row.STRUCTURE_NUMBER_008}
                   </TableCell>
@@ -1917,6 +2027,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"STRUCTURE_TYPE_043B" + "_" + rowIndex}
                   >
                     {row.STRUCTURE_TYPE_043B}
                   </TableCell>
@@ -1933,6 +2044,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SUBROUTE_NO_013B" + "_" + rowIndex}
                   >
                     {row.SUBROUTE_NO_013B}
                   </TableCell>
@@ -1949,6 +2061,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SUBSTRUCTURE_COND_060" + "_" + rowIndex}
                   >
                     {row.SUBSTRUCTURE_COND_060}
                   </TableCell>
@@ -1965,6 +2078,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SUFFICIENCY_ASTERC" + "_" + rowIndex}
                   >
                     {row.SUFFICIENCY_ASTERC}
                   </TableCell>
@@ -1981,6 +2095,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SUFFICIENCY_RATING" + "_" + rowIndex}
                   >
                     {row.SUFFICIENCY_RATING}
                   </TableCell>
@@ -1997,6 +2112,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SUPERSTRUCTURE_COND_059" + "_" + rowIndex}
                   >
                     {row.SUPERSTRUCTURE_COND_059}
                   </TableCell>
@@ -2013,6 +2129,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"SURFACE_TYPE_108A" + "_" + rowIndex}
                   >
                     {row.SURFACE_TYPE_108A}
                   </TableCell>
@@ -2029,6 +2146,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"TEMP_STRUCTURE_103" + "_" + rowIndex}
                   >
                     {row.TEMP_STRUCTURE_103}
                   </TableCell>
@@ -2043,6 +2161,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"TOLL_020" + "_" + rowIndex}
                   >
                     {row.TOLL_020}
                   </TableCell>
@@ -2059,6 +2178,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"TOTAL_IMP_COST_096" + "_" + rowIndex}
                   >
                     {row.TOTAL_IMP_COST_096}
                   </TableCell>
@@ -2075,6 +2195,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"TRAFFIC_DIRECTION_102" + "_" + rowIndex}
                   >
                     {row.TRAFFIC_DIRECTION_102}
                   </TableCell>
@@ -2091,6 +2212,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"TRAFFIC_LANES_ON_028A" + "_" + rowIndex}
                   >
                     {row.TRAFFIC_LANES_ON_028A}
                   </TableCell>
@@ -2107,6 +2229,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"TRAFFIC_LANES_UND_028B" + "_" + rowIndex}
                   >
                     {row.TRAFFIC_LANES_UND_028B}
                   </TableCell>
@@ -2123,6 +2246,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"TRANSITIONS_036B" + "_" + rowIndex}
                   >
                     {row.TRANSITIONS_036B}
                   </TableCell>
@@ -2139,6 +2263,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"TYPE_LAST_UPDATE" + "_" + rowIndex}
                   >
                     {row.TYPE_LAST_UPDATE}
                   </TableCell>
@@ -2155,6 +2280,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"UNDCLRENCE_EVAL_069" + "_" + rowIndex}
                   >
                     {row.UNDCLRENCE_EVAL_069}
                   </TableCell>
@@ -2171,6 +2297,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"UNDWATER_LAST_DATE_093B" + "_" + rowIndex}
                   >
                     {row.UNDWATER_LAST_DATE_093B}
                   </TableCell>
@@ -2187,6 +2314,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"UNDWATER_LOOK_SEE_092B" + "_" + rowIndex}
                   >
                     {row.UNDWATER_LOOK_SEE_092B}
                   </TableCell>
@@ -2203,6 +2331,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"VERT_CLR_OVER_MT_053" + "_" + rowIndex}
                   >
                     {row.VERT_CLR_OVER_MT_053}
                   </TableCell>
@@ -2219,6 +2348,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"VERT_CLR_UND_054B" + "_" + rowIndex}
                   >
                     {row.VERT_CLR_UND_054B}
                   </TableCell>
@@ -2235,6 +2365,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"VERT_CLR_UND_REF_054A" + "_" + rowIndex}
                   >
                     {row.VERT_CLR_UND_REF_054A}
                   </TableCell>
@@ -2251,6 +2382,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"WATERWAY_EVAL_071" + "_" + rowIndex}
                   >
                     {row.WATERWAY_EVAL_071}
                   </TableCell>
@@ -2267,6 +2399,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"WORK_DONE_BY_075B" + "_" + rowIndex}
                   >
                     {row.WORK_DONE_BY_075B}
                   </TableCell>
@@ -2283,6 +2416,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"WORK_PROPOSED_075A" + "_" + rowIndex}
                   >
                     {row.WORK_PROPOSED_075A}
                   </TableCell>
@@ -2297,6 +2431,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"YEAR_ADT_030" + "_" + rowIndex}
                   >
                     {row.YEAR_ADT_030}
                   </TableCell>
@@ -2311,6 +2446,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"YEAR_BUILT_027" + "_" + rowIndex}
                   >
                     {row.YEAR_BUILT_027}
                   </TableCell>
@@ -2327,6 +2463,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"YEAR_OF_FUTURE_ADT_115" + "_" + rowIndex}
                   >
                     {row.YEAR_OF_FUTURE_ADT_115}
                   </TableCell>
@@ -2341,6 +2478,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"YEAR_OF_IMP_097" + "_" + rowIndex}
                   >
                     {row.YEAR_OF_IMP_097}
                   </TableCell>
@@ -2357,6 +2495,7 @@ export default function BridgeTable({
                           : ""
                         : ""
                     }}
+                    key={"YEAR_RECONSTRUCTED_106" + "_" + rowIndex}
                   >
                     {row.YEAR_RECONSTRUCTED_106}
                   </TableCell>
