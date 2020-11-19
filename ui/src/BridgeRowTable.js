@@ -200,13 +200,12 @@ export default function BridgeTable({
       : (a, b) => (a["file"][orderBy] < b["file"][orderBy] ? -1 : 1);
   }
 
-  //   console.log(data.Bridge[0]);
-
   return (
     <TableContainer /*component={Paper}*/>
       <Table
         /*className={classes.table}*/ aria-label="simple table"
         stickyHeader={true}
+        size="small"
       >
         <TableHead>
           <TableRow>
