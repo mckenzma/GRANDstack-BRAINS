@@ -3,8 +3,8 @@ type State {
   code: String
   name: String
   abbreviation: String
-  latitude_decimal: Float
-  longitude_decimal: Float
+  # latitude_decimal: Float
+  # longitude_decimal: Float
   location: Point
 
   bridges: [Bridge] @cypher(statement: "MATCH (this)-[:HAS_COUNTY]->(:County)-[:HAS_PLACE]->(:Place)-[:HAS_BRIDGE]->(bridge:Bridge) RETURN bridge")
@@ -176,6 +176,15 @@ type Owner {
   bridge: [Bridge] @relation(name: "OWNED_BY", direction: "IN")
 }
 
+# type Entity {
+#   id: ID!
+#   code: String
+#   description: String
+  
+#   ownedBridges: [Bridge] @relation(name: "OWNS", direction: "OUT")
+#   maintainedBridges: [Bridge] @relation(name: "MAINTAINS", direction: "OUT")
+# }
+
 type HeatMapDataPoint {
   stateName: String
   ownerDescription: String
@@ -219,7 +228,146 @@ type File {
 }
 
 type Row {
-  data: String
+  # data: String
+
+  ADT_029: String
+  APPR_KIND_044A:String
+  APPR_RAIL_036C:String
+  APPR_RAIL_END_036D:String
+  APPR_ROAD_EVAL_072:String
+  APPR_SPANS_046:String
+  APPR_TYPE_044B:String
+  APPR_WIDTH_MT_032:String
+  BASE_HWY_NETWORK_012:String
+  BRIDGE_IMP_COST_094:String
+  BRIDGE_LEN_IND_112:String
+  CHANNEL_COND_061:String
+  COUNTY_CODE_003:String
+  CRITICAL_FACILITY_006B:String
+  CULVERT_COND_062:String
+  DATE_LAST_UPDATE:String
+  DATE_OF_INSPECT_090:String
+  DECK_COND_058:String
+  DECK_GEOMETRY_EVAL_068:String
+  DECK_PROTECTION_108C:String
+  DECK_STRUCTURE_TYPE_107:String
+  DECK_WIDTH_MT_052:String
+  DEDUCT_CODE:String
+  DEGREES_SKEW_034:String
+  DESIGN_LOAD_031:String
+  DETOUR_KILOS_019:String
+  DIRECTION_005E:String
+  DTL_TYPE_OF_IMP:String
+  FACILITY_CARRIED_007:String
+  FEATURES_DESC_006A:String
+  FEDERAL_LANDS_105:String
+  FED_AGENCY:String
+  FRACTURE_092A:String
+  FRACTURE_LAST_DATE_093A:String
+  FUNCTIONAL_CLASS_026:String
+  FUTURE_ADT_114:String
+  HIGHWAY_DISTRICT_002:String
+  HIGHWAY_SYSTEM_104:String
+  HISTORY_037:String
+  HORR_CLR_MT_047:String
+  IMP_LEN_MT_076:String
+  INSPECT_FREQ_MONTHS_091:String
+  INVENTORY_RATING_066:String
+  INV_RATING_METH_065:String
+  KILOPOINT_011:String
+  LAT_016:String
+  LAT_UND_MT_055B:String
+  LAT_UND_REF_055A:String
+  LEFT_CURB_MT_050A:String
+  LEFT_LAT_UND_MT_056:String
+  LOCATION_009:String
+  LONG_017:String
+  LRS_INV_ROUTE_013A:String
+  MAINTENANCE_021:String
+  MAIN_UNIT_SPANS_045:String
+  MAX_SPAN_LEN_MT_048:String
+  MEDIAN_CODE_033:String
+  MEMBRANE_TYPE_108B:String
+  MIN_NAV_CLR_MT_116:String
+  MIN_VERT_CLR_010:String
+  NATIONAL_NETWORK_110:String
+  NAVIGATION_038:String
+  NAV_HORR_CLR_MT_040:String
+  NAV_VERT_CLR_MT_039:String
+  NBI_TYPE_OF_IMP:String
+  OPEN_CLOSED_POSTED_041:String
+  OPERATING_RATING_064:String
+  OPR_RATING_METH_063:String
+  OTHER_STATE_CODE_098A:String
+  OTHER_STATE_PCNT_098B:String
+  OTHR_STATE_STRUC_NO_099:String
+  OWNER_022:String
+  PARALLEL_STRUCTURE_101:String
+  PERCENT_ADT_TRUCK_109:String
+  PIER_PROTECTION_111:String
+  PLACE_CODE_004:String
+  POSTING_EVAL_070:String
+  PROGRAM_CODE:String
+  PROJ_NO:String
+  PROJ_SUFFIX:String
+  RAILINGS_036A:String
+  RECORD_TYPE_005A:String
+  REMARKS:String
+  RIGHT_CURB_MT_050B:String
+  ROADWAY_IMP_COST_095:String
+  ROADWAY_WIDTH_MT_051:String
+  ROUTE_NUMBER_005D:String
+  ROUTE_PREFIX_005B:String
+  SCOUR_CRITICAL_113:String
+  SERVICE_LEVEL_005C:String
+  SERVICE_ON_042A:String
+  SERVICE_UND_042B:String
+  SPECIAL_CODE:String
+  SPEC_INSPECT_092C:String
+  SPEC_LAST_DATE_093C:String
+  STATE_CODE_001:String
+  STATUS_NO_10YR_RULE:String
+  STATUS_WITH_10YR_RULE:String
+  STEP_CODE:String
+  STRAHNET_HIGHWAY_100:String
+  STRUCTURAL_EVAL_067:String
+  STRUCTURE_FLARED_035:String
+  STRUCTURE_KIND_043A:String
+  STRUCTURE_LEN_MT_049:String
+  STRUCTURE_NUMBER_008:String
+  STRUCTURE_TYPE_043B:String
+  SUBROUTE_NO_013B:String
+  SUBSTRUCTURE_COND_060:String
+  SUFFICIENCY_ASTERC:String
+  SUFFICIENCY_RATING:String
+  SUPERSTRUCTURE_COND_059:String
+  SURFACE_TYPE_108A:String
+  TEMP_STRUCTURE_103:String
+  TOLL_020:String
+  TOTAL_IMP_COST_096:String
+  TRAFFIC_DIRECTION_102:String
+  TRAFFIC_LANES_ON_028A:String
+  TRAFFIC_LANES_UND_028B:String
+  TRANSITIONS_036B:String
+  TYPE_LAST_UPDATE:String
+  UNDCLRENCE_EVAL_069:String
+  UNDWATER_LAST_DATE_093B:String
+  UNDWATER_LOOK_SEE_092B:String
+  VERT_CLR_OVER_MT_053:String
+  VERT_CLR_UND_054B:String
+  VERT_CLR_UND_REF_054A:String
+  WATERWAY_EVAL_071:String
+  WORK_DONE_BY_075B:String
+  WORK_PROPOSED_075A:String
+  YEAR_ADT_030:String
+  YEAR_BUILT_027:String
+  YEAR_OF_FUTURE_ADT_115:String
+  YEAR_OF_IMP_097:String
+  YEAR_RECONSTRUCTED_106:String
+  # createdOn:
+  # file:String
+
+
 
   file: File @relation(name: "CONTAINS", direction: "IN")
   bridge: Bridge @relation(name: "DATA_FOR", direction: "OUT")
