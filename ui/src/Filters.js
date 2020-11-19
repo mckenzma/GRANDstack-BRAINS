@@ -87,12 +87,12 @@ export default function FiltersDialog({
                 // setNumSelectedStates={setNumSelectedStates}
               />
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <BuildYearFilter
                 selectedYears={selectedYears}
                 setSelectedYears={setSelectedYears}
               />
-            </Grid>
+            </Grid> */}
             {/*<MaintenanceResponsibilityFilter
               triggerParentUpdate={this.updateThisProperty}
               maintRespSelected={this.props.maintRespSelected}
