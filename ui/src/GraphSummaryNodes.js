@@ -13,7 +13,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Paper from "@material-ui/core/Paper";
 import { TableSortLabel } from "@material-ui/core";
 
-import Loading from "./Loading";
+// import Loading from "./Loading";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -64,9 +64,10 @@ export default function GraphSummaryNodes() {
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
 
+  //TODO: need to make scrolling table
   return (
     <Paper className={classes.root}>
-      <Table className={classes.table}>
+      <Table className={classes.table} stickyHeader={true}>
         <TableHead>
           <TableRow>
             <TableCell
