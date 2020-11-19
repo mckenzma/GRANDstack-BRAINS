@@ -17,6 +17,7 @@ import AboutDialog from "./About";
 import GraphSummaryDialog from "./GraphSummaryDialog";
 import FiltersDialog from "./Filters";
 import SummaryDialog from "./Summary";
+import MenuDrawer from "./MenuDrawer";
 
 const drawerWidth = 240;
 
@@ -130,28 +131,28 @@ const useStyles = makeStyles(theme => ({
 
 export default function App() {
   const classes = useStyles();
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("name");
+  // const [order, setOrder] = useState("asc");
+  // const [orderBy, setOrderBy] = useState("name");
   // const [lng, setLng] = useState(-98.5795);
-  const [lat, setLat] = useState(39.8283);
-  const [zoom, setZoom] = useState(4);
-  const [right, setRight] = useState(false);
-  const [bridge_id, setBridge_id] = useState(null);
-  const [bridge_lat, setBridge_lat] = useState(null);
-  const [bridge_lng, setBrige_lng] = useState(null);
-  const [bridge_year, setBridge_year] = useState(null);
-  const [owned_by, setOwned_by] = useState(null);
-  const [maintained_by, setMaintained_by] = useState(null);
-  const [name, setName] = useState("");
+  // const [lat, setLat] = useState(39.8283);
+  // const [zoom, setZoom] = useState(4);
+  // const [right, setRight] = useState(false);
+  // const [bridge_id, setBridge_id] = useState(null);
+  // const [bridge_lat, setBridge_lat] = useState(null);
+  // const [bridge_lng, setBrige_lng] = useState(null);
+  // const [bridge_year, setBridge_year] = useState(null);
+  // const [owned_by, setOwned_by] = useState(null);
+  // const [maintained_by, setMaintained_by] = useState(null);
+  // const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState("left");
-  const [openDialog, setOpenDialog] = useState(false);
+  // const [openDialog, setOpenDialog] = useState(false);
   const [_selectedStates, _setSelectedStates] = useState([
-    "AZ",
-    "DC",
-    "MT",
-    "VA",
-    "WA"
+    // "AZ",
+    "DC"
+    // "MT",
+    // "VA",
+    // "WA"
   ]);
   const [_selectedYears, _setSelectedYears] = useState([
     1987,
@@ -174,53 +175,53 @@ export default function App() {
     setOpen(false);
   };
 
-  const handleChangeAnchor = event => {
-    setAnchor(event.target.value);
-  };
+  // const handleChangeAnchor = event => {
+  //   setAnchor(event.target.value);
+  // };
 
-  const handleDialogOpen = () => {
-    setOpenDialog(true);
-  };
+  // const handleDialogOpen = () => {
+  //   setOpenDialog(true);
+  // };
 
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-  };
+  // const handleDialogClose = () => {
+  //   setOpenDialog(false);
+  // };
 
-  const drawer = (
-    <Drawer
-      variant="persistent"
-      anchor={anchor}
-      open={open}
-      classes={{
-        paper: classes.drawerPaper
-      }}
-    >
-      <div className={classes.drawerHeader}>
-        {/*<IconButton onClick={this.handleDrawerClose}>*/}
-        <IconButton onClick={handleDrawerClose}>
-          {/*{theme.direction === "rtl" ? (*/}
-          {classes.direction === "rtl" ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
-        </IconButton>
-      </div>
-      <Divider />
+  // const drawer = (
+  //   <Drawer
+  //     variant="persistent"
+  //     anchor={anchor}
+  //     open={open}
+  //     classes={{
+  //       paper: classes.drawerPaper
+  //     }}
+  //   >
+  //     <div className={classes.drawerHeader}>
+  //       {/*<IconButton onClick={this.handleDrawerClose}>*/}
+  //       <IconButton onClick={handleDrawerClose}>
+  //         {/*{theme.direction === "rtl" ? (*/}
+  //         {classes.direction === "rtl" ? (
+  //           <ChevronRightIcon />
+  //         ) : (
+  //           <ChevronLeftIcon />
+  //         )}
+  //       </IconButton>
+  //     </div>
+  //     <Divider />
 
-      <AboutDialog />
-      <GraphSummaryDialog />
-    </Drawer>
-  );
+  //     <AboutDialog />
+  //     <GraphSummaryDialog />
+  //   </Drawer>
+  // );
 
-  let before = null;
-  let after = null;
+  // let before = null;
+  // let after = null;
 
-  if (anchor === "left") {
-    before = drawer;
-  } else {
-    after = drawer;
-  }
+  // if (anchor === "left") {
+  //   before = drawer;
+  // } else {
+  //   after = drawer;
+  // }
 
   const [headerHeight, setHeaderHeight] = useState(0);
   const headerRef = useRef(null);
@@ -228,22 +229,7 @@ export default function App() {
     if (headerRef) {
       setHeaderHeight(headerRef.current.offsetHeight);
     }
-    // window.temp = headerRef.current;
   });
-
-  // return (
-  //   <div className={classes.root}>
-  //     <AppBar position="fixed" ref={headerRef}>
-  //       <Toolbar>
-  //         <Typography variant="h6" className={classes.title}>
-  //           Curriculum
-  //         </Typography>
-  //       </Toolbar>
-  //     </AppBar>
-
-  //     <SimpleTabs headerHeight={headerHeight} />
-  //   </div>
-  // );
 
   return (
     <div className={classes.root}>
@@ -256,21 +242,22 @@ export default function App() {
           // })}
         >
           <Toolbar disableGutters={!open}>
-            <IconButton
+            <MenuDrawer />
+            {/* <IconButton
               color="inherit"
               aria-label="Open drawer"
               onClick={handleDrawerOpen}
               // className={classNames(classes.menuButton, open && classes.hide)}
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Typography
               variant="h5"
               color="inherit"
               noWrap
               className={classes.root}
             >
-              National Bridge Index
+              National Bridge Inventory
             </Typography>
             <FiltersDialog
               _selectedStates={_selectedStates}
@@ -291,7 +278,7 @@ export default function App() {
             />
           </Toolbar>
         </AppBar>
-        {before}
+        {/* {before} this is related to where the drawer shows up. drawer moved to separate component */}
         <main
         // className={classNames(
         //   classes.content,
@@ -310,7 +297,7 @@ export default function App() {
             headerHeight={headerHeight}
           />
         </main>
-        {after}
+        {/* {after} this is related to where the drawer shows up. drawer moved to separate component */}
       </div>
 
       {/*<div className={classes.container} />
