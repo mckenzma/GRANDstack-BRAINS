@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+// TODO: Update use code, abbreviation. See Curriculum for example
 const GET_STATES = gql`
   {
     State {
@@ -56,6 +57,8 @@ export default function StateListFilter({
   // setNumSelectedStates
 }) {
   const classes = useStyles();
+
+  // console.log("state filters rendered");
 
   const { loading, error, data } = useQuery(GET_STATES);
 
