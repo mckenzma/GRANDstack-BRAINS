@@ -11,11 +11,12 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import Drawer from "@material-ui/core/Drawer";
 
 // External functions/components
-import BridgeRadar from "./BridgeRadar";
-import SimpleSlider from "./BridgeSlider";
-import BridgeRatingLineChart from "./BridgeRatingLineChart";
+// import BridgeRadar from "./BridgeRadar";
+// import SimpleSlider from "./BridgeSlider";
+// import BridgeRatingLineChart from "./BridgeRatingLineChart";
 import ShowBridgeRows from "./BridgeRows";
 
 const useStyles = makeStyles(theme => ({
@@ -79,8 +80,6 @@ const GET_BRIDGE = gql`
   }
 `;
 
-// TODO add button to show raw file data
-
 const BridgeDetail = ({ Bridge }) => {
   const temp = Bridge.inspectionLogs.map(log => log.year);
   const [currentYear, setCurrentYear] = useState(Math.max(...temp));
@@ -98,8 +97,6 @@ const BridgeDetail = ({ Bridge }) => {
       )[0]
     );
   };
-
-  // console.log("Bridge", Bridge);
 
   return (
     <List>
@@ -159,34 +156,19 @@ const BridgeDetail = ({ Bridge }) => {
   );
 };
 
-export default function BridgeDrawer({
-  right,
-  setRight,
-  selectedBridge,
-  selectedPlace,
-  selectedCounty,
-  selectedState,
-  open
-}) {
+export default function BridgeDrawer({ state, setState }) {
   const classes = useStyles();
-  // console.log("open drawer");
-  // console.log(
-  //   right,
-  //   // setRight,
-  //   selectedBridge,
-  //   selectedPlace,
-  //   selectedCounty,
-  //   selectedState,
-  //   open
-  // );
+
   const { loading, error, data } = useQuery(GET_BRIDGE, {
     variables: {
-      selectedBridge,
-      selectedPlace,
-      selectedCounty,
-      selectedState
+      selectedBridge: state.bridgeCode,
+      selectedPlace: state.placeCode,
+      selectedCounty: state.countyCode,
+      selectedState: state.stateCode
     }
   });
+
+  console.log("BridgeDrawer rendered!");
 
   const [sliderYears, setSliderYears] = useState([]);
   const [currentYear, setCurrentYear] = useState(null);
@@ -194,14 +176,40 @@ export default function BridgeDrawer({
   if (loading) return "Loading...";
   if (error) return `Error ${error.message}`;
 
-  // console.log(selectedBridge, selectedPlace, selectedCounty, selectedState);
-
   return (
     <div className={classes.list}>
-      {data.Bridge.map(b => {
+      {data.Bridge.map((b, index) => {
         const id = `${b.stateCode}${b.countyCode}${b.placeCode}${b.code}`;
 
-        return <BridgeDetail Bridge={b} key={id} />;
+        return (
+          <Drawer
+            // variant="persistent"
+            anchor="right"
+            open={state.open}
+            onClose={() =>
+              setState({
+                open: false,
+                selectedBridge: "",
+                selectedPlace: "",
+                selectedCounty: "",
+                selectedState: ""
+              })
+            }
+            key={index}
+          >
+            <div tabIndex={0} role="button">
+              <div className={classes.list}>
+                <List>
+                  <ListItem>
+                    <ListItemText>Bridge Info</ListItemText>
+                  </ListItem>
+                </List>
+                <Divider />
+                <BridgeDetail Bridge={b} key={id} />
+              </div>
+            </div>
+          </Drawer>
+        );
       })}
     </div>
   );
