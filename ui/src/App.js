@@ -149,9 +149,17 @@ export default function App() {
   // const [openDialog, setOpenDialog] = useState(false);
   const [_selectedStates, _setSelectedStates] = useState([
     // "AZ",
-    "DC"
+    // "DC",
+    // "MN",
     // "MT",
-    // "VA",
+
+    {
+      code: "51",
+      abbreviation: "VA"
+    }
+    // "51",
+    // "VA"
+
     // "WA"
   ]);
   const [_selectedYears, _setSelectedYears] = useState([

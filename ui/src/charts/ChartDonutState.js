@@ -33,7 +33,7 @@ export default function DonutChartState({ _selectedStates }) {
 
   const { loading, error, data } = useQuery(GET_STATE_QUERY, {
     variables: {
-      _selectedStates
+      _selectedStates: _selectedStates.map(state => state.abbreviation)
     }
   });
 

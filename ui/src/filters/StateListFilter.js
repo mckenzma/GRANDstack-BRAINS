@@ -58,32 +58,35 @@ export default function StateListFilter({
 }) {
   const classes = useStyles();
 
-  // console.log("state filters rendered");
+  console.log("states filter (selectedStates): ", selectedStates);
 
   const { loading, error, data } = useQuery(GET_STATES);
 
   const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("abbreviation");
+  const [orderBy, setOrderBy] = useState("abbreviation"); // want to sort by abbreviation since that is how it shows up in the filter
   const [abbreviation, setAbbreviation] = useState(null);
   const [state, setState] = useState(null);
 
-  const [selected, setSelected] = useState("");
+  console.log("states state: ", state);
+
+  const [selected, setSelected] = useState({});
   const [numSelected, setNumSelected] = useState(0);
   const [numSelectedStates, setNumSelectedStates] = useState(
     selectedStates.length
   );
 
-  const handleChange = abbreviation => event => {
-    setState({ ...state, [abbreviation]: event.target.checked });
+  const handleChange = code => event => {
+    setState({ ...state, [code]: event.target.checked });
   };
 
-  function handleClick(event, abbreviation) {
+  function handleClick(event, obj) {
     setSelected(selectedStates);
-    const selectedIndex = selectedStates.indexOf(abbreviation);
+    // const selectedIndex = selectedStates.indexOf(abbreviation);
+    const selectedIndex = selectedStates.findIndex(s => s.code === obj.code);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selectedStates, abbreviation);
+      newSelected = newSelected.concat(selectedStates, obj);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selectedStates.slice(1));
     } else if (selectedIndex === selectedStates.length - 1) {
@@ -134,8 +137,8 @@ export default function StateListFilter({
           <div className={classes.chips}>
             {selectedStates.map(value => (
               <Chip
-                key={value}
-                label={value} /*display="flex" flexWrap="wrap"*/
+                key={value.code}
+                label={value.abbreviation} /*display="flex" flexWrap="wrap"*/
               />
             ))}
           </div>
@@ -160,13 +163,19 @@ export default function StateListFilter({
             return (
               <MenuItem key={n.abbreviation} value={n.abbreviation}>
                 <Checkbox
-                  checked={selectedStates.indexOf(n.abbreviation) !== -1}
-                  onChange={handleChange(n.abbreviation)}
-                  value={n.abbreviation}
+                  // checked={selectedStates.indexOf(n.abbreviation) !== -1}
+                  checked={
+                    selectedStates.find(obj => obj.code === n.code) !==
+                    undefined
+                  }
+                  onChange={handleChange(n.code)}
+                  value={n}
                   // selected={isSelected} // is this actually needed? - test removal
-                  onClick={event => handleClick(event, n.abbreviation)}
+                  onClick={event => handleClick(event, n)}
                 />
-                <ListItemText>{n.abbreviation}</ListItemText>
+                <ListItemText>
+                  {n.abbreviation} - {n.abbreviation}
+                </ListItemText>
               </MenuItem>
             );
           })}

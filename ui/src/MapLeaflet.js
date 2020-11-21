@@ -53,18 +53,19 @@ const useStyles = makeStyles(theme => ({
 //        rather than "walking the relationships". Would need to update the state selector to do so
 const GET_BRIDGES = gql`
   query bridgesPaginateQuery(
-    $_selectedStates: [String!] #$maintRespSelected: [String!]
-  ) # $_selectedYears: [Int!]
-  #$ownerSelected: [String!]
+    $_selectedStates: [String!] #$maintRespSelected: [String!] # $_selectedYears: [Int!]
+  ) #$ownerSelected: [String!]
   #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
   {
     Bridge(
-      # first: 100, #limiting return b/c getting react range error
+      first: 1000 #limiting return b/c getting react range error. this is def due to the number of bridges being rendered. this should improve as corrections to bridges are made and that number decreases.
+      # however, this is still something to review for potential improvements.
       filter: {
         AND: [
-          {
-            place: { county: { state: { abbreviation_in: $_selectedStates } } }
-          }
+          # {
+          #   place: { county: { state: { abbreviation_in: $_selectedStates } } }
+          # }
+          { stateCode_in: $_selectedStates }
           # { place_not: null },
           # { place: { county_not: null } },
           # { latitude_decimal_not:null }
@@ -94,13 +95,16 @@ export default function MapLeaf({
   headerHeight
 }) {
   const classes = useStyles();
-
+  // console.log(_selectedStates.map(state => state.abbreviation));
   const { loading, error, data } = useQuery(GET_BRIDGES, {
     variables: {
-      _selectedStates
+      _selectedStates: _selectedStates.map(state => state.code)
       // _selectedYears
     }
   });
+
+  console.log(_selectedStates);
+  console.log(_selectedStates.map(state => state.code));
 
   const [lng, setLng] = useState(-98.5795); // center of US --> Long. 103 46 17.60283(W)
   const [lat, setLat] = useState(39.8283); //center of US --> Lat. 44 58 02.07622(N)
@@ -116,30 +120,31 @@ export default function MapLeaf({
 
   const [position, setPosition] = useState([lat, lng]);
 
+  // console.log(data,loading,error);
+
   // Todo - update this use of how the map shows while loading. Ideally want the map to always show and then show the loading icon with maybe the map "dimmed" ?
   // if (loading) return <Loading style={{position: 'absolute', left: '50%', top: '50%',transform: 'translate(-50%, -50%)'}}/>;
-  if (loading)
-    return (
-      <div style={style} ref={tabHeaderRef}>
-        <Map
-          style={style2}
-          center={position}
-          zoom={zoom}
-          maxZoom={18}
-          preferCanvas={true}
-        >
-          <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-          />
-        </Map>
-      </div>
-    );
-  if (error) return `Error ${error.message}`;
+  // if (loading)
+  //   return (
+  //     <div style={style} ref={tabHeaderRef}>
+  //       <Map
+  //         style={style2}
+  //         center={position}
+  //         zoom={zoom}
+  //         maxZoom={18}
+  //         preferCanvas={true}
+  //       >
+  //         <TileLayer
+  //           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  //           url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+  //         />
+  //       </Map>
+  //     </div>
+  //   );
+  // if (error) return `Error ${error.message}`;
 
   return (
     <div style={style} ref={tabHeaderRef}>
-      {" "}
       {/* can we move this down into the Map tag and get rid of it? */}
       <Map
         style={style2}
@@ -158,10 +163,14 @@ export default function MapLeaf({
           // url="	https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
         />
         <MarkerClusterGroup>
-          {data.Bridge.map((b, index) => {
-            // console.log("Markers rendered");
-            return <BridgeMarker bridge={b} index={index} key={index} />;
-          })}
+          {console.log("create markers here!")}
+          {loading && console.log("loading")}
+          {error && console.log("error")}
+          {data !== undefined &&
+            data.Bridge.map((b, index) => {
+              console.log("Markers rendered");
+              return <BridgeMarker bridge={b} index={index} key={index} />;
+            })}
         </MarkerClusterGroup>
       </Map>
     </div>

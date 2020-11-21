@@ -27,7 +27,7 @@ export default function BarChartState({ _selectedStates }) {
 
   const { loading, error, data } = useQuery(GET_STATES_QUERY, {
     variables: {
-      _selectedStates
+      _selectedStates: _selectedStates.map(state => state.abbreviation)
     }
   });
 
