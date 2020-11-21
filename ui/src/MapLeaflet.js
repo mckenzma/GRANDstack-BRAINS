@@ -53,9 +53,8 @@ const useStyles = makeStyles(theme => ({
 //        rather than "walking the relationships". Would need to update the state selector to do so
 const GET_BRIDGES = gql`
   query bridgesPaginateQuery(
-    $_selectedStates: [String!] #$maintRespSelected: [String!] # $_selectedYears: [Int!]
-  ) #$ownerSelected: [String!]
-  #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+    $_selectedStates: [String!] #$maintRespSelected: [String!] # $_selectedYears: [Int!] #$ownerSelected: [String!]
+  ) #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
   {
     Bridge(
       first: 1000 #limiting return b/c getting react range error. this is def due to the number of bridges being rendered. this should improve as corrections to bridges are made and that number decreases.
@@ -66,8 +65,9 @@ const GET_BRIDGES = gql`
           #   place: { county: { state: { abbreviation_in: $_selectedStates } } }
           # }
           { stateCode_in: $_selectedStates }
-          # { place_not: null },
-          # { place: { county_not: null } },
+          { place_not: null } # added because there are incomplete connections from state to bridge due to errors in the raw data
+          { place: { county_not: null } } # added because there are incomplete connections from state to bridge due to errors in the raw data
+          { place: { county: { state_not: null } } } # added because there are incomplete connections from state to bridge due to errors in the raw data
           # { latitude_decimal_not:null }
           # { location_not:{latitude: 0.0, longitude: 0.0}}, # added to prevent rendering issue of too many bridges on 0,0
           # { stateCode_not: ""},
