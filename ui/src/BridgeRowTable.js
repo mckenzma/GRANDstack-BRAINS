@@ -200,8 +200,10 @@ export default function BridgeTable({
       : (a, b) => (a["file"][orderBy] < b["file"][orderBy] ? -1 : 1);
   }
 
+  // TODO: fix horiz scroll. cant click on to drag.
+
   return (
-    <TableContainer /*component={Paper}*/>
+    <TableContainer /*component={Paper}*/ style={{ pverflowX: "auto" }}>
       <Table
         /*className={classes.table}*/ aria-label="simple table"
         stickyHeader={true}
