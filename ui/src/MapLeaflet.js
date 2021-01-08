@@ -53,9 +53,8 @@ const useStyles = makeStyles(theme => ({
 //        rather than "walking the relationships". Would need to update the state selector to do so
 const GET_BRIDGES = gql`
   query bridgesPaginateQuery(
-    $_selectedStates: [String!] #$maintRespSelected: [String!] # $_selectedYears: [Int!] #$ownerSelected: [String!]
-  ) #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
-  {
+    $_selectedStates: [String!] #$maintRespSelected: [String!] # $_selectedYears: [Int!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
+  ) {
     Bridge(
       first: 1000 #limiting return b/c getting react range error. this is def due to the number of bridges being rendered. this should improve as corrections to bridges are made and that number decreases.
       # however, this is still something to review for potential improvements.
@@ -162,6 +161,7 @@ export default function MapLeaf({
           // this sets a "dark carto map"
           // url="	https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
         />
+        {/* Idea: Might be able to do a similar approach with the MarkerClusterGroup such that each state has its own group. Could make it easier to run a singel query and then turn on/off each state. Something to think about... */}
         <MarkerClusterGroup>
           {console.log("create markers here!")}
           {loading && console.log("loading")}
