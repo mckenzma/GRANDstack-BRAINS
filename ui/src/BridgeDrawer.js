@@ -179,7 +179,7 @@ export default function BridgeDrawer({ state, setState }) {
   return (
     <div className={classes.list}>
       {data.Bridge.map((b, index) => {
-        const id = `${b.stateCode}${b.countyCode}${b.placeCode}${b.code}`;
+        // const id = `${b.stateCode}${b.countyCode}${b.placeCode}${b.code}`;
 
         return (
           <Drawer
@@ -201,11 +201,21 @@ export default function BridgeDrawer({ state, setState }) {
               <div className={classes.list}>
                 <List>
                   <ListItem>
-                    <ListItemText>Bridge Info</ListItemText>
+                    <ListItemText>
+                      Bridge Info
+                      <span style={{ float: "right" }}>
+                        <ShowBridgeRows
+                          code={b.code}
+                          placeCode={b.placeCode}
+                          countyCode={b.countyCode}
+                          stateCode={b.stateCode}
+                        />
+                      </span>
+                    </ListItemText>
                   </ListItem>
                 </List>
                 <Divider />
-                <BridgeDetail Bridge={b} key={id} />
+                <BridgeDetail Bridge={b} key={index} />
               </div>
             </div>
           </Drawer>
