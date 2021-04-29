@@ -60,3 +60,19 @@ RETURN element LIMIT 5
 // CS - 3 = Poor
 // CS - 4 = Severe
 // The quantities for each CS should sum to equal the total
+
+// Initial WIP to import and store raw data on node
+call apoc.load.xml("https://www.fhwa.dot.gov/bridge/nbi/element/2020/2020AL_ElementData.zip!2020AL_ElementData.xml", '', {}, true) YIELD value
+WITH value._FHWAELEMENT AS elements
+UNWIND elements AS element
+WITH element LIMIT 1
+CREATE (el:Element)
+SET el.state = element._FHWAED[0]._text,
+    el.strucNum = element._FHWAED[1]._text,
+    el.elemNum = element._FHWAED[2]._text,
+    el.totalQty = element._FHWAED[3]._text,
+    el.cs1 = element._FHWAED[4]._text,
+    el.cs2 = element._FHWAED[5]._text,
+    el.cs3 = element._FHWAED[6]._text,
+    el.cs4 = element._FHWAED[7]._text
+RETURN element, el {.*}
