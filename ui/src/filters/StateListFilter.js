@@ -58,7 +58,7 @@ export default function StateListFilter({
 }) {
   const classes = useStyles();
 
-  console.log("states filter (selectedStates): ", selectedStates);
+  // console.log("states filter (selectedStates): ", selectedStates);
 
   const { loading, error, data } = useQuery(GET_STATES);
 
@@ -67,7 +67,7 @@ export default function StateListFilter({
   const [abbreviation, setAbbreviation] = useState(null);
   const [state, setState] = useState(null);
 
-  console.log("states state: ", state);
+  // console.log("states state: ", state);
 
   const [selected, setSelected] = useState({});
   const [numSelected, setNumSelected] = useState(0);

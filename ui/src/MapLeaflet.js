@@ -102,8 +102,8 @@ export default function MapLeaf({
     }
   });
 
-  console.log(_selectedStates);
-  console.log(_selectedStates.map(state => state.code));
+  // console.log(_selectedStates);
+  // console.log(_selectedStates.map(state => state.code));
 
   const [lng, setLng] = useState(-98.5795); // center of US --> Long. 103 46 17.60283(W)
   const [lat, setLat] = useState(39.8283); //center of US --> Lat. 44 58 02.07622(N)
@@ -163,12 +163,12 @@ export default function MapLeaf({
         />
         {/* Idea: Might be able to do a similar approach with the MarkerClusterGroup such that each state has its own group. Could make it easier to run a singel query and then turn on/off each state. Something to think about... */}
         <MarkerClusterGroup>
-          {console.log("create markers here!")}
+          {/* {console.log("create markers here!")} */}
           {loading && console.log("loading")}
           {error && console.log("error")}
           {data !== undefined &&
             data.Bridge.map((b, index) => {
-              console.log("Markers rendered");
+              // console.log("Markers rendered");
               return <BridgeMarker bridge={b} index={index} key={index} />;
             })}
         </MarkerClusterGroup>
