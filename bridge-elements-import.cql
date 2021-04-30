@@ -76,3 +76,7 @@ SET el.state = element._FHWAED[0]._text,
     el.cs3 = element._FHWAED[6]._text,
     el.cs4 = element._FHWAED[7]._text
 RETURN element, el {.*}
+
+// Created a Google sheet that helps to build all of the URLs needed to import the bridge element data
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs/export?format=csv&id=1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs&gid=0" AS row
+RETURN row
