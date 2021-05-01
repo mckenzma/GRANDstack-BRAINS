@@ -99,3 +99,13 @@ ON CREATE SET file.abbreviation = row.Abbreviation,
               file.createdOn = datetime(),
               file:ImportXML
 
+
+
+// Query to read 'table_1_bridge_elements.json'
+// Table 1. Bridge Elements "cross-walk"element
+CALL apoc.load.json("https://raw.githubusercontent.com/mckenzma/GRANDstack-BRAINS/master/table_1_bridge_elements.json") YIELD value
+WITH value
+UNWIND value.types AS type
+WITH type
+UNWIND type.elements AS element
+RETURN type.type, element.element, element.units, element.element_numbers
