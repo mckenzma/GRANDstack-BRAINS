@@ -1,0 +1,263 @@
+{
+  "name": "Bridge Elements",
+  "materials": [
+    "Steel",
+    "Prestressed Concrete",
+    "Reinforced Concrete",
+    "Timber",
+    "Masonry",
+    "Other"
+  ],
+  "types": [
+    {
+      "type": "Deck/Slab",
+      "elements": [
+        {
+          "element": "Deck",
+          "units": "SF",
+          "element_numbers": [null, 13, 12, 31, null, 60]
+        },
+        {
+          "element": "Open Grid Deck",
+          "units": "SF",
+          "element_numbers": [28, null, null, null, null, null]
+        },
+        {
+          "element": "Concrete Filled Grid Deck",
+          "units": "SF",
+          "element_numbers": [29, null, null, null, null, null]
+        },
+        {
+          "element": "Corrugated or Orthotropic Deck",
+          "units": "SF",
+          "element_numbers": [30, null, null, null, null, null]
+        },
+        {
+          "element": "Slab",
+          "units": "SF",
+          "element_numbers": [null, null, 38, 54, null, 65]
+        },
+        {
+          "element": "Top Flange",
+          "units": "SF",
+          "element_numbers": [null, 15, 16, null, null, null]
+        }
+      ]
+    },
+    {
+      "type": "Superstructure",
+      "elements": [
+        {
+          "element": "Closed Web/Box Girder",
+          "units": "LF",
+          "element_numbers": [102, 104, 105, null, null, 106]
+        },
+        {
+          "element": "Girder/Beam",
+          "units": "LF",
+          "element_numbers": [107, 109, 110, 111, null, 112]
+        },
+        {
+          "element": "Stringer",
+          "units": "LF",
+          "element_numbers": [113, 115, 116, 117, null, 118]
+        },
+        {
+          "element": "Truss",
+          "units": "LF",
+          "element_numbers": [120, null, null, 135, null, 136]
+        },
+        {
+          "element": "Arch",
+          "units": "LF",
+          "element_numbers": [141, 143, 144, 146, 145, 142]
+        },
+        {
+          "element": "Main Cable",
+          "units": "LF",
+          "element_numbers": [147, null, null, null, null, null]
+        },
+        {
+          "element": "Secondary Cable",
+          "units": "EA",
+          "element_numbers": [148, null, null, null, null, 149]
+        },
+        {
+          "element": "Floor Beam",
+          "units": "LF",
+          "element_numbers": [152, 154, 155, 156, null, 157]
+        },
+        {
+          "element": "Pin, Pin and Hanger Assmebly",
+          "units": "EA",
+          "element_numbers": [161, null, null, null, null, null]
+        },
+        {
+          "element": "Gusset Plate",
+          "units": "EA",
+          "element_numbers": [162, null, null, null, null, null]
+        }
+      ]
+    },
+    {
+      "type": "Substructure",
+      "elements": [
+        {
+          "element": "Column",
+          "units": "EA",
+          "element_numbers": [202, 204, 205, 206, null, 207]
+        },
+        {
+          "element": "Column Tower (Trestle)",
+          "units": "LF",
+          "element_numbers": [207, null, null, 208, null, null]
+        },
+        {
+          "element": "Pier",
+          "units": "LF",
+          "element_numbers": [null, null, 210, 212, 213, 211]
+        },
+        {
+          "element": "Abutment",
+          "units": "LF",
+          "element_numbers": [219, null, 215, 216, 217, 218]
+        },
+        {
+          "element": "Pile Cap/Footing",
+          "units": "LF",
+          "element_numbers": [null, null, 220, null, null, null]
+        },
+        {
+          "element": "Pile",
+          "units": "EA",
+          "element_numbers": [225, 226, 227, 228, null, 229]
+        },
+        {
+          "element": "Pier Cap",
+          "units": "LF",
+          "element_numbers": [231, 233, 234, 235, null, 236]
+        }
+      ]
+    },
+    {
+      "type": "Culvert",
+      "elements": [
+        {
+          "element": "Culvert",
+          "units": "LF",
+          "element_numbers": [240, 245, 241, 242, 244, 243]
+        }
+      ]
+    },
+    {
+      "type": "Bridge Rail",
+      "elements": [
+        {
+          "element": "Bridge Rail",
+          "units": "LF",
+          "element_numbers": [330, null, 331, 332, 334, 333]
+        }
+      ]
+    },
+    {
+      "type": "Joint",
+      "elements": [
+        {
+          "element": "Strip Seal",
+          "units": "LF",
+          "element_numbers": [300]
+        },
+        {
+          "element": "Pourable",
+          "units": "LP",
+          "element_numbers": [301]
+        },
+        {
+          "element": "Compression",
+          "units": "LP",
+          "element_numbers": [302]
+        },
+        {
+          "element": "Assembly with Seal (Modular)",
+          "units": "LF",
+          "element_numbers": [303]
+        },
+        {
+          "element": "Open",
+          "units": "LF",
+          "element_numbers": [304]
+        },
+        {
+          "element": "Assembly without Seal",
+          "units": "LF",
+          "element_numbers": [305]
+        },
+        {
+          "element": "Other",
+          "units": "LF",
+          "element_numbers": [306]
+        }
+      ]
+    },
+    {
+      "type": "Bearing",
+      "elements": [
+        {
+          "element": "Elastomeric",
+          "units": "EA",
+          "element_numbers": [310]
+        },
+        {
+          "element": "Moveable (roller, slitiding, etc.)",
+          "units": "EA",
+          "element_numbers": [311]
+        },
+        {
+          "element": "Enclosed/Concealed",
+          "units": "EA",
+          "element_numbers": [312]
+        },
+        {
+          "element": "Fixed",
+          "units": "EA",
+          "element_numbers": [313]
+        },
+        {
+          "element": "Pot",
+          "units": "EA",
+          "element_numbers": [314]
+        },
+        {
+          "element": "Disk",
+          "units": "EA",
+          "element_numbers": [315]
+        },
+        {
+          "element": "Other",
+          "units": "EA",
+          "element_numbers": [316]
+        }
+      ]
+    },
+    {
+      "type": "Wearing Surfaces and Protective Coatings",
+      "elements": [
+        {
+          "element": "Wearing Surfaces",
+          "units": "SF",
+          "element_numbers": [510]
+        },
+        {
+          "element": "Steel Protective Coating",
+          "units": "SF",
+          "element_numbers": [515]
+        },
+        {
+          "element": "Concrete Protective Coating",
+          "units": "SF",
+          "element_numbers": [521]
+        }
+      ]
+    }
+  ]
+}
