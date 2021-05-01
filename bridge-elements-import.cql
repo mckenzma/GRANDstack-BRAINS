@@ -80,3 +80,22 @@ RETURN element, el {.*}
 // Created a Google sheet that helps to build all of the URLs needed to import the bridge element data
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs/export?format=csv&id=1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs&gid=0" AS row
 RETURN row
+
+// Query to count number of elements for each file
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs/export?format=csv&id=1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs&gid=0" AS row
+WITH row
+WHERE row.DataPresent = "Yes"
+call apoc.load.xml(row.URL, '', {}, true) YIELD value
+RETURN row.Year, row.Abbreviation, row.URL, size(value._FHWAELEMENT)
+
+// Create (:File:XML) nodes
+LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs/export?format=csv&id=1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs&gid=0" AS row
+WITH row
+WHERE row.DataPresent = "Yes"
+WITH row, row.URL AS fileUrl
+MERGE (file:File:XML {url: fileUrl})
+ON CREATE SET file.abbreviation = row.Abbreviation,
+              file.year = toInteger(row.Year),
+              file.createdOn = datetime(),
+              file:ImportXML
+
