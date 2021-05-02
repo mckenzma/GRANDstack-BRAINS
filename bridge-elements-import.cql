@@ -130,6 +130,20 @@ WITH file, batches, total, timeTaken, committedOperations, failedOperations, fai
 //REMOVE file:ImportXML
 RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
 
+// Connect XML File to XML Element Data
+CALL apoc.periodic.iterate(
+'
+MATCH (element:ConnectElementToFile)
+RETURN element
+','
+MATCH (file:ConnectFileToElement)
+WHERE file.name = element.file
+CREATE (file)-[:CONTAINS]->(element)
+WITH file, element
+REMOVE file:ConnectFileToElement,
+       element:ConnectElementToFile
+',
+{batchSize:1000})
 
 // Query to read 'table_1_bridge_elements.json'
 // Table 1. Bridge Elements "cross-walk"element
