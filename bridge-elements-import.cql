@@ -144,6 +144,7 @@ REMOVE file:ConnectFileToElement,
        element:ConnectElementToFile
 ',
 {batchSize:1000})
+//TODO - update batch size to 10000 when integrating with bridge database
 
 // Query to read 'table_1_bridge_elements.json'
 // Table 1. Bridge Elements "cross-walk"element
