@@ -85,7 +85,7 @@ RETURN row
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs/export?format=csv&id=1z4gfFVp3s0GbPe8YRFhU1eiNDUXR6eUUwu2BDOC5QPs&gid=0" AS row
 WITH row
 WHERE row.DataPresent = "Yes"
-call apoc.load.xml(row.URL, '', {}, true) YIELD value
+CALL apoc.load.xml(row.URL, '', {}, true) YIELD value
 RETURN row.Year, row.Abbreviation, row.URL, size(value._FHWAELEMENT)
 
 // Create (:File:XML) nodes
@@ -95,10 +95,40 @@ WHERE row.DataPresent = "Yes"
 WITH row, row.URL AS fileUrl
 MERGE (file:File:XML {url: fileUrl})
 ON CREATE SET file.abbreviation = row.Abbreviation,
+              file.name = row.File,
               file.year = toInteger(row.Year),
               file.createdOn = datetime(),
-              file:ImportXML
+              file:ImportXML:ConnectFileToElement
 
+// Iterate through files and import elements
+MATCH (file:ImportXML)
+REMOVE file:ImportXML
+WITH collect(file) AS files
+UNWIND files AS file
+CALL apoc.periodic.iterate(
+'
+CALL apoc.load.xml($url, "", {}, true) YIELD value
+WITH value._FHWAELEMENT AS elements
+UNWIND elements AS element
+RETURN element
+','
+WITH element._FHWAED AS components
+CREATE (el:XmlElement)
+SET el.file = $name,
+    el.state = [x in components WHERE x._type = "STATE" | x._text][0],
+    el.structNum = [x in components WHERE x._type = "STRUCTNUM" | x._text][0],
+    el.elementNum = [x in components WHERE x._type = "EN" | x._text][0],
+    el.totalQty = [x in components WHERE x._type = "TOTALQTY" | toInteger(x._text)][0],
+    el.cs1 = [x in components WHERE x._type = "CS1" | toInteger(x._text)][0],
+    el.cs2 = [x in components WHERE x._type = "CS2" | toInteger(x._text)][0],
+    el.cs3 = [x in components WHERE x._type = "CS3" | toInteger(x._text)][0],
+    el.cs4 = [x in components WHERE x._type = "CS4" | toInteger(x._text)][0],
+    el:ConnectElementToFile
+',
+{batchSize:1000,parallel:false,params:{url: file.url, name: file.name}}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+WITH file, batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+//REMOVE file:ImportXML
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
 
 
 // Query to read 'table_1_bridge_elements.json'
