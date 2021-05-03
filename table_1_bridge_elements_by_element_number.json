@@ -1,0 +1,705 @@
+{
+  "name": "Bridge Elements",
+  "elements": [
+    {
+      "material": "Reinforced Concrete",
+      "units": "SF",
+      "element_number": 12,
+      "type": "Deck/Slab",
+      "element": "Deck"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "SF",
+      "element_number": 13,
+      "type": "Deck/Slab",
+      "element": "Deck"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "SF",
+      "element_number": 15,
+      "type": "Deck/Slab",
+      "element": "Top Flange"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "SF",
+      "element_number": 16,
+      "type": "Deck/Slab",
+      "element": "Top Flange"
+    },
+    {
+      "material": "Steel",
+      "units": "SF",
+      "element_number": 28,
+      "type": "Deck/Slab",
+      "element": "Open Grid Deck"
+    },
+    {
+      "material": "Steel",
+      "units": "SF",
+      "element_number": 29,
+      "type": "Deck/Slab",
+      "element": "Concrete Filled Grid Deck"
+    },
+    {
+      "material": "Steel",
+      "units": "SF",
+      "element_number": 30,
+      "type": "Deck/Slab",
+      "element": "Corrugated or Orthotropic Deck"
+    },
+    {
+      "material": "Timber",
+      "units": "SF",
+      "element_number": 31,
+      "type": "Deck/Slab",
+      "element": "Deck"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "SF",
+      "element_number": 38,
+      "type": "Deck/Slab",
+      "element": "Slab"
+    },
+    {
+      "material": "Timber",
+      "units": "SF",
+      "element_number": 54,
+      "type": "Deck/Slab",
+      "element": "Slab"
+    },
+    {
+      "material": "Other",
+      "units": "SF",
+      "element_number": 60,
+      "type": "Deck/Slab",
+      "element": "Deck"
+    },
+    {
+      "material": "Other",
+      "units": "SF",
+      "element_number": 65,
+      "type": "Deck/Slab",
+      "element": "Slab"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 102,
+      "type": "Superstructure",
+      "element": "Closed Web/Box Girder"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "LF",
+      "element_number": 104,
+      "type": "Superstructure",
+      "element": "Closed Web/Box Girder"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 105,
+      "type": "Superstructure",
+      "element": "Closed Web/Box Girder"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 106,
+      "type": "Superstructure",
+      "element": "Closed Web/Box Girder"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 107,
+      "type": "Superstructure",
+      "element": "Girder/Beam"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "LF",
+      "element_number": 109,
+      "type": "Superstructure",
+      "element": "Girder/Beam"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 110,
+      "type": "Superstructure",
+      "element": "Girder/Beam"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 111,
+      "type": "Superstructure",
+      "element": "Girder/Beam"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 112,
+      "type": "Superstructure",
+      "element": "Girder/Beam"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 113,
+      "type": "Superstructure",
+      "element": "Stringer"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "LF",
+      "element_number": 115,
+      "type": "Superstructure",
+      "element": "Stringer"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 116,
+      "type": "Superstructure",
+      "element": "Stringer"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 117,
+      "type": "Superstructure",
+      "element": "Stringer"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 118,
+      "type": "Superstructure",
+      "element": "Stringer"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 120,
+      "type": "Superstructure",
+      "element": "Truss"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 135,
+      "type": "Superstructure",
+      "element": "Truss"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 136,
+      "type": "Superstructure",
+      "element": "Truss"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 141,
+      "type": "Superstructure",
+      "element": "Arch"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 142,
+      "type": "Superstructure",
+      "element": "Arch"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "LF",
+      "element_number": 143,
+      "type": "Superstructure",
+      "element": "Arch"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 144,
+      "type": "Superstructure",
+      "element": "Arch"
+    },
+    {
+      "material": "Masonry",
+      "units": "LF",
+      "element_number": 145,
+      "type": "Superstructure",
+      "element": "Arch"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 146,
+      "type": "Superstructure",
+      "element": "Arch"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 147,
+      "type": "Superstructure",
+      "element": "Main Cable"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 148,
+      "type": "Superstructure",
+      "element": "Secondary Cable"
+    },
+    {
+      "material": "Other",
+      "units": "EA",
+      "element_number": 149,
+      "type": "Superstructure",
+      "element": "Secondary Cable"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 152,
+      "type": "Superstructure",
+      "element": "Floor Beam"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "LF",
+      "element_number": 154,
+      "type": "Superstructure",
+      "element": "Floor Beam"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 155,
+      "type": "Superstructure",
+      "element": "Floor Beam"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 156,
+      "type": "Superstructure",
+      "element": "Floor Beam"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 157,
+      "type": "Superstructure",
+      "element": "Floor Beam"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 161,
+      "type": "Superstructure",
+      "element": "Pin, Pin and Hanger Assmebly"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 162,
+      "type": "Superstructure",
+      "element": "Gusset Plate"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 202,
+      "type": "Substructure",
+      "element": "Column"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "EA",
+      "element_number": 204,
+      "type": "Substructure",
+      "element": "Column"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "EA",
+      "element_number": 205,
+      "type": "Substructure",
+      "element": "Column"
+    },
+    {
+      "material": "Timber",
+      "units": "EA",
+      "element_number": 206,
+      "type": "Substructure",
+      "element": "Column"
+    },
+    {
+      "material": "Other",
+      "units": "EA",
+      "element_number": 207,
+      "type": "Substructure",
+      "element": "Column"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 207,
+      "type": "Substructure",
+      "element": "Column Tower (Trestle)"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 208,
+      "type": "Substructure",
+      "element": "Column Tower (Trestle)"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 210,
+      "type": "Substructure",
+      "element": "Pier"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 211,
+      "type": "Substructure",
+      "element": "Pier"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 212,
+      "type": "Substructure",
+      "element": "Pier"
+    },
+    {
+      "material": "Masonry",
+      "units": "LF",
+      "element_number": 213,
+      "type": "Substructure",
+      "element": "Pier"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 215,
+      "type": "Substructure",
+      "element": "Abutment"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 216,
+      "type": "Substructure",
+      "element": "Abutment"
+    },
+    {
+      "material": "Masonry",
+      "units": "LF",
+      "element_number": 217,
+      "type": "Substructure",
+      "element": "Abutment"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 218,
+      "type": "Substructure",
+      "element": "Abutment"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 219,
+      "type": "Substructure",
+      "element": "Abutment"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 220,
+      "type": "Substructure",
+      "element": "Pile Cap/Footing"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 225,
+      "type": "Substructure",
+      "element": "Pile"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "EA",
+      "element_number": 226,
+      "type": "Substructure",
+      "element": "Pile"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "EA",
+      "element_number": 227,
+      "type": "Substructure",
+      "element": "Pile"
+    },
+    {
+      "material": "Timber",
+      "units": "EA",
+      "element_number": 228,
+      "type": "Substructure",
+      "element": "Pile"
+    },
+    {
+      "material": "Other",
+      "units": "EA",
+      "element_number": 229,
+      "type": "Substructure",
+      "element": "Pile"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 231,
+      "type": "Substructure",
+      "element": "Pier Cap"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "LF",
+      "element_number": 233,
+      "type": "Substructure",
+      "element": "Pier Cap"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 234,
+      "type": "Substructure",
+      "element": "Pier Cap"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 235,
+      "type": "Substructure",
+      "element": "Pier Cap"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 236,
+      "type": "Substructure",
+      "element": "Pier Cap"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 240,
+      "type": "Culvert",
+      "element": "Culvert"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 241,
+      "type": "Culvert",
+      "element": "Culvert"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 242,
+      "type": "Culvert",
+      "element": "Culvert"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 243,
+      "type": "Culvert",
+      "element": "Culvert"
+    },
+    {
+      "material": "Masonry",
+      "units": "LF",
+      "element_number": 244,
+      "type": "Culvert",
+      "element": "Culvert"
+    },
+    {
+      "material": "Prestressed Concrete",
+      "units": "LF",
+      "element_number": 245,
+      "type": "Culvert",
+      "element": "Culvert"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 300,
+      "type": "Joint",
+      "element": "Strip Seal"
+    },
+    {
+      "material": "Steel",
+      "units": "LP",
+      "element_number": 301,
+      "type": "Joint",
+      "element": "Pourable"
+    },
+    {
+      "material": "Steel",
+      "units": "LP",
+      "element_number": 302,
+      "type": "Joint",
+      "element": "Compression"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 303,
+      "type": "Joint",
+      "element": "Assembly with Seal (Modular)"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 304,
+      "type": "Joint",
+      "element": "Open"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 305,
+      "type": "Joint",
+      "element": "Assembly without Seal"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 306,
+      "type": "Joint",
+      "element": "Other"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 310,
+      "type": "Bearing",
+      "element": "Elastomeric"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 311,
+      "type": "Bearing",
+      "element": "Moveable (roller, slitiding, etc.)"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 312,
+      "type": "Bearing",
+      "element": "Enclosed/Concealed"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 313,
+      "type": "Bearing",
+      "element": "Fixed"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 314,
+      "type": "Bearing",
+      "element": "Pot"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 315,
+      "type": "Bearing",
+      "element": "Disk"
+    },
+    {
+      "material": "Steel",
+      "units": "EA",
+      "element_number": 316,
+      "type": "Bearing",
+      "element": "Other"
+    },
+    {
+      "material": "Steel",
+      "units": "LF",
+      "element_number": 330,
+      "type": "Bridge Rail",
+      "element": "Bridge Rail"
+    },
+    {
+      "material": "Reinforced Concrete",
+      "units": "LF",
+      "element_number": 331,
+      "type": "Bridge Rail",
+      "element": "Bridge Rail"
+    },
+    {
+      "material": "Timber",
+      "units": "LF",
+      "element_number": 332,
+      "type": "Bridge Rail",
+      "element": "Bridge Rail"
+    },
+    {
+      "material": "Other",
+      "units": "LF",
+      "element_number": 333,
+      "type": "Bridge Rail",
+      "element": "Bridge Rail"
+    },
+    {
+      "material": "Masonry",
+      "units": "LF",
+      "element_number": 334,
+      "type": "Bridge Rail",
+      "element": "Bridge Rail"
+    },
+    {
+      "material": "Steel",
+      "units": "SF",
+      "element_number": 510,
+      "type": "Wearing Surfaces and Protective Coatings",
+      "element": "Wearing Surfaces"
+    },
+    {
+      "material": "Steel",
+      "units": "SF",
+      "element_number": 515,
+      "type": "Wearing Surfaces and Protective Coatings",
+      "element": "Steel Protective Coating"
+    },
+    {
+      "material": "Steel",
+      "units": "SF",
+      "element_number": 521,
+      "type": "Wearing Surfaces and Protective Coatings",
+      "element": "Concrete Protective Coating"
+    }
+  ]
+}
