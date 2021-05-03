@@ -98,7 +98,7 @@ ON CREATE SET file.abbreviation = row.Abbreviation,
               file.name = row.File,
               file.year = toInteger(row.Year),
               file.createdOn = datetime(),
-              file:ImportXML:ConnectFileToElement
+              file:ImportXML
 
 // Iterate through files and import elements
 MATCH (file:ImportXML)
@@ -136,14 +136,13 @@ CALL apoc.periodic.iterate(
 MATCH (element:ConnectElementToFile)
 RETURN element
 ','
-MATCH (file:ConnectFileToElement)
+MATCH (file:File)
 WHERE file.name = element.file
 CREATE (file)-[:CONTAINS]->(element)
-WITH file, element
-REMOVE file:ConnectFileToElement,
-       element:ConnectElementToFile
+WITH element
+REMOVE element:ConnectElementToFile
 ',
-{batchSize:1000})
+{batchSize:1000,parallel:false})
 //TODO - update batch size to 10000 when integrating with bridge database
 
 // Query to read 'table_1_bridge_elements.json'
