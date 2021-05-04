@@ -116,7 +116,7 @@ WITH element._FHWAED AS components
 CREATE (el:XmlElement)
 SET el.file = $name,
     el.state = [x in components WHERE x._type = "STATE" | x._text][0],
-    el.structNum = [x in components WHERE x._type = "STRUCTNUM" | x._text][0],
+    el.structNum = [x in components WHERE x._type = "STRUCNUM" | x._text][0],
     el.elementNum = [x in components WHERE x._type = "EN" | x._text][0],
     el.totalQty = [x in components WHERE x._type = "TOTALQTY" | toInteger(x._text)][0],
     el.cs1 = [x in components WHERE x._type = "CS1" | toInteger(x._text)][0],
@@ -144,6 +144,11 @@ REMOVE element:ConnectElementToFile
 ',
 {batchSize:1000,parallel:false})
 //TODO - update batch size to 10000 when integrating with bridge database
+
+//TODO - create query(ies) to create bridge and elements
+// 1. Add processing labels to XML element to create "bridge". Need to update query where XML element created to generate this processing label.
+// 2. Add processing labels to XML element to create "element". Need to update query where XML element created to generate this processing label.
+// 3. Add query to connect bridge, element, and XML element
 
 // Query to read 'table_1_bridge_elements.json'
 // Table 1. Bridge Elements "cross-walk"element
