@@ -150,6 +150,19 @@ REMOVE element:ConnectElementToFile
 // 2. Add processing labels to XML element to create "element". Need to update query where XML element created to generate this processing label.
 // 3. Add query to connect bridge, element, and XML element
 
+// Create (:State)
+CALL apoc.periodic.iterate(
+'
+MATCH (file:File)
+RETURN file
+','
+MERGE (state:State {abbreviation: file.abbreviation})
+MERGE (state)<-[:FILE_FOR]-(file)
+',
+{batchSize:1000})
+
+
+
 // Query to read 'table_1_bridge_elements.json'
 // Table 1. Bridge Elements "cross-walk"element
 CALL apoc.load.json("https://raw.githubusercontent.com/mckenzma/GRANDstack-BRAINS/master/table_1_bridge_elements.json") YIELD value
