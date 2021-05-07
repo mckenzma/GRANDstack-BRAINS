@@ -181,7 +181,7 @@ CALL apoc.periodic.iterate(
 MATCH (xml:XmlElement)
 RETURN xml
 ','
-MATCH (el:Element {elementNum: xml.elementNum, strucNum: xml.structNum, stateCode: xml.state})
+MATCH (el:Element {elementNum: toInteger(xml.elementNum), strucNum: xml.structNum, stateCode: xml.state})
 MERGE (el)<-[:DATA_FOR]-(xml)
 ',
 {batchSize:1000})
@@ -232,3 +232,18 @@ UNWIND value.types AS type
 WITH type
 UNWIND type.elements AS element
 RETURN type.type, element.element, element.units, element.element_numbers
+
+// Add element properties from Table 1
+CALL apoc.load.json("https://raw.githubusercontent.com/mckenzma/GRANDstack-BRAINS/master/table_1_bridge_elements_by_element_number.json") YIELD value
+WITH value AS table_1
+CALL apoc.periodic.iterate(
+'
+MATCH (el:Element)
+RETURN el
+','
+WITH el,
+     [x in $elements WHERE x.element_number = el.elementNum | { units: x.units, material: x.material, type: x.type, element: x.element } ] AS properties
+SET el += properties[0]
+',
+{batchSize:1000, parallel: true, params: {elements:table_1.elements}}) YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
+RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
