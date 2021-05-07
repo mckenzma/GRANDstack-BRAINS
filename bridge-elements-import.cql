@@ -175,6 +175,28 @@ ON CREATE SET el.stateAbbr = substring(xml.file,4,2)
 ',
 {batchSize:1000})
 
+// Create (:Element)<-[:DATA_FOR]-(:XmlElement)
+CALL apoc.periodic.iterate(
+'
+MATCH (xml:XmlElement)
+RETURN xml
+','
+MATCH (el:Element {elementNum: xml.elementNum, strucNum: xml.structNum, stateCode: xml.state})
+MERGE (el)<-[:DATA_FOR]-(xml)
+',
+{batchSize:1000})
+
+// Create (:Bridge)-[:HAS_ELEMENT]->(:Element)
+CALL apoc.periodic.iterate(
+'
+MATCH (el:Element)
+RETURN el
+','
+MATCH (b:Bridge {strucNum: el.strucNum, stateCode: el.stateCode})
+MERGE (b)-[:HAS_ELEMENT]->(el)
+',
+{batchSize:1000})
+
 // Create Constrain on (:Bridge)
  CREATE CONSTRAINT ON (b:Bridge) ASSERT (b.strucNum, b.stateCode) IS NODE KEY
 
@@ -197,6 +219,8 @@ RETURN b
 ','
 MATCH (s:State {abbreviation: b.stateAbbr})
 MERGE (s)-[:HAS_BRIDGE]->(b)
+WITH s,b
+SET s.code = b.stateCode
 ',
 {batchSize:1000})
 
