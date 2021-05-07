@@ -161,7 +161,33 @@ MERGE (state)<-[:FILE_FOR]-(file)
 ',
 {batchSize:1000})
 
+// Create Constraint on (:Element)
+CREATE CONSTRAINT ON (el:Element) ASSERT (el.strucNum, el.stateCode, el.elementNum) IS NODE KEY
 
+// Create (:Element)
+CALL apoc.periodic.iterate(
+'
+MATCH (xml:XmlElement)
+RETURN xml
+','
+MERGE (el:Element {elementNum: xml.elementNum, strucNum: xml.structNum, stateCode: xml.state})
+ON CREATE SET el.stateAbbr = substring(xml.file,4,2)
+',
+{batchSize:1000})
+
+// Create Constrain on (:Bridge)
+ CREATE CONSTRAINT ON (b:Bridge) ASSERT (b.strucNum, b.stateCode) IS NODE KEY
+
+// Create (:Bridge)
+CALL apoc.periodic.iterate(
+'
+MATCH (el:Element)
+RETURN el
+','
+MERGE (b:Bridge {strucNum: el.strucNum, stateCode: el.stateCode})
+ON CREATE SET b.stateAbbr = el.stateAbbr
+',
+{batchSize:1000})
 
 // Query to read 'table_1_bridge_elements.json'
 // Table 1. Bridge Elements "cross-walk"element
