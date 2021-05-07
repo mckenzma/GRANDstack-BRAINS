@@ -189,6 +189,17 @@ ON CREATE SET b.stateAbbr = el.stateAbbr
 ',
 {batchSize:1000})
 
+// Create (:State)-[:HAS_BRIDGE]->(:Bridge)
+CALL apoc.periodic.iterate(
+'
+MATCH (b:Bridge)
+RETURN b
+','
+MATCH (s:State {abbreviation: b.stateAbbr})
+MERGE (s)-[:HAS_BRIDGE]->(b)
+',
+{batchSize:1000})
+
 // Query to read 'table_1_bridge_elements.json'
 // Table 1. Bridge Elements "cross-walk"element
 CALL apoc.load.json("https://raw.githubusercontent.com/mckenzma/GRANDstack-BRAINS/master/table_1_bridge_elements.json") YIELD value
