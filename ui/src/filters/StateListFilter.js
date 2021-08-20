@@ -174,7 +174,7 @@ export default function StateListFilter({
                   onClick={event => handleClick(event, n)}
                 />
                 <ListItemText>
-                  {n.abbreviation} - {n.abbreviation}
+                  {n.abbreviation} - {n.name}
                 </ListItemText>
               </MenuItem>
             );
