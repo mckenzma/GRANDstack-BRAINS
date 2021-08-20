@@ -230,6 +230,8 @@ type File {
 type Row {
   # data: String
 
+  # order by number or alpha?
+  # prob order by number to match document
   ADT_029: String
   APPR_KIND_044A:String
   APPR_RAIL_036C:String
