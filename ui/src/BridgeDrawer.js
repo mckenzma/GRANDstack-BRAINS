@@ -14,8 +14,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Drawer from "@material-ui/core/Drawer";
 
 // External functions/components
-// import BridgeRadar from "./BridgeRadar";
-// import SimpleSlider from "./BridgeSlider";
+import BridgeRadar from "./BridgeRadar";
+import SimpleSlider from "./BridgeSlider";
 // import BridgeRatingLineChart from "./BridgeRatingLineChart";
 import ShowBridgeRows from "./BridgeRows";
 
@@ -143,15 +143,15 @@ const BridgeDetail = ({ Bridge }) => {
         </ListItemText>
       </ListItem>*/}
 
-      {/* <SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} /> */}
-      {/* <BridgeRadar inspectionLog={inspectionLog} /> */}
+      <SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} />
+      <BridgeRadar inspectionLog={inspectionLog} />
       {/* <BridgeRatingLineChart inspectionLogs={Bridge.inspectionLogs} /> */}
-      <ShowBridgeRows
+      {/* <ShowBridgeRows
         code={Bridge.code}
         placeCode={Bridge.placeCode}
         countyCode={Bridge.countyCode}
         stateCode={Bridge.stateCode}
-      />
+      /> */}
     </List>
   );
 };
@@ -168,7 +168,7 @@ export default function BridgeDrawer({ state, setState }) {
     }
   });
 
-  console.log("BridgeDrawer rendered!");
+  // console.log("BridgeDrawer rendered!");
 
   const [sliderYears, setSliderYears] = useState([]);
   const [currentYear, setCurrentYear] = useState(null);
