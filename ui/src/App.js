@@ -152,7 +152,14 @@ export default function App() {
     // "DC",
     // "MN",
     // "MT",
-
+    {
+      code: "11",
+      abbreviation: "DC"
+    },
+    {
+      code: "24",
+      abbreviation: "MD"
+    },
     {
       code: "51",
       abbreviation: "VA"
