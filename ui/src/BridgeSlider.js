@@ -15,18 +15,59 @@ const useStyles = makeStyles(theme => ({
 
 export default function DiscreteSlider({ sliderYears, selectedSliderYear }) {
   const classes = useStyles();
-
+  // console.log(sliderYears);
   const [value, setValue] = useState(Math.max(...sliderYears));
 
-  const marks = sliderYears.map(year => ({
-    value: year,
-    label: toString(year)
-  }));
+  // TODO - set this by file years
+  const fileYears = [
+    1992,
+    1993,
+    1994,
+    1995,
+    1996,
+    1997,
+    1998,
+    1999,
+    2000,
+    2001,
+    2002,
+    2003,
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019
+  ];
+
+  // TODO - restrict values to only those for the bridge with a query
+  const marks = sliderYears.map(year => {
+    if (fileYears.includes(year)) {
+      return {
+        value: year
+        // label: toString(year)
+      };
+    }
+  });
 
   const handleChange = (event, value) => {
     setValue(value);
     selectedSliderYear(value);
   };
+
+  // function valuetext(value) {
+  //   return `${value}°C`;
+  // }
 
   return (
     <div className={classes.root}>
@@ -39,12 +80,18 @@ export default function DiscreteSlider({ sliderYears, selectedSliderYear }) {
         defaultValue={Math.max(...sliderYears)}
         // getAriaValueText={valuetext}
         aria-labelledby="discrete-slider-always"
-        step={1}
-        min={Math.min(...sliderYears)}
-        max={Math.max(...sliderYears)}
+        // step={1}
+        step={null}
+        // min={Math.min(...sliderYears)}
+        min={Math.min(...fileYears)}
+        // max={Math.max(...sliderYears)}
+        max={Math.max(...fileYears)}
         marks={sliderYears}
-        valueLabelDisplay="on"
+        // marks={fileYears}
+        valueLabelDisplay={sliderYears.length === 0 ? "" : "on"}
         onChange={handleChange}
+        marks={marks}
+        disabled={sliderYears.length === 0 ? true : false}
       />
     </div>
   );
