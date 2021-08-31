@@ -58,8 +58,6 @@ export default function StateListFilter({
 }) {
   const classes = useStyles();
 
-  // console.log("states filter (selectedStates): ", selectedStates);
-
   const { loading, error, data } = useQuery(GET_STATES);
 
   const [order, setOrder] = useState("asc");
@@ -106,13 +104,16 @@ export default function StateListFilter({
     let newSelected = [];
 
     if (event.target.checked) {
-      newSelected = data.map(n => n.abbreviation);
+      // newSelected = data.map(n => n.abbreviation);
+      // newSelected = data.map(n => n);
+      newSelected = data;
       setSelectedStates(newSelected.sort());
       setNumSelectedStates(rowCount);
       return;
     }
     setSelectedStates([]);
-    setNumSelected(0);
+    // setNumSelected(0);
+    setNumSelectedStates(0);
   };
 
   function getSorting(order, orderBy) {
