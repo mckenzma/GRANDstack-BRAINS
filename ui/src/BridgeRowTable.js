@@ -205,7 +205,7 @@ export default function BridgeTable({
   // TODO: fix horiz scroll. cant click on to drag.
 
   return (
-    <TableContainer /*component={Paper}*/ style={{ pverflowX: "auto" }}>
+    <TableContainer /*component={Paper}*/ style={{ overflowX: "auto" }}>
       <Table
         /*className={classes.table}*/ aria-label="simple table"
         stickyHeader={true}
