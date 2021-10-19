@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -17,8 +18,8 @@ import { TableSortLabel } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 700,
-    marginTop: theme.spacing(3),
+    // maxWidth: 700,
+    // marginTop: theme.spacing(3),
     overflowX: "auto",
     margin: "auto"
   },
@@ -66,10 +67,23 @@ export default function GraphSummaryNodes() {
 
   //TODO: need to make scrolling table
   return (
-    <Paper className={classes.root}>
-      <Table className={classes.table} stickyHeader={true}>
+    // <Paper /*className={classes.root}*/>
+    <TableContainer /*component={Paper}*/ /*style={{ overflowY: "auto" }}*/>
+      <Table
+        // className={classes.table}
+        // aria-label="simple table"
+        stickyHeader={true}
+        // size="small"
+      >
         <TableHead>
-          <TableRow>
+          <TableRow
+          // style={{
+          //   position: "-webkit-sticky",
+          //   position: "sticky",
+          //   left: 0,
+          //   zIndex: 3
+          // }}
+          >
             <TableCell
               key="label"
               sortDirection={orderBy === "label" ? order : false}
@@ -117,6 +131,7 @@ export default function GraphSummaryNodes() {
             })}
         </TableBody>
       </Table>
-    </Paper>
+    </TableContainer>
+    // </Paper>
   );
 }

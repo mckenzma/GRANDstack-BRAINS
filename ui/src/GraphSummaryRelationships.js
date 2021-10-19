@@ -17,8 +17,8 @@ import { TableSortLabel } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    maxWidth: 700,
-    marginTop: theme.spacing(3),
+    // maxWidth: 700,
+    // marginTop: theme.spacing(3),
     overflowX: "auto",
     margin: "auto"
   },
@@ -67,7 +67,10 @@ export default function GraphSummaryRelationships() {
   //TODO: need to make scrolling table
   return (
     <Paper className={classes.root}>
-      <Table className={classes.table}>
+      <Table
+        /*className={classes.table}*/
+        stickyHeader={true}
+      >
         <TableHead>
           <TableRow>
             <TableCell

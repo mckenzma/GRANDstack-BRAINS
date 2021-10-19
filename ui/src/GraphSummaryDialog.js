@@ -17,6 +17,7 @@ import GraphSummaryNodes from "./GraphSummaryNodes";
 import GraphSummaryRelationships from "./GraphSummaryRelationships";
 
 import Grid from "@material-ui/core/Grid";
+import { Paper } from "@material-ui/core";
 
 // TODO update to makeStyles
 const DialogTitle = withStyles(theme => ({
@@ -58,6 +59,7 @@ const DialogContent = withStyles(theme => ({
 
 export default function GraphSummaryDialog() {
   const [open, setOpen] = useState(false);
+  const [scroll, setScroll] = useState("paper");
 
   const [maxWidth, setMaxWidth] = useState("xl");
 
@@ -85,18 +87,21 @@ export default function GraphSummaryDialog() {
         open={open}
         fullWidth={true}
         maxWidth={maxWidth}
+        // scroll={scroll}
         //scroll={this.state.scroll} // set this with useState?
         // aria-labelledby="scroll-dialog-title"
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Graph Data Summary
         </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <GraphSummaryNodes />
+        <DialogContent style={{ overflow: "hidden" }}>
+          <Grid container spacing={1}>
+            <Grid item xs={6} md={6}>
+              <Paper>
+                <GraphSummaryNodes />
+              </Paper>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={6} md={6}>
               <GraphSummaryRelationships />
             </Grid>
           </Grid>

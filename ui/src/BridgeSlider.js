@@ -13,7 +13,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DiscreteSlider({ sliderYears, selectedSliderYear }) {
+export default function DiscreteSlider({
+  /*bridge,*/ sliderYears,
+  selectedSliderYear
+}) {
   const classes = useStyles();
   // console.log(sliderYears);
   const [value, setValue] = useState(Math.max(...sliderYears));
@@ -50,15 +53,20 @@ export default function DiscreteSlider({ sliderYears, selectedSliderYear }) {
     2019
   ];
 
+  console.log(sliderYears);
+
   // TODO - restrict values to only those for the bridge with a query
   const marks = sliderYears.map(year => {
     if (fileYears.includes(year)) {
       return {
         value: year
+        // key: bridge.stateCode+bridge.countyCode+bridge.placeCode+bridge.code+year
         // label: toString(year)
       };
     }
   });
+
+  console.log(marks);
 
   const handleChange = (event, value) => {
     setValue(value);
@@ -70,14 +78,16 @@ export default function DiscreteSlider({ sliderYears, selectedSliderYear }) {
   // }
 
   return (
-    <div className={classes.root}>
+    <>
+      {/* <div className={classes.root}> */}
       {/*<div className={classes.margin} />*/}
       <Typography id="discrete-slider-always" gutterBottom>
         Inspection Log Year
       </Typography>
       <div className={classes.margin} />
       <Slider
-        defaultValue={Math.max(...sliderYears)}
+        // defaultValue={Math.max(...sliderYears)}
+        defaultValue={value}
         // getAriaValueText={valuetext}
         aria-labelledby="discrete-slider-always"
         // step={1}
@@ -86,13 +96,14 @@ export default function DiscreteSlider({ sliderYears, selectedSliderYear }) {
         min={Math.min(...fileYears)}
         // max={Math.max(...sliderYears)}
         max={Math.max(...fileYears)}
-        marks={sliderYears}
-        // marks={fileYears}
+        // marks={sliderYears}
+        marks={fileYears}
         valueLabelDisplay={sliderYears.length === 0 ? "" : "on"}
         onChange={handleChange}
         marks={marks}
         disabled={sliderYears.length === 0 ? true : false}
       />
-    </div>
+      {/* </div> */}
+    </>
   );
 }

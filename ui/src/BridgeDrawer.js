@@ -15,7 +15,7 @@ import Drawer from "@material-ui/core/Drawer";
 
 // External functions/components
 import BridgeRadar from "./BridgeRadar";
-import SimpleSlider from "./BridgeSlider";
+import DiscreteSlider from "./BridgeSlider";
 // import BridgeRatingLineChart from "./BridgeRatingLineChart";
 import ShowBridgeRows from "./BridgeRows";
 
@@ -81,7 +81,9 @@ const GET_BRIDGE = gql`
 `;
 
 const BridgeDetail = ({ Bridge }) => {
-  const temp = Bridge.inspectionLogs.map(log => log.year);
+  let temp = [];
+  // const temp = Bridge.inspectionLogs.map(log => log.year);
+  console.log(temp);
   const [currentYear, setCurrentYear] = useState(Math.max(...temp));
   const [sliderYears, setSliderYears] = useState(temp);
   const [inspectionLog, setInspectionLog] = useState(
@@ -143,7 +145,10 @@ const BridgeDetail = ({ Bridge }) => {
         </ListItemText>
       </ListItem>*/}
 
-      <SimpleSlider sliderYears={sliderYears} selectedSliderYear={updateYear} />
+      <DiscreteSlider
+        /*bridge={Bridge}*/ sliderYears={sliderYears}
+        selectedSliderYear={updateYear}
+      />
       <BridgeRadar inspectionLog={inspectionLog} />
       {/* <BridgeRatingLineChart inspectionLogs={Bridge.inspectionLogs} /> */}
       {/* <ShowBridgeRows
