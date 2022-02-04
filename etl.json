@@ -1,0 +1,21 @@
+{
+  "name": "Import and process bridge data",
+  "queries": [
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    }
+  ]
+}
+
+create-file-nodes.cql
+
+import-row-nodes.cql
+
+connect-row-nodes.cql
+
+connect-related-files.cql
+
+connect-related-rows.cql
