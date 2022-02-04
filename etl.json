@@ -2,20 +2,34 @@
   "name": "Import and process bridge data",
   "queries": [
     {
-      "name": "",
-      "description": "",
-      "file": "",
+      "name": "Create (:File:DelimitedFile) Nodes",
+      "description": "Create (:File:DelimitedFile) from Google Spreadsheet",
+      "file": "create-file-nodes-delimited.cql",
+      "dependencies": []
+    },
+    {
+      "name": "Import & Create (:Row:DelimitedRow)",
+      "description": "Create (:Row:DelimitedRow) raw data nodes",
+      "file": "import-row-nodes-delimited.cql",
+      "dependencies": []
+    },
+    {
+      "name": "Connect (:Row:DelimitedRow) to (:File:DelimitedFile)",
+      "description": "Connect (:Row:DelimitedRow) to (:File:DelimitedFile)",
+      "file": "connect-row-nodes-delimited.cql",
+      "dependencies": []
+    },
+    {
+      "name": "Connect related (:File:DelimitedFile)",
+      "description": "Connected related (:File:DelimitedFile) in sequential order across multiple years.",
+      "file": "connect-related-files-delimited.cql",
+      "dependencies": []
+    },
+    {
+      "name": "Connect related (:Row:DelimitedRow)",
+      "description": "Connect related (:Row:DelimitedRow) in sequential order across multiple years. Each (:Row) represents an entry for a Bridge.",
+      "file": "connect-related-rows-delimited.cql",
       "dependencies": []
     }
   ]
 }
-
-create-file-nodes.cql
-
-import-row-nodes.cql
-
-connect-row-nodes.cql
-
-connect-related-files.cql
-
-connect-related-rows.cql
