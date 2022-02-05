@@ -30,6 +30,348 @@
       "description": "Connect related (:Row:DelimitedRow) in sequential order across multiple years. Each (:Row) represents an entry for a Bridge.",
       "file": "connect-related-rows-delimited.cql",
       "dependencies": []
+    },
+    {
+      "name": "Add processing label to (:File)",
+      "description": "Add processing label to (:File) nodes that aren't connected to states",
+      "file": "add-processing-label-to-file-node.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-state-and-connect-to-file.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "update-state-properties",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-index-for-bridge.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-processing-label-to-row.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "merge-bridge.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "connect-bridge-to-row.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-index-for-places.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "merge-place.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-HAS_BRIDGE.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-index-on-county.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "merge-county.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-HAS_PLACE.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-HAS_COUNTY.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "fix-county-and-place-nodes-query.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-invalid-labels.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "valid-node-tree-breakdown.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-county-names.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-label-for-invalid-county.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "compare-valid-invalid-counties.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-label-for-invalid-place.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "compare-valid-invalid-places.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-label-for-invalid-bridge.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "compare-valid-invalid-bridges.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "breakdown-of-invalid-bridges.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-processing-label-to-reprocess-rows.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "merge-bridge-again.cql.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "merge-place-again.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "compare-valid-invalid-bridges-again.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "merge-bridge-again-again.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "connect-bridge-to-row-again.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-location-audit-log.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "find-invalid-location-logs.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-label-for-invalid-location-log.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-lat-long-where-valid.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "update-bridge-location-with-recent-lat-long.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "set-lat-long-for-bridge-where-not-set.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-build-year-audit-log.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-owned-and-maintained.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "",
+      "dependencies": []
     }
   ]
 }
