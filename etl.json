@@ -268,25 +268,115 @@
     {
       "name": "",
       "description": "",
-      "file": "",
+      "file": "add-entity-code-description.cql",
       "dependencies": []
     },
     {
       "name": "",
       "description": "",
-      "file": "",
+      "file": "create-inspection-raw.cql",
       "dependencies": []
     },
     {
       "name": "",
       "description": "",
-      "file": "",
+      "file": "create-inspection-date.cql",
       "dependencies": []
     },
     {
       "name": "",
       "description": "",
-      "file": "",
+      "file": "clean-inspection-dates-to-temporal.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "merge-structure-kind-merge-structure-type.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "set-structure-kind-description.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "set-structure-type-description.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "set-inspection-month-and-year.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-yearBuilt-and-connect-to-bridge.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "connect-inspectionDate-to-month-in-timeline-tree.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-condition-rating-nodes.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-appraisal-rating-nodes.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "create-and-connect-evaluation-node.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "convert-bridge-latitude-to-decimal.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "convert-bridge-long-to-decimal.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "add-bridge-long-lat-as-point.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "change-state-name-from-id-to-state-letters.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "set-county-name.cql",
+      "dependencies": []
+    },
+    {
+      "name": "",
+      "description": "",
+      "file": "set-place-name.cql",
       "dependencies": []
     },
     {
