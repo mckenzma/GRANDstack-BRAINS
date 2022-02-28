@@ -217,7 +217,7 @@ export default function BridgeTable({
               // TODO - refactor this so the header is created at the same time the first row is created to reduce number of iterations
               if (prop === "file") {
                 return (
-                  <>
+                  <React.Fragment key={"react-fragment"}>
                     <TableCell
                       style={{
                         position: "-webkit-sticky",
@@ -232,7 +232,7 @@ export default function BridgeTable({
                     <TableCell key={"fileName"}>
                       File Name{/*prop.name*/}
                     </TableCell>
-                  </>
+                  </React.Fragment>
                 );
               } else if (prop === "__typename") {
                 return;
