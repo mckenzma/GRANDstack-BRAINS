@@ -53,8 +53,6 @@ export default function DiscreteSlider({
     2019
   ];
 
-  console.log(sliderYears);
-
   // TODO - restrict values to only those for the bridge with a query
   const marks = sliderYears.map(year => {
     if (fileYears.includes(year)) {
@@ -66,8 +64,6 @@ export default function DiscreteSlider({
     }
   });
 
-  console.log(marks);
-
   const handleChange = (event, value) => {
     setValue(value);
     selectedSliderYear(value);
@@ -78,7 +74,7 @@ export default function DiscreteSlider({
   // }
 
   return (
-    <>
+    <div className={classes.root}>
       {/* <div className={classes.root}> */}
       {/*<div className={classes.margin} />*/}
       <Typography id="discrete-slider-always" gutterBottom>
@@ -98,12 +94,12 @@ export default function DiscreteSlider({
         max={Math.max(...fileYears)}
         // marks={sliderYears}
         marks={fileYears}
-        valueLabelDisplay={sliderYears.length === 0 ? "" : "on"}
+        valueLabelDisplay={sliderYears.length === 0 ? "off" : "on"}
         onChange={handleChange}
         marks={marks}
         disabled={sliderYears.length === 0 ? true : false}
       />
       {/* </div> */}
-    </>
+    </div>
   );
 }
