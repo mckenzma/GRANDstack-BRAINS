@@ -19,6 +19,9 @@ import FiltersDialog from "./Filters";
 import SummaryDialog from "./Summary";
 import MenuDrawer from "./MenuDrawer";
 
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -128,6 +131,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // TODO: add theme const & theme provider
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#212121" // "black"
+    },
+    secondary: {
+      main: "#808080" // "gray"
+    }
+  }
+});
 
 export default function App() {
   const classes = useStyles();
@@ -247,18 +260,21 @@ export default function App() {
   });
 
   return (
-    <div className={classes.root}>
-      <div className={classes.appFrame}>
-        <AppBar
-          ref={headerRef}
-          // className={classNames(classes.appBar, {
-          //   [classes.appBarShift]: open,
-          //   [classes[`appBarShift-${anchor}`]]: open
-          // })}
-        >
-          <Toolbar disableGutters={!open}>
-            <MenuDrawer />
-            {/* <IconButton
+    <ThemeProvider theme={theme}>
+      {" "}
+      {/*use this to set theme colors*/}
+      <div className={classes.root}>
+        <div className={classes.appFrame}>
+          <AppBar
+            ref={headerRef}
+            // className={classNames(classes.appBar, {
+            //   [classes.appBarShift]: open,
+            //   [classes[`appBarShift-${anchor}`]]: open
+            // })}
+          >
+            <Toolbar disableGutters={!open}>
+              <MenuDrawer />
+              {/* <IconButton
               color="inherit"
               aria-label="Open drawer"
               onClick={handleDrawerOpen}
@@ -266,57 +282,58 @@ export default function App() {
             >
               <MenuIcon />
             </IconButton> */}
-            <Typography
-              variant="h5"
-              color="inherit"
-              noWrap
-              className={classes.root}
-            >
-              National Bridge Inventory
-            </Typography>
-            <FiltersDialog
-              _selectedStates={_selectedStates}
-              _setSelectedStates={_setSelectedStates}
-              // _numSelectedStates={_numSelectedStates}
-              // _setNumSelectedStates={_setNumSelectedStates}
-              _selectedYears={_selectedYears}
-              _setSelectedYears={_setSelectedYears}
-              // setYearSelected={setYearSelected}ed}
-              // maintRespSelected={maintRespSelected}
-              // setMaintRespSelected={setMaintRespSelected}
-              // ownerSelected={ownerSelected}
-              // setOwnerSelected={setOwnerSelected}
-            />
-            <SummaryDialog
-              _selectedStates={_selectedStates}
-              _selectedYears={_selectedYears}
-            />
-          </Toolbar>
-        </AppBar>
-        {/* {before} this is related to where the drawer shows up. drawer moved to separate component */}
-        <main
-        // className={classNames(
-        //   classes.content,
-        //   classes[`content-${anchor}`],
-        //   {
-        //     [classes.contentShift]: open,
-        //     [classes[`contentShift-${anchor}`]]: open
-        //   }
-        // )}
-        >
-          {/*<div className={classes.drawerHeader} />
+              <Typography
+                variant="h5"
+                color="inherit"
+                noWrap
+                className={classes.root}
+              >
+                National Bridge Inventory
+              </Typography>
+              <FiltersDialog
+                _selectedStates={_selectedStates}
+                _setSelectedStates={_setSelectedStates}
+                // _numSelectedStates={_numSelectedStates}
+                // _setNumSelectedStates={_setNumSelectedStates}
+                _selectedYears={_selectedYears}
+                _setSelectedYears={_setSelectedYears}
+                // setYearSelected={setYearSelected}ed}
+                // maintRespSelected={maintRespSelected}
+                // setMaintRespSelected={setMaintRespSelected}
+                // ownerSelected={ownerSelected}
+                // setOwnerSelected={setOwnerSelected}
+              />
+              <SummaryDialog
+                _selectedStates={_selectedStates}
+                _selectedYears={_selectedYears}
+              />
+            </Toolbar>
+          </AppBar>
+          {/* {before} this is related to where the drawer shows up. drawer moved to separate component */}
+          <main
+          // className={classNames(
+          //   classes.content,
+          //   classes[`content-${anchor}`],
+          //   {
+          //     [classes.contentShift]: open,
+          //     [classes[`contentShift-${anchor}`]]: open
+          //   }
+          // )}
+          >
+            {/*<div className={classes.drawerHeader} />
             {/*does this do anything?*/}
-          <MapLeaf
-            _selectedStates={_selectedStates}
-            _selectedYears={_selectedYears}
-            headerHeight={headerHeight}
-          />
-        </main>
-        {/* {after} this is related to where the drawer shows up. drawer moved to separate component */}
-      </div>
+            <MapLeaf
+              _selectedStates={_selectedStates}
+              _selectedYears={_selectedYears}
+              headerHeight={headerHeight}
+            />
+          </main>
+          {/* {after} this is related to where the drawer shows up. drawer moved to separate component */}
+        </div>
 
-      {/*<div className={classes.container} />
+        {/*<div className={classes.container} />
         {/* does this do anything */}
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }
