@@ -53,6 +53,11 @@ export default function BridgeChart({ inspectionLog }) {
             }
           }
         }
+      },
+      chart: {
+        toolbar: {
+          show: false
+        }
       }
     },
     series: [
