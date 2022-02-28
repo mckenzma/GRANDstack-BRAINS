@@ -26,7 +26,6 @@ export default function BridgeMarkrer({ bridge, index }) {
   });
 
   const setBridge = bridge => {
-    // console.log("set bridge");
     setState({
       open: true,
       bridgeCode: bridge.code,

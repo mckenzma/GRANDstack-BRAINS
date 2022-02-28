@@ -99,7 +99,6 @@ export default function BuildYearFilter({ selectedYears, setSelectedYears }) {
 
     if (event.target.checked) {
       newSelected = data.map(n => n.year);
-      console.log(data.map(n => n.year));
       setSelectedYears(newSelected.sort().reverse());
       setNumSelectedYears(rowCount);
       return;

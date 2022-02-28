@@ -83,7 +83,6 @@ const GET_BRIDGE = gql`
 const BridgeDetail = ({ Bridge }) => {
   let temp = [];
   // const temp = Bridge.inspectionLogs.map(log => log.year);
-  console.log(temp);
   const [currentYear, setCurrentYear] = useState(Math.max(...temp));
   const [sliderYears, setSliderYears] = useState(temp);
   const [inspectionLog, setInspectionLog] = useState(
@@ -172,8 +171,6 @@ export default function BridgeDrawer({ state, setState }) {
       selectedState: state.stateCode
     }
   });
-
-  // console.log("BridgeDrawer rendered!");
 
   const [sliderYears, setSliderYears] = useState([]);
   const [currentYear, setCurrentYear] = useState(null);

@@ -62,9 +62,6 @@ class StateMarkerBarChart extends React.Component {
           if (error) return <p>Error</p>;
 
           window.data = data;
-          console.log(data);
-          console.log(this.state.selectedState);
-          console.log(this.props.selectedState);
 
           const options = {
             ...this.state.options,

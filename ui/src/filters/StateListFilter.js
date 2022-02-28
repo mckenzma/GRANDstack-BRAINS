@@ -65,8 +65,6 @@ export default function StateListFilter({
   const [abbreviation, setAbbreviation] = useState(null);
   const [state, setState] = useState(null);
 
-  // console.log("states state: ", state);
-
   const [selected, setSelected] = useState({});
   const [numSelected, setNumSelected] = useState(0);
   const [numSelectedStates, setNumSelectedStates] = useState(

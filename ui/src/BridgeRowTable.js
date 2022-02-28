@@ -213,10 +213,8 @@ export default function BridgeTable({
       >
         <TableHead>
           <TableRow>
-            {/* {Object.keys(data.Bridge[0].rows[0]).forEach((prop) => console.log(prop))} */}
             {Object.keys(data.Bridge[0].rows[0]).map(prop => {
               // TODO - refactor this so the header is created at the same time the first row is created to reduce number of iterations
-              // console.log(prop);
               if (prop === "file") {
                 return (
                   <>
@@ -237,10 +235,8 @@ export default function BridgeTable({
                   </>
                 );
               } else if (prop === "__typename") {
-                // console.log("something here");
                 return;
               } else {
-                // console.log(prop);
                 return <TableCell key={prop}>{prop}</TableCell>;
               }
             })}
@@ -250,11 +246,6 @@ export default function BridgeTable({
           {data.Bridge[0].rows
             .sort(getSorting(order, orderBy))
             .map((row, rowIndex) => {
-              //   if (rowIndex !== 0) {
-              //     // console.log(row.file.year);
-              //     // console.log("prevRow", data.Bridge[0].rows[rowIndex - 1]);
-              //   }
-              // console.log(rowIndex);
               return (
                 <TableRow key={rowIndex}>
                   {/* Trying to not have to specify each property from the Row node */}

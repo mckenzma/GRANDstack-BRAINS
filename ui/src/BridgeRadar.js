@@ -2,8 +2,6 @@ import React from "react";
 import Chart from "react-apexcharts";
 
 export default function BridgeChart({ inspectionLog }) {
-  // console.log("inspectionLog: ", inspectionLog);
-
   const labels = [];
   const data = [];
 

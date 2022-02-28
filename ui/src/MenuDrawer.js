@@ -15,8 +15,6 @@ import GraphSummaryDialog from "./GraphSummaryDialog";
 const useStyles = makeStyles(theme => ({}));
 
 export default function MenuDrawer() {
-  // console.log("Menu Drawer");
-
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);

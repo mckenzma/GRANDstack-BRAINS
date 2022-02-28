@@ -94,16 +94,12 @@ export default function MapLeaf({
   headerHeight
 }) {
   const classes = useStyles();
-  // console.log(_selectedStates.map(state => state.abbreviation));
   const { loading, error, data } = useQuery(GET_BRIDGES, {
     variables: {
       _selectedStates: _selectedStates.map(state => state.code)
       // _selectedYears
     }
   });
-
-  // console.log(_selectedStates);
-  // console.log(_selectedStates.map(state => state.code));
 
   const [lng, setLng] = useState(-98.5795); // center of US --> Long. 103 46 17.60283(W)
   const [lat, setLat] = useState(39.8283); //center of US --> Lat. 44 58 02.07622(N)
@@ -118,8 +114,6 @@ export default function MapLeaf({
   };
 
   const [position, setPosition] = useState([lat, lng]);
-
-  // console.log(data,loading,error);
 
   // Todo - update this use of how the map shows while loading. Ideally want the map to always show and then show the loading icon with maybe the map "dimmed" ?
   // if (loading) return <Loading style={{position: 'absolute', left: '50%', top: '50%',transform: 'translate(-50%, -50%)'}}/>;
@@ -163,12 +157,10 @@ export default function MapLeaf({
         />
         {/* Idea: Might be able to do a similar approach with the MarkerClusterGroup such that each state has its own group. Could make it easier to run a singel query and then turn on/off each state. Something to think about... */}
         <MarkerClusterGroup>
-          {/* {console.log("create markers here!")} */}
           {loading && console.log("loading")}
           {error && console.log("error")}
           {data !== undefined &&
             data.Bridge.map((b, index) => {
-              // console.log("Markers rendered");
               return <BridgeMarker bridge={b} index={index} key={index} />;
             })}
         </MarkerClusterGroup>

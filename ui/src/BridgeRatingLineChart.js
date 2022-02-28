@@ -4,8 +4,6 @@ import Chart from "react-apexcharts";
 export default function BridgeRatingLineChart({ inspectionLogs }) {
   const categories = [];
 
-  // console.log("inspectionLogs: ", inspectionLogs);
-
   const data_067 = [];
   const data_068 = [];
   const data_069 = [];
@@ -14,7 +12,6 @@ export default function BridgeRatingLineChart({ inspectionLogs }) {
   const data_072 = [];
 
   inspectionLogs.forEach(log => {
-    // console.log("year: ", log.year);
     categories.push(log.year);
     // data.push(log.STRUCTURAL_EVAL_067);
 
@@ -52,8 +49,6 @@ export default function BridgeRatingLineChart({ inspectionLogs }) {
       data: data_072.reverse()
     }
   ];
-
-  // console.log(categories);
 
   const state = {
     series: series,

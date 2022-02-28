@@ -129,8 +129,6 @@ class HeatMapState extends React.Component {
           if (loading) return <Loading />;
           if (error) return <p>Error</p>;
 
-          // console.log(data);
-
           const series = data.State.slice()
             .sort(getSorting(order, orderBy))
             .map(n => {
@@ -146,8 +144,6 @@ class HeatMapState extends React.Component {
                 })
               };
             });
-
-          // console.log(series);
 
           return (
             <div className="mixed-chart">

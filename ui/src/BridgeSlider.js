@@ -18,7 +18,6 @@ export default function DiscreteSlider({
   selectedSliderYear
 }) {
   const classes = useStyles();
-  // console.log(sliderYears);
   const [value, setValue] = useState(Math.max(...sliderYears));
 
   // TODO - set this by file years
