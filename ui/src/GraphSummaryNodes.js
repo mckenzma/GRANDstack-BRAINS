@@ -17,15 +17,15 @@ import { TableSortLabel } from "@material-ui/core";
 // import Loading from "./Loading";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    // maxWidth: 700,
-    // marginTop: theme.spacing(3),
-    overflowX: "auto",
-    margin: "auto"
-  },
-  table: {
-    // minWidth: 700
-  }
+  // root: {
+  //   // maxWidth: 700,
+  //   // marginTop: theme.spacing(3),
+  //   // overflowX: "auto",
+  //   margin: "auto"
+  // },
+  // table: {
+  //   // minWidth: 700
+  // }
 }));
 
 const GET_NODES = gql`
@@ -67,13 +67,12 @@ export default function GraphSummaryNodes() {
 
   //TODO: need to make scrolling table
   return (
-    // <Paper /*className={classes.root}*/>
     <TableContainer /*component={Paper}*/ /*style={{ overflowY: "auto" }}*/>
       <Table
         // className={classes.table}
         // aria-label="simple table"
         stickyHeader={true}
-        // size="small"
+        size="small"
       >
         <TableHead>
           <TableRow
@@ -132,6 +131,5 @@ export default function GraphSummaryNodes() {
         </TableBody>
       </Table>
     </TableContainer>
-    // </Paper>
   );
 }

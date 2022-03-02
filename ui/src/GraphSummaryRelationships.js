@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -16,15 +17,15 @@ import { TableSortLabel } from "@material-ui/core";
 // import Loading from "./Loading";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    // maxWidth: 700,
-    // marginTop: theme.spacing(3),
-    overflowX: "auto",
-    margin: "auto"
-  },
-  table: {
-    // minWidth: 700
-  }
+  // root: {
+  //   // maxWidth: 700,
+  //   // marginTop: theme.spacing(3),
+  //   // overflowX: "auto",
+  //   margin: "auto"
+  // },
+  // table: {
+  //   // minWidth: 700
+  // }
 }));
 
 const GET_RELATIONSHIPS = gql`
@@ -66,10 +67,11 @@ export default function GraphSummaryRelationships() {
 
   //TODO: need to make scrolling table
   return (
-    <Paper className={classes.root}>
+    <TableContainer /*component={Paper}*/ /*style={{ overflowY: "auto" }}*/>
       <Table
         /*className={classes.table}*/
         stickyHeader={true}
+        size="small"
       >
         <TableHead>
           <TableRow>
@@ -83,7 +85,7 @@ export default function GraphSummaryRelationships() {
                   direction={order}
                   onClick={() => handleSortRequest("type")}
                 >
-                  Relationship Label
+                  Relationship Type
                 </TableSortLabel>
               </Tooltip>
             </TableCell>
@@ -120,6 +122,6 @@ export default function GraphSummaryRelationships() {
             })}
         </TableBody>
       </Table>
-    </Paper>
+    </TableContainer>
   );
 }

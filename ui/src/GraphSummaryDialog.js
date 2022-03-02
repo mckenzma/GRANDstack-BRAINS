@@ -57,7 +57,10 @@ const DialogContent = withStyles(theme => ({
   }
 }))(MuiDialogContent);
 
+// const useStyles = makeStyles(theme => ({}))
+
 export default function GraphSummaryDialog() {
+  // const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState("paper");
 
@@ -72,7 +75,7 @@ export default function GraphSummaryDialog() {
   };
 
   return (
-    <div>
+    <>
       <ListItem
         button
         variant="outlined"
@@ -87,19 +90,16 @@ export default function GraphSummaryDialog() {
         open={open}
         fullWidth={true}
         maxWidth={maxWidth}
-        // scroll={scroll}
-        //scroll={this.state.scroll} // set this with useState?
+        scroll={scroll}
         // aria-labelledby="scroll-dialog-title"
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Graph Data Summary
         </DialogTitle>
-        <DialogContent style={{ overflow: "hidden" }}>
+        <DialogContent>
           <Grid container spacing={1}>
             <Grid item xs={6} md={6}>
-              <Paper>
-                <GraphSummaryNodes />
-              </Paper>
+              <GraphSummaryNodes />
             </Grid>
             <Grid item xs={6} md={6}>
               <GraphSummaryRelationships />
@@ -107,6 +107,6 @@ export default function GraphSummaryDialog() {
           </Grid>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
