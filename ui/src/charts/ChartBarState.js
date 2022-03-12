@@ -73,6 +73,7 @@ export default function BarChartState({ _selectedStates }) {
               }
             }
           },
+          colors: ["#808080"], // set to secondary color of the app
           dataLabels: {
             enabled: true,
             formatter: function(val) {
