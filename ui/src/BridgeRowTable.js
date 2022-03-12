@@ -180,7 +180,8 @@ export default function BridgeTable({
   placeCode,
   countyCode,
   stateCode,
-  showChanges
+  showChanges,
+  hideColumns
 }) {
   const { loading, error, data } = useQuery(GET_BRIDGE_ROWS, {
     variables: {
@@ -213,7 +214,7 @@ export default function BridgeTable({
       >
         <TableHead>
           <TableRow>
-            {Object.keys(data.Bridge[0].rows[0]).map(prop => {
+            {Object.keys(data.Bridge[0].rows[0]).map((prop, propIndex) => {
               // TODO - refactor this so the header is created at the same time the first row is created to reduce number of iterations
               if (prop === "file") {
                 return (
@@ -237,7 +238,30 @@ export default function BridgeTable({
               } else if (prop === "__typename") {
                 return;
               } else {
-                return <TableCell key={prop}>{prop}</TableCell>;
+                let uniquePropVals = data.Bridge[0].rows
+                  .map(item => item[prop])
+                  .filter(
+                    (value, index, self) => self.indexOf(value) === index
+                  );
+                return (
+                  <TableCell
+                    key={prop}
+                    style={{
+                      backgroundColor: showChanges
+                        ? uniquePropVals.length > 1
+                          ? "#ef9a9a"
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? uniquePropVals.length === 1
+                          ? "none"
+                          : ""
+                        : ""
+                    }}
+                  >
+                    {prop}
+                  </TableCell>
+                );
               }
             })}
           </TableRow>
@@ -307,6 +331,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["ADT_029"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"ADT_029" + "_" + rowIndex}
@@ -322,6 +356,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["APPR_KIND_044A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"APPR_KIND_044A" + "_" + rowIndex}
@@ -336,6 +380,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["APPR_RAIL_036C"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["APPR_RAIL_036C"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -354,6 +408,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["APPR_RAIL_END_036D"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"APPR_RAIL_END_036D" + "_" + rowIndex}
@@ -371,6 +435,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["APPR_ROAD_EVAL_072"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"APPR_ROAD_EVAL_072" + "_" + rowIndex}
@@ -386,6 +460,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["APPR_SPANS_046"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"APPR_SPANS_046" + "_" + rowIndex}
@@ -400,6 +484,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["APPR_TYPE_044B"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["APPR_TYPE_044B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -418,6 +512,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["APPR_WIDTH_MT_032"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"APPR_WIDTH_MT_032" + "_" + rowIndex}
@@ -434,6 +538,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["BASE_HWY_NETWORK_012"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -452,6 +566,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["BRIDGE_IMP_COST_094"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"BRIDGE_IMP_COST_094" + "_" + rowIndex}
@@ -468,6 +592,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["BRIDGE_LEN_IND_112"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -486,6 +620,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["CHANNEL_COND_061"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"CHANNEL_COND_061" + "_" + rowIndex}
@@ -500,6 +644,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["COUNTY_CODE_003"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["COUNTY_CODE_003"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -518,6 +672,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["CRITICAL_FACILITY_006B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"CRITICAL_FACILITY_006B" + "_" + rowIndex}
@@ -534,6 +698,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["CULVERT_COND_062"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -552,6 +726,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DATE_LAST_UPDATE"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"DATE_LAST_UPDATE" + "_" + rowIndex}
@@ -569,6 +753,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DATE_OF_INSPECT_090"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"DATE_OF_INSPECT_090" + "_" + rowIndex}
@@ -583,6 +777,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["DECK_COND_058"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DECK_COND_058"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -600,6 +804,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DECK_GEOMETRY_EVAL_068"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -620,6 +834,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DECK_PROTECTION_108C"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"DECK_PROTECTION_108C" + "_" + rowIndex}
@@ -636,6 +860,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DECK_STRUCTURE_TYPE_107"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -654,6 +888,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DECK_WIDTH_MT_052"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"DECK_WIDTH_MT_052" + "_" + rowIndex}
@@ -668,6 +912,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["DEDUCT_CODE"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DEDUCT_CODE"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -686,6 +940,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DEGREES_SKEW_034"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"DEGREES_SKEW_034" + "_" + rowIndex}
@@ -700,6 +964,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["DESIGN_LOAD_031"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DESIGN_LOAD_031"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -718,6 +992,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DETOUR_KILOS_019"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"DETOUR_KILOS_019" + "_" + rowIndex}
@@ -733,6 +1017,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DIRECTION_005E"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"DIRECTION_005E" + "_" + rowIndex}
@@ -747,6 +1041,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["DTL_TYPE_OF_IMP"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["DTL_TYPE_OF_IMP"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -765,6 +1069,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["FACILITY_CARRIED_007"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"FACILITY_CARRIED_007" + "_" + rowIndex}
@@ -781,6 +1095,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["FEATURES_DESC_006A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -799,6 +1123,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["FEDERAL_LANDS_105"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"FEDERAL_LANDS_105" + "_" + rowIndex}
@@ -814,6 +1148,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["FED_AGENCY"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"FED_AGENCY" + "_" + rowIndex}
@@ -828,6 +1172,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["FRACTURE_092A"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["FRACTURE_092A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -846,6 +1200,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["FRACTURE_LAST_DATE_093A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"FRACTURE_LAST_DATE_093A" + "_" + rowIndex}
@@ -863,6 +1227,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["FUNCTIONAL_CLASS_026"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"FUNCTIONAL_CLASS_026" + "_" + rowIndex}
@@ -877,6 +1251,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["FUTURE_ADT_114"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["FUTURE_ADT_114"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -895,6 +1279,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["HIGHWAY_DISTRICT_002"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"HIGHWAY_DISTRICT_002" + "_" + rowIndex}
@@ -912,6 +1306,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["HIGHWAY_SYSTEM_104"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"HIGHWAY_SYSTEM_104" + "_" + rowIndex}
@@ -926,6 +1330,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["HISTORY_037"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["HISTORY_037"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -942,6 +1356,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["HORR_CLR_MT_047"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"HORR_CLR_MT_047" + "_" + rowIndex}
@@ -956,6 +1380,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["IMP_LEN_MT_076"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["IMP_LEN_MT_076"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -974,6 +1408,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["INSPECT_FREQ_MONTHS_091"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"INSPECT_FREQ_MONTHS_091" + "_" + rowIndex}
@@ -990,6 +1434,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["INVENTORY_RATING_066"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1008,6 +1462,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["INV_RATING_METH_065"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"INV_RATING_METH_065" + "_" + rowIndex}
@@ -1022,6 +1486,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["KILOPOINT_011"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["KILOPOINT_011"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1038,6 +1512,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["LAT_016"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"LAT_016" + "_" + rowIndex}
@@ -1052,6 +1536,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["LAT_UND_MT_055B"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["LAT_UND_MT_055B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1070,6 +1564,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["LAT_UND_REF_055A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"LAT_UND_REF_055A" + "_" + rowIndex}
@@ -1086,6 +1590,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["LEFT_CURB_MT_050A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1104,6 +1618,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["LEFT_LAT_UND_MT_056"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"LEFT_LAT_UND_MT_056" + "_" + rowIndex}
@@ -1119,6 +1643,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["LOCATION_009"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"LOCATION_009" + "_" + rowIndex}
@@ -1133,6 +1667,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["LONG_017"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["LONG_017"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1151,6 +1695,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["LRS_INV_ROUTE_013A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"LRS_INV_ROUTE_013A" + "_" + rowIndex}
@@ -1165,6 +1719,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["MAINTENANCE_021"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["MAINTENANCE_021"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1183,6 +1747,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["MAIN_UNIT_SPANS_045"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"MAIN_UNIT_SPANS_045" + "_" + rowIndex}
@@ -1200,6 +1774,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["MAX_SPAN_LEN_MT_048"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"MAX_SPAN_LEN_MT_048" + "_" + rowIndex}
@@ -1214,6 +1798,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["MEDIAN_CODE_033"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["MEDIAN_CODE_033"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1232,6 +1826,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["MEMBRANE_TYPE_108B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"MEMBRANE_TYPE_108B" + "_" + rowIndex}
@@ -1248,6 +1852,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["MIN_NAV_CLR_MT_116"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1266,6 +1880,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["MIN_VERT_CLR_010"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"MIN_VERT_CLR_010" + "_" + rowIndex}
@@ -1283,6 +1907,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["NATIONAL_NETWORK_110"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"NATIONAL_NETWORK_110" + "_" + rowIndex}
@@ -1297,6 +1931,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["NAVIGATION_038"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["NAVIGATION_038"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1315,6 +1959,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["NAV_HORR_CLR_MT_040"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"NAV_HORR_CLR_MT_040" + "_" + rowIndex}
@@ -1332,6 +1986,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["NAV_VERT_CLR_MT_039"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"NAV_VERT_CLR_MT_039" + "_" + rowIndex}
@@ -1346,6 +2010,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["NBI_TYPE_OF_IMP"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["NBI_TYPE_OF_IMP"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1364,6 +2038,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["OPEN_CLOSED_POSTED_041"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"OPEN_CLOSED_POSTED_041" + "_" + rowIndex}
@@ -1380,6 +2064,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["OPERATING_RATING_064"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1398,6 +2092,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["OPR_RATING_METH_063"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"OPR_RATING_METH_063" + "_" + rowIndex}
@@ -1414,6 +2118,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["OTHER_STATE_CODE_098A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1432,6 +2146,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["OTHER_STATE_PCNT_098B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"OTHER_STATE_PCNT_098B" + "_" + rowIndex}
@@ -1449,6 +2173,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["OTHR_STATE_STRUC_NO_099"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"OTHR_STATE_STRUC_NO_099" + "_" + rowIndex}
@@ -1463,6 +2197,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["OWNER_022"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["OWNER_022"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1481,6 +2225,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["PARALLEL_STRUCTURE_101"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"PARALLEL_STRUCTURE_101" + "_" + rowIndex}
@@ -1497,6 +2251,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["PERCENT_ADT_TRUCK_109"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1515,6 +2279,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["PIER_PROTECTION_111"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"PIER_PROTECTION_111" + "_" + rowIndex}
@@ -1529,6 +2303,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["PLACE_CODE_004"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["PLACE_CODE_004"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1547,6 +2331,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["POSTING_EVAL_070"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"POSTING_EVAL_070" + "_" + rowIndex}
@@ -1561,6 +2355,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["PROGRAM_CODE"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["PROGRAM_CODE"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1577,6 +2381,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["PROJ_NO"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"PROJ_NO" + "_" + rowIndex}
@@ -1592,6 +2406,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["PROJ_SUFFIX"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"PROJ_SUFFIX" + "_" + rowIndex}
@@ -1606,6 +2430,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["RAILINGS_036A"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["RAILINGS_036A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1624,6 +2458,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["RECORD_TYPE_005A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"RECORD_TYPE_005A" + "_" + rowIndex}
@@ -1638,6 +2482,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["REMARKS"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["REMARKS"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1656,6 +2510,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["RIGHT_CURB_MT_050B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"RIGHT_CURB_MT_050B" + "_" + rowIndex}
@@ -1672,6 +2536,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["ROADWAY_IMP_COST_095"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1690,6 +2564,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["ROADWAY_WIDTH_MT_051"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"ROADWAY_WIDTH_MT_051" + "_" + rowIndex}
@@ -1706,6 +2590,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["ROUTE_NUMBER_005D"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1724,6 +2618,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["ROUTE_PREFIX_005B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"ROUTE_PREFIX_005B" + "_" + rowIndex}
@@ -1740,6 +2644,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SCOUR_CRITICAL_113"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1758,6 +2672,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SERVICE_LEVEL_005C"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"SERVICE_LEVEL_005C" + "_" + rowIndex}
@@ -1772,6 +2696,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["SERVICE_ON_042A"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SERVICE_ON_042A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1790,6 +2724,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SERVICE_UND_042B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"SERVICE_UND_042B" + "_" + rowIndex}
@@ -1804,6 +2748,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["SPECIAL_CODE"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SPECIAL_CODE"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1822,6 +2776,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SPEC_INSPECT_092C"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"SPEC_INSPECT_092C" + "_" + rowIndex}
@@ -1839,6 +2803,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SPEC_LAST_DATE_093C"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"SPEC_LAST_DATE_093C" + "_" + rowIndex}
@@ -1853,6 +2827,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["STATE_CODE_001"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STATE_CODE_001"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1871,6 +2855,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STATUS_NO_10YR_RULE"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"STATUS_NO_10YR_RULE" + "_" + rowIndex}
@@ -1888,6 +2882,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STATUS_WITH_10YR_RULE"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"STATUS_WITH_10YR_RULE" + "_" + rowIndex}
@@ -1902,6 +2906,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["STEP_CODE"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STEP_CODE"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1920,6 +2934,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STRAHNET_HIGHWAY_100"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"STRAHNET_HIGHWAY_100" + "_" + rowIndex}
@@ -1936,6 +2960,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STRUCTURAL_EVAL_067"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1954,6 +2988,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STRUCTURE_FLARED_035"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"STRUCTURE_FLARED_035" + "_" + rowIndex}
@@ -1970,6 +3014,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STRUCTURE_KIND_043A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -1988,6 +3042,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STRUCTURE_LEN_MT_049"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"STRUCTURE_LEN_MT_049" + "_" + rowIndex}
@@ -2004,6 +3068,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STRUCTURE_NUMBER_008"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2022,6 +3096,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["STRUCTURE_TYPE_043B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"STRUCTURE_TYPE_043B" + "_" + rowIndex}
@@ -2038,6 +3122,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SUBROUTE_NO_013B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2056,6 +3150,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SUBSTRUCTURE_COND_060"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"SUBSTRUCTURE_COND_060" + "_" + rowIndex}
@@ -2072,6 +3176,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SUFFICIENCY_ASTERC"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2090,6 +3204,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SUFFICIENCY_RATING"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"SUFFICIENCY_RATING" + "_" + rowIndex}
@@ -2106,6 +3230,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SUPERSTRUCTURE_COND_059"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2124,6 +3258,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["SURFACE_TYPE_108A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"SURFACE_TYPE_108A" + "_" + rowIndex}
@@ -2141,6 +3285,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["TEMP_STRUCTURE_103"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"TEMP_STRUCTURE_103" + "_" + rowIndex}
@@ -2155,6 +3309,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["TOLL_020"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["TOLL_020"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2173,6 +3337,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["TOTAL_IMP_COST_096"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"TOTAL_IMP_COST_096" + "_" + rowIndex}
@@ -2189,6 +3363,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["TRAFFIC_DIRECTION_102"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2207,6 +3391,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["TRAFFIC_LANES_ON_028A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"TRAFFIC_LANES_ON_028A" + "_" + rowIndex}
@@ -2223,6 +3417,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["TRAFFIC_LANES_UND_028B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2241,6 +3445,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["TRANSITIONS_036B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"TRANSITIONS_036B" + "_" + rowIndex}
@@ -2257,6 +3471,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["TYPE_LAST_UPDATE"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2275,6 +3499,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["UNDCLRENCE_EVAL_069"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"UNDCLRENCE_EVAL_069" + "_" + rowIndex}
@@ -2291,6 +3525,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["UNDWATER_LAST_DATE_093B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2309,6 +3553,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["UNDWATER_LOOK_SEE_092B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"UNDWATER_LOOK_SEE_092B" + "_" + rowIndex}
@@ -2325,6 +3579,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["VERT_CLR_OVER_MT_053"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2343,6 +3607,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["VERT_CLR_UND_054B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"VERT_CLR_UND_054B" + "_" + rowIndex}
@@ -2359,6 +3633,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["VERT_CLR_UND_REF_054A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2377,6 +3661,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["WATERWAY_EVAL_071"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"WATERWAY_EVAL_071" + "_" + rowIndex}
@@ -2393,6 +3687,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["WORK_DONE_BY_075B"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2411,6 +3715,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["WORK_PROPOSED_075A"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"WORK_PROPOSED_075A" + "_" + rowIndex}
@@ -2426,6 +3740,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["YEAR_ADT_030"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"YEAR_ADT_030" + "_" + rowIndex}
@@ -2440,6 +3764,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["YEAR_BUILT_027"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["YEAR_BUILT_027"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2458,6 +3792,16 @@ export default function BridgeTable({
                             ? "#ef9a9a"
                             : ""
                           : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["YEAR_OF_FUTURE_ADT_115"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
+                          : ""
                         : ""
                     }}
                     key={"YEAR_OF_FUTURE_ADT_115" + "_" + rowIndex}
@@ -2472,6 +3816,16 @@ export default function BridgeTable({
                             data.Bridge[0].rows[rowIndex - 1]["YEAR_OF_IMP_097"]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["YEAR_OF_IMP_097"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}
@@ -2489,6 +3843,16 @@ export default function BridgeTable({
                             ]
                             ? "#ef9a9a"
                             : ""
+                          : ""
+                        : "",
+                      display: hideColumns
+                        ? data.Bridge[0].rows
+                            .map(item => item["YEAR_RECONSTRUCTED_106"])
+                            .filter(
+                              (value, index, self) =>
+                                self.indexOf(value) === index
+                            ).length === 1
+                          ? "none"
                           : ""
                         : ""
                     }}

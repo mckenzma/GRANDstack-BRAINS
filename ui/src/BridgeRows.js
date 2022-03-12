@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-// import Table from "@material-ui/core/Table";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -18,12 +15,17 @@ export default function ShowBridgeRows({
   countyCode,
   stateCode
 }) {
-  // const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState("paper");
   const [fullWidth, setFullWidth] = useState(true);
   const [maxWidth, setMaxWidth] = useState("xl");
   const [showChanges, setShowChanges] = useState(true);
+  const [hideColumns, setHideColumns] = useState(false);
+
+  // const [state, setState] = React.useState({
+  //   changes: true,
+  //   columns: true
+  // });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,6 +40,37 @@ export default function ShowBridgeRows({
     else setShowChanges(true);
   }
 
+  function handleHideColumns() {
+    if (hideColumns) setHideColumns(false);
+    else setHideColumns(true);
+  }
+
+  // const [selectedSwtiches, setSelectedSwitches] = useState([]);
+  // const [selected, setSelected] = useState([]);
+  // function handleClick(event, name) {
+  //   setSelected(selectedSwtiches);
+  //   const selectedIndex = selectedSwtiches.indexOf(name);
+  //   let newSelected = [];
+
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selectedSwtiches, name);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selectedSwtiches.slice(1));
+  //   } else if (selectedIndex === selectedSwtiches.length - 1) {
+  //     newSelected = newSelected.concat(selectedSwtiches.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(
+  //       selectedSwtiches.slice(0, selectedIndex),
+  //       selectedSwtiches.slice(selectedIndex + 1)
+  //     );
+  //   }
+
+  //   setSelectedSwitches(newSelected);
+  // }
+
+  // console.log(state);
+  // console.log(selectedSwtiches);
+
   return (
     <>
       <Button onClick={handleClickOpen} variant="contained" color="secondary">
@@ -49,7 +82,6 @@ export default function ShowBridgeRows({
         open={open}
         onClose={handleClose}
         scroll={scroll}
-        // aria-labelledby=""
       >
         <DialogTitle id="raw-data-rows-title">
           Raw Row Data
@@ -59,25 +91,27 @@ export default function ShowBridgeRows({
                 <Switch
                   checked={showChanges}
                   onChange={handleSwitch}
-                  name="checkedA"
+                  // onClick={(event) => handleClick(event,"showChanges")}
+                  name="changes"
+                  color="primary"
                 />
               }
               label="Highlight Changes"
             />
-            {/* <FormControlLabel
-        control={
-          <Switch
-            checked={showChanges}
-            onChange={handleSwitch}
-            name="checkedB"
-            color="primary"
-          />
-        }
-        label="Primary"
-      /> */}
-            {/* <FormControlLabel control={<Switch />} label="Uncontrolled" />
-      <FormControlLabel disabled control={<Switch />} label="Disabled" />
-      <FormControlLabel disabled control={<Switch checked />} label="Disabled" /> */}
+          </FormGroup>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={hideColumns}
+                  onChange={handleHideColumns}
+                  // onClick={(event) => handleClick(event,"hideColumns")}
+                  name="columns"
+                  color="primary"
+                />
+              }
+              label="Hide Unchanged Columns"
+            />
           </FormGroup>
         </DialogTitle>
         <BridgeTable
@@ -86,6 +120,7 @@ export default function ShowBridgeRows({
           countyCode={countyCode}
           stateCode={stateCode}
           showChanges={showChanges}
+          hideColumns={hideColumns}
         />
       </Dialog>
     </>
