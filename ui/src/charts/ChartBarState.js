@@ -95,11 +95,16 @@ export default function BarChartState({ _selectedStates }) {
                 return val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
               }
             }
-          }
+          },
           // legend: {
           //   show:true,
           //   position: 'bottom'
           // },
+          chart: {
+            toolbar: {
+              show: false // hide download button
+            }
+          }
         }}
         series={series}
         type="bar"
