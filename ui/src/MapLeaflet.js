@@ -30,6 +30,8 @@ import MenuDrawer from "./MenuDrawer";
 // import StateMarker from "./MapStateMarker.js";
 import BridgeMarker from "./BridgeMarker";
 
+import ErrorDialog from "./Error.js";
+
 import Loading from "./Loading";
 
 const useStyles = makeStyles(theme => ({
@@ -105,6 +107,8 @@ export default function MapLeaf({
   const [lat, setLat] = useState(39.8283); //center of US --> Lat. 44 58 02.07622(N)
   const [zoom, setZoom] = useState(4);
 
+  const [showError, setShowError] = useState(false);
+
   const tabHeaderRef = useRef(null);
   const style = { top: headerHeight };
   const style2 = {
@@ -156,9 +160,10 @@ export default function MapLeaf({
           // url="	https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
         />
         {/* Idea: Might be able to do a similar approach with the MarkerClusterGroup such that each state has its own group. Could make it easier to run a singel query and then turn on/off each state. Something to think about... */}
+        {/* what about grouping bridges by certain criteria for a given year (like overall rating). need to think about ways to compare differences */}
         <MarkerClusterGroup>
           {loading && console.log("loading")}
-          {error && console.log("error")}
+          {error && <ErrorDialog errorMessage={error.message} />}
           {data !== undefined &&
             data.Bridge.map((b, index) => {
               return <BridgeMarker bridge={b} index={index} key={index} />;
