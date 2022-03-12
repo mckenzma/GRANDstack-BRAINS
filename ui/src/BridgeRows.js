@@ -7,6 +7,9 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+
 import BridgeTable from "./BridgeRowTable";
 
 export default function ShowBridgeRows({
@@ -80,11 +83,25 @@ export default function ShowBridgeRows({
         fullWidth={true}
         maxWidth={maxWidth}
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
         scroll={scroll}
       >
         <DialogTitle id="raw-data-rows-title">
           Raw Row Data
+          <IconButton
+            aria-label="Close"
+            style={{
+              position: "absolute",
+              // right: theme.spacing(1),
+              right: 10,
+              // top: theme.spacing(1),
+              top: 10
+              // color: theme.palette.grey[500]
+            }}
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
           <FormGroup row>
             <FormControlLabel
               control={
