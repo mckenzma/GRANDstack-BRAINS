@@ -8,7 +8,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 // External functions/components
-import DonutChartState from "./charts/ChartDonutState";
+// import DonutChartState from "./charts/ChartDonutState";
 import BarChartState from "./charts/ChartBarState";
 // import HeatMapState from "./ChartHeatState";
 // import StackedBarChart1 from "./charts/StackedBarChart1";
@@ -60,11 +60,11 @@ export default function SummaryDialog({ _selectedStates, _selectedYears }) {
         <DialogContent>
           <div className={classes.root}>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+              {/* <Grid item xs={12} md={6}>
                 <Paper className={classes.paper}>
                   <DonutChartState _selectedStates={_selectedStates} />
                 </Paper>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} md={6}>
                 <Paper className={classes.paper}>
                   <BarChartState _selectedStates={_selectedStates} />

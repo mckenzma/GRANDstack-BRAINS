@@ -51,8 +51,6 @@ const GET_BRIDGE = gql`
           }
         }
       }
-      # latitude_decimal
-      # longitude_decimal
       location {
         latitude
         longitude
@@ -144,18 +142,13 @@ const BridgeDetail = ({ Bridge }) => {
         </ListItemText>
       </ListItem>*/}
 
-      <DiscreteSlider
-        /*bridge={Bridge}*/ sliderYears={sliderYears}
+      {/* <DiscreteSlider
+        /*bridge={Bridge}* / 
+        sliderYears={sliderYears}
         selectedSliderYear={updateYear}
-      />
-      <BridgeRadar inspectionLog={inspectionLog} />
-      {/* <BridgeRatingLineChart inspectionLogs={Bridge.inspectionLogs} /> */}
-      {/* <ShowBridgeRows
-        code={Bridge.code}
-        placeCode={Bridge.placeCode}
-        countyCode={Bridge.countyCode}
-        stateCode={Bridge.stateCode}
       /> */}
+      {/* <BridgeRadar inspectionLog={inspectionLog} /> */}
+      {/* <BridgeRatingLineChart inspectionLogs={Bridge.inspectionLogs} /> */}
     </List>
   );
 };

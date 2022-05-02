@@ -51,8 +51,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// TODO - since we store the state code on the bridge as a property, could update to pass and match on the state code
-//        rather than "walking the relationships". Would need to update the state selector to do so
 const GET_BRIDGES = gql`
   query bridgesPaginateQuery(
     $_selectedStates: [String!] #$maintRespSelected: [String!] # $_selectedYears: [Int!] #$ownerSelected: [String!] #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? '$ownerSelected: [String!]' : '' */} this is a way to not pass every filter in unless selected
@@ -62,17 +60,12 @@ const GET_BRIDGES = gql`
       # however, this is still something to review for potential improvements.
       filter: {
         AND: [
-          # {
-          #   place: { county: { state: { abbreviation_in: $_selectedStates } } }
-          # }
           { stateCode_in: $_selectedStates }
           { place_not: null } # added because there are incomplete connections from state to bridge due to errors in the raw data
           { place: { county_not: null } } # added because there are incomplete connections from state to bridge due to errors in the raw data
           { place: { county: { state_not: null } } } # added because there are incomplete connections from state to bridge due to errors in the raw data
-          # { latitude_decimal_not:null }
-          # { location_not:{latitude: 0.0, longitude: 0.0}}, # added to prevent rendering issue of too many bridges on 0,0
-          # { stateCode_not: ""},
-          # { placeCode_not: ""}
+          # location_not doesnt seem to be workings
+          # { location_not: { latitude: 0.0, longitude: 0.0 } } # added to prevent rendering issue of too many bridges on 0,0
         ]
         # buildYear_in: $_selectedYears
         #$ {/*this.props.ownerSelected != null && this.props.ownerSelected.length > 0 ? 'owner: { description_in: $ownerSelected }' : '' */} this is a way to not pass every filter in unless selected
@@ -155,9 +148,9 @@ export default function MapLeaf({
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           // Reference: https://wiki.openstreetmap.org/wiki/Tile_servers
           // this is for the "tradition basic map"
-          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+          // url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           // this sets a "dark carto map"
-          // url="	https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+          url="	https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
         />
         {/* Idea: Might be able to do a similar approach with the MarkerClusterGroup such that each state has its own group. Could make it easier to run a singel query and then turn on/off each state. Something to think about... */}
         {/* what about grouping bridges by certain criteria for a given year (like overall rating). need to think about ways to compare differences */}
