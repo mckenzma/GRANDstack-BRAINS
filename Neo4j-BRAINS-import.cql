@@ -603,25 +603,25 @@
 //DROP CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.state_code, bridge.county_code, bridge.place_code, bridge.code) IS NODE KEY
 CREATE CONSTRAINT ON (bridge:Bridge) ASSERT (bridge.stateCode, bridge.countyCode, bridge.placeCode, bridge.code) IS NODE KEY
 
-// create/merge bridge (:NoDelimieterRow)
-CALL apoc.periodic.iterate(
-'
-MATCH (row:NoDelimiterRow)
-WHERE NOT (row)-[:DATA_FOR]->()
-RETURN row
-','
-WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
-     row.COUNTY_CODE_003 AS countyCode,
-     row.PLACE_CODE_004 AS placeCode,
-     coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
-MERGE (bridge:Bridge {stateCode: stateCode, 
-                      countyCode: countyCode, 
-                      placeCode: placeCode, 
-                      code: bridgeCode})
-ON CREATE SET bridge.createdOn = datetime()
-//CREATE (row)-[:DATA_FOR]->(bridge)
-',
-{batchSize:10000,parallel:false})
+// // create/merge bridge (:NoDelimieterRow)
+// CALL apoc.periodic.iterate(
+// '
+// MATCH (row:NoDelimiterRow)
+// WHERE NOT (row)-[:DATA_FOR]->()
+// RETURN row
+// ','
+// WITH DISTINCT row.STATE_CODE_001 AS stateCode, 
+//      row.COUNTY_CODE_003 AS countyCode,
+//      row.PLACE_CODE_004 AS placeCode,
+//      coalesce(apoc.text.replace(trim(row.STRUCTURE_NUMBER_008), "^0*", ""),row.STRUCTURE_NUMBER_008) AS bridgeCode
+// MERGE (bridge:Bridge {stateCode: stateCode, 
+//                       countyCode: countyCode, 
+//                       placeCode: placeCode, 
+//                       code: bridgeCode})
+// ON CREATE SET bridge.createdOn = datetime()
+// //CREATE (row)-[:DATA_FOR]->(bridge)
+// ',
+// {batchSize:10000,parallel:false})
 
 //// create/merge bridge (:DelimitedRow)
 //CALL apoc.periodic.iterate(
