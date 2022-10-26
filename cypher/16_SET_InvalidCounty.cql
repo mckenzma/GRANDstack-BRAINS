@@ -10,4 +10,4 @@ WHERE size(c.code) <> 3
 OR NOT c.code =~ "^[0-9]+$"
 SET c:InvalidCounty
 ',
-{batchSize:10000,parallel: false})
+{batchSize:10000,parallel: true})

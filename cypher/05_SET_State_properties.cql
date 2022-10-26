@@ -1,6 +1,6 @@
 // Update State properties
 // TODO - update to set code and name via objects in one case statement (if possible)
-MATCH (state:State)
+MATCH (state:SetStateProps)
 SET state.code = 
 			// These are ordered by the state code
       CASE state.abbreviation
@@ -121,3 +121,4 @@ SET state.code =
         WHEN "WY" THEN "Wyoming"
         WHEN "PR" THEN "Puerto Rico"
       END
+REMOVE state:SetStateProps

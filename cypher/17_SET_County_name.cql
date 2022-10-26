@@ -10,5 +10,5 @@ WHERE state.name = row.State
 AND county.code = row.`County Code`
 SET county.name = rtrim(row.`County Name`)
 ',
-{batchSize:10000,parallel:false}) YIELD batches, total
-RETURN batches, total
+{batchSize:10000,parallel:false})// YIELD batches, total
+//RETURN batches, total

@@ -11,4 +11,4 @@ WHERE (size(p.countyCode) <> 3 OR NOT p.countyCode =~ "^[0-9]+$")
 OR (size(p.code) <> 5 OR NOT p.code =~ "^[0-9]+$")
 SET p:InvalidPlace
 ',
-{batchSize:10000,parallel: false})
+{batchSize:10000,parallel: true})

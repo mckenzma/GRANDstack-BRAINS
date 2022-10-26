@@ -10,4 +10,5 @@ ON CREATE SET file.url = fileUrl,
               file.name = row.File,
               file.year = toInteger(row.Year),
               file.createdOn = datetime(), 
-              file:ImportFileRows
+              file:ImportFileRows,
+              file:ConnectFileToState

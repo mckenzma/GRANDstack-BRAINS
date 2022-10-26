@@ -1,12 +1,16 @@
-// Add processing label to each (:Row) not connected to a (:Bridge)
-// TODO - add this processing label upon row creation
+// Create (:County)-[:HAS_PLACE]->(:Place)
 CALL apoc.periodic.iterate(
 '
-MATCH (row:Row)
-WHERE NOT (row)-[:DATA_FOR]->()
-RETURN row
+MATCH (place:ConnectPlaceToCounty)
+RETURN place
 ','
-SET row:ConnectRowToBridge
+//WITH place
+MERGE (county:County {code: place.countyCode, 
+                      stateCode: place.stateCode})
+ON CREATE SET county:ConnectCountyToState
+MERGE (county)-[:HAS_PLACE]->(place)
+WITH place
+REMOVE place:ConnectPlaceToCounty
 ',
 {batchSize:10000, parallel:false})// YIELD batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams
 //RETURN batches, total, timeTaken, committedOperations, failedOperations, failedBatches, retries, errorMessages, batch, operations, wasTerminated, failedParams

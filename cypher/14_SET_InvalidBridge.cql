@@ -13,4 +13,4 @@ OR (size(b.placeCode) <> 5 OR NOT b.placeCode =~ "^[0-9]+$")
 OR size(b.code) <> 15
 SET b:InvalidBridge
 ',
-{batchSize:10000,parallel: false})
+{batchSize:10000,parallel: true})
