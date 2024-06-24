@@ -1,0 +1,1 @@
+CREATE INDEX countyState FOR (c:County) ON (c.code, c.StateCode)

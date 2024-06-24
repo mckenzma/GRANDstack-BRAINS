@@ -4,11 +4,11 @@ CALL apoc.periodic.iterate(
 MATCH (row:ConnectRowToFile)
 RETURN row
 ','
-REMOVE row:ConnectRowToFile
 WITH row
 MATCH (file:DelimitedFile)
 WHERE file.name = row.file
 MERGE (file)-[:CONTAINS]->(row)
+REMOVE row:ConnectRowToFile
 ',
-{batchSize:10000,parallel:false}) YIELD batches, total
-RETURN batches, total
+{batchSize:10000,parallel:false,iterateList:true})// YIELD batches, total
+//RETURN batches, total

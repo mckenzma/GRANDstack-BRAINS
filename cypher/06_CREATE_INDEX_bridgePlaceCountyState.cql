@@ -1,0 +1,2 @@
+// Create index for each bridge based on STATE_CODE_001, COUNTY_CODE_003, PLACE_CODE_004, STRUCTURE_NUMBER_008
+CREATE INDEX bridgePlaceCountyState FOR (b:Bridge) ON (b.stateCode, b.countyCode, b.placeCode, b.code)
